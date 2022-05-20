@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 //use Illuminate\Support\Facades\Hash;
 Use Alert;
 use App\User;
+use App\Models\Persona;
 use App\Models\Cliente;
+use App\Models\Tipocliente;
 use Auth;
 use Carbon\Carbon;
 
@@ -45,8 +47,8 @@ class ClienteController extends Controller
         $fecha = date('Y-m-d'); 
         $segment = 'clientes';
 
-
-        return view('clientes.create', compact('segment'));
+        $tipoclientes = Tipocliente::all();
+        return view('clientes.create', compact('segment','tipoclientes'));
     }
 
     /**

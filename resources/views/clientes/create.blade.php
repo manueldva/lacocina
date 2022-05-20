@@ -90,11 +90,12 @@
                         @enderror
 
                         <div class="form-group">
-                          <label for="genero">Genero:</label>
+                          <label for="genero">Tipo de Cliente:</label>
                           <select  id="genero" name="genero" class="form-control  @error('genero') is-invalid @enderror">
-                            <option value="s" {{ old('genero') == 's' ? 'selected' : '' }}>Sin Datos</option>
-                            <option value="m" {{ old('genero') == 'm' ? 'selected' : '' }}>Masculino</option>
-                            <option value="f" {{ old('genero') == 'f' ? 'selected' : '' }}>Femenino</option>
+                            
+                            @foreach($tipoclientes as $tipo)
+                              <option value="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
+                            @endforeach
                         </select>
                         </div>
                         @error('genero')

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('precio', $precision = 10, $scale = 2);
             $table->integer('cantidad');
             $table->integer('cantidadenvios')->default(0);
+            $table->decimal('precioenvio', $precision = 10, $scale = 2);
             //$table->boolean('entregado')->default(false);
             $table->timestamps();
         });

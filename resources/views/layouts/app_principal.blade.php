@@ -118,7 +118,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-             
+          @can('home')   
           <li class="nav-item">
             <a href="{{ route('home') }}" class="nav-link 
               @if($segment == 'home')
@@ -132,7 +132,8 @@
             </a>
             
           </li>
-          
+          @endcan
+          @can('clientes.index')
           <li class="nav-item">
             <a href="{{ route('clientes.index') }}" class="nav-link 
               @if($segment == 'clientes')
@@ -146,7 +147,7 @@
             </a>
             
           </li>
-         
+          @endcan
           @if(auth()->user()->can('manageusers.index'))
           <li class="nav-item has-treeview
             @if($segment=='users' || $segment=='roles')
@@ -185,7 +186,7 @@
             </ul>
           </li>
           @endif
-          <!--
+          @can('complementos.index')
           <li class="nav-item has-treeview
           @if(substr($segment, -1)=='c')
               menu-open
@@ -227,7 +228,7 @@
               </li>
             </ul>
           </li>
-          -->
+          @endif
           <!--
           <li class="nav-header">Acción</li>
           <li class="nav-item">

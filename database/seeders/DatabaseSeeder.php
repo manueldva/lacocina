@@ -45,5 +45,13 @@ class DatabaseSeeder extends Seeder
             
         ])->assignRole('Admin');
 
+        User::create([
+            'name' => 'Veronica Benitez',
+            'username' => 'vbenitez',
+            'email' => 'vbenitez@admin.com',
+            'password' => bcrypt('123456'),
+            
+        ])->assignRole('Administrativo');
+
     }
 }

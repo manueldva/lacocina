@@ -18,8 +18,9 @@ class RoleSeeder extends Seeder
     {
         $role1 = Role::create(['name' => 'Desarrollador']);
         $role2 = Role::create(['name' => 'Admin']);
+        $role3 = Role::create(['name' => 'Administrativo']);
         
-        permission::create(['name' => 'home', 'description' => 'Solo Lectura', 'father' => 'Tablero'])->syncRoles([$role2]);
+        permission::create(['name' => 'home', 'description' => 'Solo Lectura', 'father' => 'Tablero'])->syncRoles([$role2,$role3]);
 
         
         permission::create(['name' => 'manageusers.index', 'description' => 'Solo Lectura', 'father' => 'Usuario'])->syncRoles([$role2]);
@@ -34,12 +35,18 @@ class RoleSeeder extends Seeder
         permission::create(['name' => 'roles.edit', 'description' => 'Modi', 'father' => 'Rol'])->syncRoles([$role2]);
         permission::create(['name' => 'roles.destroy', 'description' => 'Baja', 'father' => 'Rol'])->syncRoles([$role2]);
 
-        /*
-        permission::create(['name' => 'establecimientos.index'])->syncRoles([$role1,$role2]);
-        permission::create(['name' => 'establecimientos.create'])->syncRoles([$role1,$role2]);
-        permission::create(['name' => 'establecimientos.edit']);
-        permission::create(['name' => 'establecimientos.destroy'])->syncRoles([$role1,$role2]);
+        permission::create(['name' => 'clientes.index', 'description' => 'Solo Lectura', 'father' => 'Cliente'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'clientes.show', 'description' => 'Detalle', 'father' => 'Cliente'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'clientes.create', 'description' => 'Alta', 'father' => 'Cliente'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'clientes.edit', 'description' => 'Modi', 'father' => 'Cliente'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'clientes.destroy', 'description' => 'Baja', 'father' => 'Cliente'])->syncRoles([$role2,$role3]);
 
+        permission::create(['name' => 'complementos.index', 'description' => 'Solo Lectura', 'father' => 'Complemento'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'complementos.show', 'description' => 'Detalle', 'father' => 'Complemento'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'complementos.create', 'description' => 'Alta', 'father' => 'Complemento'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'complementos.edit', 'description' => 'Modi', 'father' => 'Complemento'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'complementos.destroy', 'description' => 'Baja', 'father' => 'Complemento'])->syncRoles([$role2,$role3]);
+        /*
         permission::create(['name' => 'planes.index'])->syncRoles([$role1,$role2]);
         permission::create(['name' => 'planes.create'])->syncRoles([$role1,$role2]);
         permission::create(['name' => 'planes.edit'])->syncRoles([$role1,$role2]);

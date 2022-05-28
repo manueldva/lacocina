@@ -42,4 +42,5 @@ Route::resource('roles', 'RoleController');
 
 Route::resource('clientes', 'ClienteController');
 Route::resource('tipocontactos', 'TipocontactoController');
+Route::resource('tipoantecedentemedicos', 'TipoantecedentemedicoController');
 

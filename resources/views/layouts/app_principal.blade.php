@@ -220,9 +220,17 @@
                         <p>Tipo Contactos</p>
                       </a>
                     </li>
+                    <li class="nav-item">
+                      <a href="{{ route('tipoantecedentemedicos.index') }}" class="nav-link  
+                        @if($segment=='tipoantecedentemedicos_c')
+                        active
+                        @endif">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>T. Antecedente M.</p>
+                      </a>
+                    </li>
                   </ul>
                 </li>
-              
             </ul>
           </li>
           @endif

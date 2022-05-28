@@ -6,11 +6,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Gestionar Roles</h1>
+            <h1 class="m-0 text-dark">Gestionar T. Contactos</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('roles.index') }}">Roles</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('tipocontactos.index') }}">T. Contactos</a></li>
               <li class="breadcrumb-item active">Listado</li>
             </ol>
           </div><!-- /.col -->
@@ -27,19 +27,17 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Listado de Roles</h3>
+                <h3 class="card-title">Listado de T. Contactos</h3>
 
                 <form class="form-inline float-right">
                   <select name="tipo" class="form-control mr-sm-2" id="tipo">
                     <option value=''>Buscar por...</option>
-                    <option value='name' @if($buscador == 'name') selected @endif>Descripción</option>
+                    <option value='descripcion'>Descripción</option>
                   </select>
-                  <input name="buscarpor" id="buscarpor" value="{{ $dato }}" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+                  <input name="buscarpor" id="buscarpor" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
                      <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
                         &nbsp;&nbsp;
-                      @can('roles.create')  
-                        <a class="btn btn-outline-primary" href="{{ route('roles.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
-                      @endcan
+                      <a class="btn btn-outline-primary" href="{{ route('tipocontactos.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
                 </form>
                 <div class="card-tools">
                   <div class="input-group input-group-sm" style="width: 200px;">
@@ -65,35 +63,48 @@
                       <tr>
                         <th><center>Codigo</center></th>
                         <th><center>Descripción</center></th>
+                        <th><center>Estado</center></th>
                         <th width="280px"></th>
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach($roles as $role)
+                      @foreach($tipocontactos as $tipocontacto)
                         <tr>
                           <td>
                             <center>
-                              {{ $role->id }}
+                              {{ $tipocontacto->id }}
                             </center>
                           </td>
                           <td>
                             <center>
-                              {{ $role->name }}
+                              {{ $tipocontacto->descripcion }}
+                            </center>
+                          </td>
+                          <td>
+                            <center>
+                              @if($tipocontacto->activo == 1)
+                                <img src="{{url('image/on.ico')}}"  width="30" height="30" data-toggle="tooltip" data-placement="top" title="Activo">
+                               
+                              @else
+                                <img src="{{url('image/off.ico')}}"  width="30" height="30" data-toggle="tooltip" data-placement="top" title="Inactivo">
+                               
+                              @endif
                             </center>
                           </td>
                          <td>
                             <center>
-                              @can('roles.show')  
-                                <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('roles.show',$role->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>
+                              @can('complementos.show')  
+                                <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('tipocontactos.show',$tipocontacto->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>
                               @endcan
-                              @can('roles.edit')  
-                                <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('roles.edit',$role->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
+                              @can('complementos.edit')  
+                                <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('tipocontactos.edit',$tipocontacto->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
                               @endcan
-                              @can('roles.destroy')  
-                                <a href="#" data-id="{{$role->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
+                              @can('complementos.destroy')  
+                                <a href="#" data-id="{{$tipocontacto->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
                                   <i class="fas fa-trash-alt"></i>
                                 </a>
                               @endcan
+    
                             </center>
                           </td>
                         </tr>
@@ -104,8 +115,8 @@
                   <br>
                   <div>
                     <strong>
-                      <?php echo  'Mostrando ' . $roles->firstItem() . ' a ' . $roles->lastItem() . ' de ' . $roles->total() . ' registros'; ?> 
-                       {{ $roles->appends(Request::only(['tipo','buscarpor']))->links() }}
+                      <?php echo  'Mostrando ' . $tipocontactos->firstItem() . ' a ' . $tipocontactos->lastItem() . ' de ' . $tipocontactos->total() . ' registros'; ?> 
+                       {{ $tipocontactos->appends(Request::only(['tipo','buscarpor']))->links() }}
                     </strong>  
                 <!--</div>-->
               </div>
@@ -117,8 +128,8 @@
         </div>
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
-      <!-- Modal -->
-      <div class="modal modal-danger fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+       <!-- Modal -->
+       <div class="modal modal-danger fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -145,7 +156,6 @@
           </div>
         </div>
       </div>
-      
     </section>
     <!-- /.content -->
 @endsection
@@ -154,9 +164,9 @@
   <script type="text/javascript">
 
 
-  $('.btnDelete').on('click', function(){
-      var rol = $(this).data('id');
-      $('#frmdelete').attr('action', '{{asset('roles')}}/'+rol);
+    $('.btnDelete').on('click', function(){
+      var tc = $(this).data('id');
+      $('#frmdelete').attr('action', '{{asset('tipocontactos')}}/'+tc);
       //$('#deleteEmpleado').modal('show');
     });
     

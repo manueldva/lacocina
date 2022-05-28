@@ -199,33 +199,30 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('planes.index') }}" class="nav-link  
-                  @if($segment=='plan_c')
-                  active
+              <li class="nav-item has-treeview
+                @if(substr($segment, -1)=='c')
+                    menu-open
                   @endif">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Planes</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('tiporepeticiones.index') }}" class="nav-link  
-                  @if($segment=='tiporepeticion_c')
-                  active
-                  @endif">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>T. Repeticiones</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('ejercicios.index') }}" class="nav-link  
-                  @if($segment=='ejercicio_c')
-                  active
-                  @endif">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Ejercicios</p>
-                </a>
-              </li>
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-users"></i>
+                    <p>
+                      Personas
+                      <i class="right fas fa-angle-left"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="{{ route('tipocontactos.index') }}" class="nav-link  
+                        @if($segment=='tipocontacto_c')
+                        active
+                        @endif">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Tipo Contactos</p>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              
             </ul>
           </li>
           @endif

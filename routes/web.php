@@ -40,12 +40,6 @@ route::put('/setting/{id}',		'ManageuserController@setting')->name('setting');
 
 Route::resource('roles', 'RoleController');
 
-
-
-Route::resource('establecimientos', 'EstablecimientoController');
 Route::resource('clientes', 'ClienteController');
-Route::resource('planes', 'PlanController');
-Route::resource('tiporepeticiones', 'TiporepeticionesController');
-Route::resource('ejercicios', 'EjercicioController');
+Route::resource('tipocontactos', 'TipocontactoController');
 
-//Route::post('delete/{id}', 'ManageuserController@delete');

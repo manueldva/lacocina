@@ -6,11 +6,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Gestionar T. Antecedentes Medicos</h1>
+            <h1 class="m-0 text-dark">Gestionar Antecedentes Medicos</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('tipoantecedentemedicos.index') }}">T. Antecedentes Medicos</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('antecedentemedicos.index') }}"> Antecedentes Medicos</a></li>
               <li class="breadcrumb-item active">Listado</li>
             </ol>
           </div><!-- /.col -->
@@ -27,7 +27,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Listado de T. Antecedentes Medicos</h3>
+                <h3 class="card-title">Listado de Antecedentes Medicos</h3>
 
                 <form class="form-inline float-right">
                   <select name="tipo" class="form-control mr-sm-2" id="tipo">
@@ -38,7 +38,7 @@
                      <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
                       &nbsp;&nbsp;
                       @can('complementos.create')  
-                      <a class="btn btn-outline-primary" href="{{ route('tipoantecedentemedicos.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
+                      <a class="btn btn-outline-primary" href="{{ route('antecedentemedicos.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
                       @endcan
                 </form>
                 <div class="card-tools">
@@ -70,21 +70,21 @@
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach($tipoantecedentemedicos as $tipoantecedentemedico)
+                      @foreach($antecedentemedicos as $antecedentemedico)
                         <tr>
                           <td>
                             <center>
-                              {{ $tipoantecedentemedico->id }}
+                              {{ $antecedentemedico->id }}
                             </center>
                           </td>
                           <td>
                             <center>
-                              {{ $tipoantecedentemedico->descripcion }}
+                              {{ $antecedentemedico->descripcion }}
                             </center>
                           </td>
                           <td>
                             <center>
-                              @if($tipoantecedentemedico->activo == 1)
+                              @if($antecedentemedico->activo == 1)
                                 <img src="{{url('image/on.ico')}}"  width="30" height="30" data-toggle="tooltip" data-placement="top" title="Activo">
                                
                               @else
@@ -96,13 +96,13 @@
                          <td>
                             <center>
                               @can('complementos.show')  
-                                <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('tipoantecedentemedicos.show',$tipoantecedentemedico->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>
+                                <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('antecedentemedicos.show',$antecedentemedico->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>
                               @endcan
                               @can('complementos.edit')  
-                                <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('tipoantecedentemedicos.edit',$tipoantecedentemedico->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
+                                <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('antecedentemedicos.edit',$antecedentemedico->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
                               @endcan
                               @can('complementos.destroy')  
-                                <a href="#" data-id="{{$tipoantecedentemedico->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
+                                <a href="#" data-id="{{$antecedentemedico->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
                                   <i class="fas fa-trash-alt"></i>
                                 </a>
                               @endcan
@@ -117,8 +117,8 @@
                   <br>
                   <div>
                     <strong>
-                      <?php echo  'Mostrando ' . $tipoantecedentemedicos->firstItem() . ' a ' . $tipoantecedentemedicos->lastItem() . ' de ' . $tipoantecedentemedicos->total() . ' registros'; ?> 
-                       {{ $tipoantecedentemedicos->appends(Request::only(['tipo','buscarpor']))->links() }}
+                      <?php echo  'Mostrando ' . $antecedentemedicos->firstItem() . ' a ' . $antecedentemedicos->lastItem() . ' de ' . $antecedentemedicos->total() . ' registros'; ?> 
+                       {{ $antecedentemedicos->appends(Request::only(['tipo','buscarpor']))->links() }}
                     </strong>  
                 <!--</div>-->
               </div>
@@ -167,8 +167,8 @@
 
 
     $('.btnDelete').on('click', function(){
-      var tam = $(this).data('id');
-      $('#frmdelete').attr('action', '{{asset('tipoantecedentemedicos')}}/'+tam);
+      var am = $(this).data('id');
+      $('#frmdelete').attr('action', '{{asset('antecedentemedicos')}}/'+am);
       //$('#deleteEmpleado').modal('show');
     });
     

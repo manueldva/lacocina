@@ -229,6 +229,15 @@
                         <p>T. Antecedente M.</p>
                       </a>
                     </li>
+                    <li class="nav-item">
+                      <a href="{{ route('antecedentemedicos.index') }}" class="nav-link  
+                        @if($segment=='antecedentemedicos_c')
+                        active
+                        @endif">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Antecedente M.</p>
+                      </a>
+                    </li>
                   </ul>
                 </li>
             </ul>

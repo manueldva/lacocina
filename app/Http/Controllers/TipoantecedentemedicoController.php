@@ -26,11 +26,14 @@ class TipoantecedentemedicoController extends Controller
 
         $segment = 'tipoantecedentemedicos_c';
 
+        $buscador = $request->get('tipo'); // se agrega para que queden seleccionados los filtros al recargar la pagina
+        $dato = $request->get('buscarpor'); // despues ver como refactorizar
+
         $tipoantecedentemedicos =  Tipoantecedentemedico::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
 
         
 
-        return view('tipoantecedentemedicos.index', compact('tipoantecedentemedicos', 'segment'));
+        return view('tipoantecedentemedicos.index', compact('tipoantecedentemedicos', 'segment','buscador','dato'));
     }
 
     /**

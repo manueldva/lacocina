@@ -32,9 +32,9 @@
                 <form class="form-inline float-right">
                   <select name="tipo" class="form-control mr-sm-2" id="tipo">
                     <option value=''>Buscar por...</option>
-                    <option value='descripcion'>Descripción</option>
+                    <option value='descripcion' @if($buscador == 'descripcion') selected @endif>Descripción</option>
                   </select>
-                  <input name="buscarpor" id="buscarpor" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+                  <input name="buscarpor" id="buscarpor" value="{{ $dato }}" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search"> 
                      <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
                         &nbsp;&nbsp;
                       @can('complementos.create')  

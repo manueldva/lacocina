@@ -36,11 +36,11 @@
                     <option value='name' @if($buscador == 'name') selected @endif>Nombre</option>
                   </select>
                   <input name="buscarpor" id="buscarpor" value="{{ $dato }}" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
-                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
-                        &nbsp;&nbsp;
-                      @can('manageusers.create')  
-                        <a class="btn btn-outline-primary" href="{{ route('manageusers.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
-                      @endcan
+                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
+                    &nbsp;&nbsp;
+                  @can('manageusers.create')  
+                    <a class="btn btn-outline-primary" href="{{ route('manageusers.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
+                  @endcan
                 </form>
                 <div class="card-tools">
                   <div class="input-group input-group-sm" style="width: 200px;">

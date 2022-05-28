@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 Use Alert;
 use App\User;
-use App\Models\Tipocontacto;
+use App\Models\Tipoantecedentemedico;
+use App\Models\Antecedentemedico;
 use Auth;
 use Carbon\Carbon;
 
-class TipocontactoController extends Controller
+class AntecedentemedicoController extends Controller
 {
     public function __construct()
     {
@@ -24,16 +25,14 @@ class TipocontactoController extends Controller
     public function index(Request $request)
     {
 
-        $segment = 'tipocontacto_c';
+        $segment = 'antecedentemedicos_c';
 
         $buscador = $request->get('tipo'); // se agrega para que queden seleccionados los filtros al recargar la pagina
         $dato = $request->get('buscarpor'); // despues ver como refactorizar
 
-        $tipocontactos =  Tipocontacto::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
+        $antecedentemedicos =  Antecedentemedico::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);  
 
-        
-
-        return view('tipocontactos.index', compact('tipocontactos', 'segment','buscador','dato'));
+        return view('antecedentemedicos.index', compact('antecedentemedicos', 'segment','buscador','dato'));
     }
 
     /**
@@ -43,9 +42,9 @@ class TipocontactoController extends Controller
      */
     public function create()
     {
-         $segment = 'tipocontacto_c';
+         $segment = 'tipoantecedentemedico_c';
 
-        return view('tipocontactos.create', compact('segment'));
+        return view('tipoantecedentemedicos.create', compact('segment'));
     }
 
     /**
@@ -62,13 +61,13 @@ class TipocontactoController extends Controller
  
         ];
         $validatedData = $request->validate([
-            'descripcion' => 'required|max:256|unique:tipocontactos,descripcion'
+            'descripcion' => 'required|max:256|unique:tipoantecedentesmedicos,descripcion'
         ], $messages);
 
-        $tipocontacto = Tipocontacto::create($request->all());
+        $tipoantecedentemedico = Tipoantecedentemedico::create($request->all());
 
-        Alert::success('Tipo de Contacto Creado', 'Exitosamente');
-        return redirect()->route('tipocontactos.edit', $tipocontacto->id);   
+        Alert::success('Registro Creado', 'Exitosamente');
+        return redirect()->route('tipoantecedentemedicos.edit', $tipoantecedentemedico->id);   
     }
 
     /**
@@ -77,13 +76,13 @@ class TipocontactoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Tipocontacto $tipocontacto)
+    public function show(Tipoantecedentemedico $tipoantecedentemedico)
     {
        // $tipocontacto = Tipocontacto::find($id);
-        $segment = 'tipocontacto_c';
+        $segment = 'tipoantecedentemedico_c';
         $show = 1;
         //Alert::toast('Toast Message', 'success');
-        return view('tipocontactos.edit', compact('segment','tipocontacto', 'show'));
+        return view('tipoantecedentemedicos.edit', compact('segment','tipoantecedentemedico', 'show'));
     }
 
     /**
@@ -92,15 +91,15 @@ class TipocontactoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tipocontacto $tipocontacto)
+    public function edit(Tipoantecedentemedico $tipoantecedentemedico)
     {
         
         //$tipocontacto = Tipocontacto::find($id);
         //dd($plan);
         $show = 0;
-        $segment = 'tipocontacto_c';
+        $segment = 'tipoantecedentemedico_c';
 
-        return view('tipocontactos.edit', compact('segment', 'tipocontacto','show'));
+        return view('tipoantecedentemedicos.edit', compact('segment', 'tipoantecedentemedico','show'));
     }
 
     /**
@@ -110,7 +109,7 @@ class TipocontactoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tipocontacto $tipocontacto)
+    public function update(Request $request, Tipoantecedentemedico $tipoantecedentemedico)
     {
         //$tipocontacto = Tipocontacto::find($id);
 
@@ -119,15 +118,15 @@ class TipocontactoController extends Controller
             
         ];
         $validatedData = $request->validate([
-            'descripcion' => 'required|max:256|unique:tipocontactos,descripcion,' . $tipocontacto->id
+            'descripcion' => 'required|max:256|unique:tipoantecedentesmedicos,descripcion,' . $tipoantecedentemedico->id
         ], $messages);
 
 
   
-        $tipocontacto->update($request->all());
+        $tipoantecedentemedico->update($request->all());
   
         Alert::success('Registro Actualizado', 'Exitosamente');
-        return redirect()->route('tipocontactos.edit', $tipocontacto->id);   
+        return redirect()->route('tipoantecedentemedicos.edit', $tipoantecedentemedico->id);   
     }
 
     /**
@@ -136,14 +135,14 @@ class TipocontactoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tipocontacto $tipocontacto)
+    public function destroy(Tipoantecedentemedico $tipoantecedentemedico)
     {
         
         /*if(Cliente::where('plan_id', '=', $id)->first()) {
             alert()->error('Este registro no se puede eliminar', 'Error');
             return back();
         } else {*/
-            $tipocontacto->delete();
+            $tipoantecedentemedico->delete();
             //Alert::success('Eliminado correctamente')->persistent();
             //alert()->success('Registro Eliminado', 'Exitosamente')->toToast();
             Alert::success('Registro Eliminado', 'Exitosamente');

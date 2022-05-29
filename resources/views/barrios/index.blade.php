@@ -6,11 +6,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Listado de Usuarios</h1>
+            <h1 class="m-0 text-dark">Listado de Barrios</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('manageusers.index') }}">Usuarios</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('barrios.index') }}">Barrios</a></li>
               <li class="breadcrumb-item active">Listado</li>
             </ol>
           </div><!-- /.col -->
@@ -27,20 +27,19 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <!-- <h3 class="card-title">Listado de Usuarios</h3>-->
+              <!--<h3 class="card-title">Listado de T. Contactos</h3>-->
 
                 <form class="form-inline float-right">
                   <select name="tipo" class="form-control mr-sm-2" id="tipo">
                     <option value=''>Buscar por...</option>
-                    <option value='username' @if($buscador == 'username') selected @endif>Usuario</option>
-                    <option value='name' @if($buscador == 'name') selected @endif>Nombre</option>
+                    <option value='descripcion' @if($buscador == 'descripcion') selected @endif>Descripción</option>
                   </select>
-                  <input name="buscarpor" id="buscarpor" value="{{ $dato }}" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
-                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
-                    &nbsp;&nbsp;
-                  @can('manageusers.create')  
-                    <a class="btn btn-outline-info" href="{{ route('manageusers.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
-                  @endcan
+                  <input name="buscarpor" id="buscarpor" value="{{ $dato }}" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search"> 
+                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
+                        &nbsp;&nbsp;
+                      @can('complementos.create')  
+                      <a class="btn btn-outline-info" href="{{ route('barrios.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
+                      @endcan
                 </form>
                 <div class="card-tools">
                   <div class="input-group input-group-sm" style="width: 200px;">
@@ -65,44 +64,49 @@
                     <thead>
                       <tr>
                         <th><center>Codigo</center></th>
-                        <th><center>Nombre</center></th>
-                        <th><center>Usuario</center></th>
+                        <th><center>Descripción</center></th>
+                        <th><center>Activo</center></th>
                         <th width="280px"></th>
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach($users as $user)
+                      @foreach($barrios as $barrio)
                         <tr>
                           <td>
                             <center>
-                              {{ $user->id }}
+                              {{ $barrio->id }}
                             </center>
                           </td>
                           <td>
                             <center>
-                              {{ $user->name }}
+                              {{ $barrio->descripcion }}
                             </center>
                           </td>
                           <td>
                             <center>
-                              {{ $user->username }}
+                              @if($barrio->activo == 1)
+                                <img src="{{url('image/on.ico')}}"  width="30" height="30" data-toggle="tooltip" data-placement="top" title="Activo">
+                               
+                              @else
+                                <img src="{{url('image/off.ico')}}"  width="30" height="30" data-toggle="tooltip" data-placement="top" title="Inactivo">
+                               
+                              @endif
                             </center>
                           </td>
-                    
                          <td>
                             <center>
-
-                              @can('manageusers.show')
-                                <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('manageusers.show',$user->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>
+                              @can('complementos.show')  
+                                <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('barrios.show',$barrio->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>
                               @endcan
-                              @can('manageusers.edit')
-                                <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('manageusers.edit',$user->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
+                              @can('complementos.edit')  
+                                <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('barrios.edit',$barrio->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
                               @endcan
-                              @can('manageusers.destroy')
-                                <a href="#" data-id="{{$user->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDeleteUser" data-toggle="modal" data-target="#deleteUser"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
+                              @can('complementos.destroy')  
+                                <a href="#" data-id="{{$barrio->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
                                   <i class="fas fa-trash-alt"></i>
                                 </a>
                               @endcan
+    
                             </center>
                           </td>
                         </tr>
@@ -113,8 +117,8 @@
                   <br>
                   <div>
                     <strong>
-                      <?php echo  'Mostrando ' . $users->firstItem() . ' a ' . $users->lastItem() . ' de ' . $users->total() . ' registros'; ?> 
-                       {{ $users->appends(Request::only(['tipo','buscarpor']))->links() }}
+                      <?php echo  'Mostrando ' . $barrios->firstItem() . ' a ' . $barrios->lastItem() . ' de ' . $barrios->total() . ' registros'; ?> 
+                       {{ $barrios->appends(Request::only(['tipo','buscarpor']))->links() }}
                     </strong>  
                 <!--</div>-->
               </div>
@@ -126,15 +130,15 @@
         </div>
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
-      <!-- Modal -->
-      <div class="modal modal-danger fade" id="deleteUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+       <!-- Modal -->
+       <div class="modal modal-danger fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <!--<h4 class="modal-title text-center" id="myModalLabel">Eliminar confirmación</h4>-->
             </div>
-            <form id="frmdeleteUser" action="" method="POST">
+            <form id="frmdelete" action="" method="POST">
                 {{method_field('delete')}}
                 {{csrf_field()}}
               <div class="modal-body">
@@ -161,10 +165,10 @@
 @section('js')
   <script type="text/javascript">
 
-  
-    $('.btnDeleteUser').on('click', function(){
-      var user = $(this).data('id');
-      $('#frmdeleteUser').attr('action', '{{asset('manageusers')}}/'+user);
+
+    $('.btnDelete').on('click', function(){
+      var b = $(this).data('id');
+      $('#frmdelete').attr('action', '{{asset('barrios')}}/'+b);
       //$('#deleteEmpleado').modal('show');
     });
     

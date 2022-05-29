@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 Use Alert;
 use App\User;
-use App\Models\Tipoantecedentemedico;
+use App\Models\Barrio;
 use Auth;
 use Carbon\Carbon;
 
-class TipoantecedentemedicoController extends Controller
+class BarrioController extends Controller
 {
     public function __construct()
     {
@@ -24,16 +24,16 @@ class TipoantecedentemedicoController extends Controller
     public function index(Request $request)
     {
 
-        $segment = 'tipoantecedentemedicos_c';
+        $segment = 'barrios_c';
 
         $buscador = $request->get('tipo'); // se agrega para que queden seleccionados los filtros al recargar la pagina
         $dato = $request->get('buscarpor'); // despues ver como refactorizar
 
-        $tipoantecedentemedicos =  Tipoantecedentemedico::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
+        $barrios =  Barrio::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
 
         
 
-        return view('tipoantecedentemedicos.index', compact('tipoantecedentemedicos', 'segment','buscador','dato'));
+        return view('barrios.index', compact('barrios', 'segment','buscador','dato'));
     }
 
     /**
@@ -43,9 +43,9 @@ class TipoantecedentemedicoController extends Controller
      */
     public function create()
     {
-         $segment = 'tipoantecedentemedicos_c';
+         $segment = 'barrios_c';
 
-        return view('tipoantecedentemedicos.create', compact('segment'));
+        return view('barrios.create', compact('segment'));
     }
 
     /**
@@ -62,13 +62,13 @@ class TipoantecedentemedicoController extends Controller
  
         ];
         $validatedData = $request->validate([
-            'descripcion' => 'required|max:256|unique:tipoantecedentesmedicos,descripcion'
+            'descripcion' => 'required|max:256|unique:barrios,descripcion'
         ], $messages);
 
-        $tipoantecedentemedico = Tipoantecedentemedico::create($request->all());
+        $barrio = Barrio::create($request->all());
 
         Alert::success('Registro Creado', 'Exitosamente');
-        return redirect()->route('tipoantecedentemedicos.edit', $tipoantecedentemedico->id);   
+        return redirect()->route('barrios.edit', $barrio->id);   
     }
 
     /**
@@ -77,13 +77,13 @@ class TipoantecedentemedicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Tipoantecedentemedico $tipoantecedentemedico)
+    public function show(Barrio $barrio)
     {
        // $tipocontacto = Tipocontacto::find($id);
-        $segment = 'tipoantecedentemedicos_c';
+        $segment = 'barrios_c';
         $show = 1;
         //Alert::toast('Toast Message', 'success');
-        return view('tipoantecedentemedicos.edit', compact('segment','tipoantecedentemedico', 'show'));
+        return view('barrios.edit', compact('segment','barrio', 'show'));
     }
 
     /**
@@ -92,15 +92,15 @@ class TipoantecedentemedicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tipoantecedentemedico $tipoantecedentemedico)
+    public function edit(Barrio $barrio)
     {
         
         //$tipocontacto = Tipocontacto::find($id);
         //dd($plan);
         $show = 0;
-        $segment = 'tipoantecedentemedicos_c';
+        $segment = 'barrios_c';
 
-        return view('tipoantecedentemedicos.edit', compact('segment', 'tipoantecedentemedico','show'));
+        return view('barrios.edit', compact('segment', 'barrio','show'));
     }
 
     /**
@@ -110,7 +110,7 @@ class TipoantecedentemedicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tipoantecedentemedico $tipoantecedentemedico)
+    public function update(Request $request, Barrio $barrio)
     {
         //$tipocontacto = Tipocontacto::find($id);
 
@@ -119,15 +119,15 @@ class TipoantecedentemedicoController extends Controller
             
         ];
         $validatedData = $request->validate([
-            'descripcion' => 'required|max:256|unique:tipoantecedentesmedicos,descripcion,' . $tipoantecedentemedico->id
+            'descripcion' => 'required|max:256|unique:barrios,descripcion,' . $barrio->id
         ], $messages);
 
 
   
-        $tipoantecedentemedico->update($request->all());
+        $barrio->update($request->all());
   
         Alert::success('Registro Actualizado', 'Exitosamente');
-        return redirect()->route('tipoantecedentemedicos.edit', $tipoantecedentemedico->id);   
+        return redirect()->route('barrios.edit', $barrio->id);   
     }
 
     /**
@@ -136,14 +136,14 @@ class TipoantecedentemedicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tipoantecedentemedico $tipoantecedentemedico)
+    public function destroy(Barrio $barrio)
     {
         
         /*if(Cliente::where('plan_id', '=', $id)->first()) {
             alert()->error('Este registro no se puede eliminar', 'Error');
             return back();
         } else {*/
-            $tipoantecedentemedico->delete();
+            $barrio->delete();
             //Alert::success('Eliminado correctamente')->persistent();
             //alert()->success('Registro Eliminado', 'Exitosamente')->toToast();
             Alert::success('Registro Eliminado', 'Exitosamente');

@@ -6,11 +6,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Gestionar T. Antecedentes Medicos</h1>
+            <h1 class="m-0 text-dark">Nuevo Antecedente Medico</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('tipoantecedentemedicos.index') }}">T. Antecedentes Medicos</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('antecedentemedicos.index') }}">Antecedentes Medicos</a></li>
               <li class="breadcrumb-item active">Nuevo</li>
             </ol>
           </div><!-- /.col -->
@@ -25,7 +25,7 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
           <div class="col-md-12">
-            <form method="POST" action="{{ route('tipoantecedentemedicos.store') }}">
+            <form method="POST" action="{{ route('antecedentemedicos.store') }}">
               @csrf
               <div class="row">
                 <div class="col-md-12">
@@ -38,7 +38,7 @@
                           </div> 
                           &nbsp; &nbsp; 
                           <div class="form-group">
-                            <a class="btn btn-outline-success" href="{{ route('tipoantecedentemedicos.index') }}"><i class="fas fa-list"></i> Listado</a>
+                            <a class="btn btn-outline-success" href="{{ route('antecedentemedicos.index') }}"><i class="fas fa-list"></i> Listado</a>
                           </div>
                           <!-- /.col -->
                         </div>
@@ -61,14 +61,27 @@
                       <div class="card-body">
                         <div class="form-group">
                           <label for="descripcion">Descripción:</label>
-                          <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" placeholder="Eje: Alergia" value="{{ old('descripcion') }}">
+                          <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" placeholder="Eje: Asma" value="{{ old('descripcion') }}">
                         </div>
                         @error('descripcion')
                           <div class="alert alert-info" role="alert">
                             {{ $message }}
                           </div>
                         @enderror
-
+                        <div class="form-group">
+                          <label for="tipoantecedentemedico_id">Tipo de Cliente:</label>
+                          <select  id="tipoantecedentemedico_id" name="tipoantecedentemedico_id" class="form-control  @error('tipoantecedentemedico_id') is-invalid @enderror">
+                            <option value="" >Seleccionar</option>
+                            @foreach($tipoantecedentemedicos as $tipo)
+                              <option value="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                        @error('tipoantecedentemedico_id')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
                         <div class="form-group">
                           <label for="estado">Activo:</label>
                           <select  id="activo" name="activo" class="form-control  @error('activo') is-invalid @enderror">

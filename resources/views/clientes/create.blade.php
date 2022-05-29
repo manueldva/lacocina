@@ -6,7 +6,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Gestionar Clientes</h1>
+            <h1 class="m-0 text-dark">Nuevo Cliente</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -81,7 +81,7 @@
 
                         <div class="form-group">
                           <label for="fechanacimiento">Fecha de Nacimiento:</label>
-                          <input type="date" class="form-control @error('fechanacimiento') is-invalid @enderror" id="fechanacimiento" name="fechanacimiento" value="{{ old('fechanacimiento') }}">
+                          <input type="date" class="form-control @error('fechanacimiento') is-invalid @enderror" id="fechanacimiento" name="fechanacimiento" value="{{ old('fechanacimiento') ? old('fechanacimiento') : date('Y-m-d')  }}">
                         </div>
                         @error('fechanacimiento')
                           <div class="alert alert-info" role="alert">
@@ -90,15 +90,15 @@
                         @enderror
 
                         <div class="form-group">
-                          <label for="genero">Tipo de Cliente:</label>
-                          <select  id="genero" name="genero" class="form-control  @error('genero') is-invalid @enderror">
-                            
+                          <label for="tipocliente_id">Tipo de Cliente:</label>
+                          <select  id="tipocliente_id" name="tipocliente_id" class="form-control  @error('tipocliente_id') is-invalid @enderror">
+                            <option value="" >Seleccionar</option>
                             @foreach($tipoclientes as $tipo)
                               <option value="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
                             @endforeach
                         </select>
                         </div>
-                        @error('genero')
+                        @error('tipocliente_id')
                           <div class="alert alert-info" role="alert">
                             {{ $message }}
                           </div>

@@ -235,7 +235,26 @@
                         active
                         @endif">
                         <i class="far fa-circle nav-icon"></i>
-                        <p>Antecedente M.</p>
+                        <p> Antecedente M.</p>
+                      </a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a href="{{ route('calles.index') }}" class="nav-link  
+                        @if($segment=='calles_c')
+                        active
+                        @endif">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p> Calles</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="{{ route('barrios.index') }}" class="nav-link  
+                        @if($segment=='barrios_c')
+                        active
+                        @endif">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p> Barrios</p>
                       </a>
                     </li>
                   </ul>

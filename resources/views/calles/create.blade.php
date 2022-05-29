@@ -6,11 +6,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Nuevo T. Contacto</h1>
+            <h1 class="m-0 text-dark">Nuevo Calle</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('tipocontactos.index') }}">T. Contactos</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('calles.index') }}">Calles</a></li>
               <li class="breadcrumb-item active">Nuevo</li>
             </ol>
           </div><!-- /.col -->
@@ -25,7 +25,7 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
           <div class="col-md-12">
-            <form method="POST" action="{{ route('tipocontactos.store') }}">
+            <form method="POST" action="{{ route('calles.store') }}">
               @csrf
               <div class="row">
                 <div class="col-md-12">
@@ -38,7 +38,7 @@
                           </div> 
                           &nbsp; &nbsp; 
                           <div class="form-group">
-                            <a class="btn btn-outline-success" href="{{ route('tipocontactos.index') }}"><i class="fas fa-list"></i> Listado</a>
+                            <a class="btn btn-outline-success" href="{{ route('calles.index') }}"><i class="fas fa-list"></i> Listado</a>
                           </div>
                           <!-- /.col -->
                         </div>
@@ -61,7 +61,7 @@
                       <div class="card-body">
                         <div class="form-group">
                           <label for="descripcion">Descripción:</label>
-                          <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" placeholder="Eje: Celular" value="{{ old('descripcion') }}">
+                          <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" placeholder="Eje: Salta" value="{{ old('descripcion') }}">
                         </div>
                         @error('descripcion')
                           <div class="alert alert-info" role="alert">

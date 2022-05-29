@@ -6,7 +6,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Gestionar T. Antecedentes Medicos</h1>
+            <h1 class="m-0 text-dark">@if($show == 1) Ver @else Editar @endif T. Antecedente Medico</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -38,6 +38,12 @@
                             <div class="form-group">
                               <button name="guardar" id="guardar" type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar</button>
                             </div> 
+                            @can('complementos.create')  
+                            &nbsp; &nbsp; 
+                            <div class="form-group">
+                              <a class="btn btn-outline-info" href="{{ route('tipoantecedentemedicos.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
+                            </div>
+                            @endcan
                           @endif
                           &nbsp; &nbsp; 
                           <div class="form-group">

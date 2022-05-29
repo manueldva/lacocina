@@ -42,9 +42,10 @@ class AntecedentemedicoController extends Controller
      */
     public function create()
     {
-         $segment = 'tipoantecedentemedico_c';
+         $segment = 'antecedentemedicos_c';
 
-        return view('tipoantecedentemedicos.create', compact('segment'));
+        $tipoantecedentemedicos = Tipoantecedentemedico::all();
+        return view('antecedentemedicos.create', compact('segment','tipoantecedentemedicos'));
     }
 
     /**
@@ -58,16 +59,18 @@ class AntecedentemedicoController extends Controller
 
         $messages = [
             'descripcion.required' => 'El campo descripcion es obligatorio.',
+            'tipoantecedentemedico_id.required' => 'El campo tipo de antecedente es obligatorio.'
  
         ];
         $validatedData = $request->validate([
-            'descripcion' => 'required|max:256|unique:tipoantecedentesmedicos,descripcion'
+            'descripcion' => 'required|max:256|unique:tipoantecedentesmedicos,descripcion',
+            'tipoantecedentemedico_id' => 'required'
         ], $messages);
 
-        $tipoantecedentemedico = Tipoantecedentemedico::create($request->all());
+        $antecedentemedico = Antecedentemedico::create($request->all());
 
         Alert::success('Registro Creado', 'Exitosamente');
-        return redirect()->route('tipoantecedentemedicos.edit', $tipoantecedentemedico->id);   
+        return redirect()->route('antecedentemedicos.edit', $antecedentemedico->id);   
     }
 
     /**
@@ -76,13 +79,15 @@ class AntecedentemedicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Tipoantecedentemedico $tipoantecedentemedico)
+    public function show(Antecedentemedico $antecedentemedico)
     {
        // $tipocontacto = Tipocontacto::find($id);
-        $segment = 'tipoantecedentemedico_c';
+        $segment = 'antecedentemedicos_c';
         $show = 1;
+
+        $tipoantecedentemedicos = Tipoantecedentemedico::all();
         //Alert::toast('Toast Message', 'success');
-        return view('tipoantecedentemedicos.edit', compact('segment','tipoantecedentemedico', 'show'));
+        return view('antecedentemedicos.edit', compact('segment','antecedentemedico','tipoantecedentemedicos', 'show'));
     }
 
     /**
@@ -91,15 +96,17 @@ class AntecedentemedicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tipoantecedentemedico $tipoantecedentemedico)
+    public function edit(Antecedentemedico $antecedentemedico)
     {
         
         //$tipocontacto = Tipocontacto::find($id);
         //dd($plan);
         $show = 0;
-        $segment = 'tipoantecedentemedico_c';
+        $segment = 'antecedentemedicos_c';
 
-        return view('tipoantecedentemedicos.edit', compact('segment', 'tipoantecedentemedico','show'));
+        $tipoantecedentemedicos = Tipoantecedentemedico::all();
+
+        return view('antecedentemedicos.edit', compact('segment', 'antecedentemedico', 'tipoantecedentemedicos','show'));
     }
 
     /**
@@ -109,24 +116,26 @@ class AntecedentemedicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tipoantecedentemedico $tipoantecedentemedico)
+    public function update(Request $request, Antecedentemedico $antecedentemedico)
     {
         //$tipocontacto = Tipocontacto::find($id);
 
         $messages = [
-            'descripcion.required' => 'El campo descripcion es obligatorio.'
+            'descripcion.required' => 'El campo descripcion es obligatorio.',
+            'tipoantecedentemedico_id.required' => 'El campo tipo de antecedente es obligatorio.'
             
         ];
         $validatedData = $request->validate([
-            'descripcion' => 'required|max:256|unique:tipoantecedentesmedicos,descripcion,' . $tipoantecedentemedico->id
+            'descripcion' => 'required|max:256|unique:antecedentesmedicos,descripcion,' . $antecedentemedico->id,
+            'tipoantecedentemedico_id' => 'required'
         ], $messages);
 
 
   
-        $tipoantecedentemedico->update($request->all());
+        $antecedentemedico->update($request->all());
   
         Alert::success('Registro Actualizado', 'Exitosamente');
-        return redirect()->route('tipoantecedentemedicos.edit', $tipoantecedentemedico->id);   
+        return redirect()->route('antecedentemedicos.edit', $antecedentemedico->id);   
     }
 
     /**
@@ -135,14 +144,14 @@ class AntecedentemedicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tipoantecedentemedico $tipoantecedentemedico)
+    public function destroy(Antecedentemedico $antecedentemedico)
     {
         
         /*if(Cliente::where('plan_id', '=', $id)->first()) {
             alert()->error('Este registro no se puede eliminar', 'Error');
             return back();
         } else {*/
-            $tipoantecedentemedico->delete();
+            $antecedentemedico->delete();
             //Alert::success('Eliminado correctamente')->persistent();
             //alert()->success('Registro Eliminado', 'Exitosamente')->toToast();
             Alert::success('Registro Eliminado', 'Exitosamente');

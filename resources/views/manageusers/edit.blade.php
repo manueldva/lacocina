@@ -6,12 +6,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Gestionar Usuarios</h1>
+            <h1 class="m-0 text-dark">@if($show == 1) Ver @else Editar @endif Usuario</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('manageusers.index') }}">Usuarios</a></li>
-              <li class="breadcrumb-item active">Nuevo</li>
+              <li class="breadcrumb-item active">Editar</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -34,9 +34,17 @@
                     <div class="card card-default">
                       <div class="card-header">
                         <div class="row justify-content-center align-items-center">
+                        @if($show == 0)
                           <div class="form-group">
                             <button name="guardar" id="guardar" type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar</button>
                           </div> 
+                          @can('manageusers.create')  
+                            &nbsp; &nbsp; 
+                            <div class="form-group">
+                              <a class="btn btn-outline-info" href="{{ route('manageusers.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
+                            </div>
+                            @endcan
+                        @endif
                           &nbsp; &nbsp; 
                           <div class="form-group">
                             <a class="btn btn-outline-success" href="{{ route('manageusers.index') }}"><i class="fas fa-list"></i> Listado</a>

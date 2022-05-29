@@ -6,7 +6,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Gestionar Antecedentes Medicos</h1>
+            <h1 class="m-0 text-dark">Listado Antecedentes Medicos</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -27,7 +27,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Listado de Antecedentes Medicos</h3>
+                
 
                 <form class="form-inline float-right">
                   <select name="tipo" class="form-control mr-sm-2" id="tipo">
@@ -38,7 +38,7 @@
                      <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
                       &nbsp;&nbsp;
                       @can('complementos.create')  
-                      <a class="btn btn-outline-primary" href="{{ route('antecedentemedicos.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
+                      <a class="btn btn-outline-info" href="{{ route('antecedentemedicos.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
                       @endcan
                 </form>
                 <div class="card-tools">

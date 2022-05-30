@@ -46,4 +46,6 @@ Route::resource('tipoantecedentemedicos', 'TipoantecedentemedicoController');
 Route::resource('antecedentemedicos', 'AntecedentemedicoController');
 Route::resource('calles', 'CalleController');
 Route::resource('barrios', 'BarrioController');
+Route::resource('dias', 'DiaController');
+Route::resource('tipoclientes', 'TipoclienteController');
 

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('viandaventa_id');
             $table->foreign('viandaventa_id')->references('id')->on('viandaventas');
+            $table->unsignedBigInteger('vianda_id');
+            $table->foreign('vianda_id')->references('id')->on('viandas');
             $table->decimal('precio', $precision = 10, $scale = 2);
             $table->integer('cantidad');
             $table->integer('cantidadenvios')->default(0);

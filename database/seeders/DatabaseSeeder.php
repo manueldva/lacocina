@@ -53,5 +53,43 @@ class DatabaseSeeder extends Seeder
             
         ])->assignRole('Administrativo');
 
+
+
+        DB::table('dias')->insert([
+            'descripcion' => 'Lunes',
+            'activo' => 1
+        ]);
+
+        DB::table('dias')->insert([
+            'descripcion' => 'Martes',
+            'activo' => 1
+        ]);
+
+        DB::table('dias')->insert([
+            'descripcion' => 'Miercoles',
+            'activo' => 1
+        ]);
+
+
+        DB::table('dias')->insert([
+            'descripcion' => 'Jueves',
+            'activo' => 1
+        ]);
+
+
+        DB::table('dias')->insert([
+            'descripcion' => 'Viernes',
+            'activo' => 1
+        ]);
+
+        DB::table('dias')->insert([
+            'descripcion' => 'Sabado',
+            'activo' => 0
+        ]);
+
+        DB::table('dias')->insert([
+            'descripcion' => 'Domingo',
+            'activo' => 0
+        ]);
     }
 }

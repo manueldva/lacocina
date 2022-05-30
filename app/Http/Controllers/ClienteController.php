@@ -62,15 +62,15 @@ class ClienteController extends Controller
 
 
         $messages = [
-            'fechaalta.required' =>'El campo Fecha de alta es obligatorio.'
+            'fechanacimiento.required' =>'El campo Fecha de alta es obligatorio.'
             
         ];
         $validatedData = $request->validate([
             //'descripcion' => 'required|max:200|unique:establecimientos,descripcion',
             'apellido' => 'required|max:100',
             'nombre' => 'required|max:100',
-            'numerodocumento' => 'max:20',
-            'fechanacimiento' => 'required'
+            //'numerodocumento' => 'max:20',
+            //'fechanacimiento' => 'required'
             
             //'body' => 'required',
         ], $messages);
@@ -83,17 +83,17 @@ class ClienteController extends Controller
         }
 
     
-        $carbon = new Carbon(); 
+        /*$carbon = new Carbon(); 
         if($request->input('fechaingreso') > $carbon ){
             alert()->error('Fecha de alta incorrecta', 'no pude ser mayor a la fecha actual');
             return redirect('clientes/create')->withInput();
-        }
+        }*/
 
         //dd($request);
 
-        $cliente = Cliente::create($request->all());
-        $max = Cliente::max('codigo') + 1;
-        $cliente->fill(['codigo' => $max ])->save();
+        $cliente = Persona::create($request->all());
+        //$max = Cliente::max('codigo') + 1;
+        //$cliente->fill(['codigo' => $max ])->save();
 
         /* para crear varios registros
              $carbon = new Carbon(); 

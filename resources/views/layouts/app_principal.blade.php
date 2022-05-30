@@ -206,7 +206,7 @@
                   <a href="#" class="nav-link">
                     <i class="nav-icon fas fa-users"></i>
                     <p>
-                      Personas
+                      Clientes
                       <i class="right fas fa-angle-left"></i>
                     </p>
                   </a>
@@ -255,6 +255,24 @@
                         @endif">
                         <i class="far fa-circle nav-icon"></i>
                         <p> Barrios</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="{{ route('tipoclientes.index') }}" class="nav-link  
+                        @if($segment=='tipoclientes_c')
+                        active
+                        @endif">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p> Tipo Clientes</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="{{ route('dias.index') }}" class="nav-link  
+                        @if($segment=='dias_c')
+                        active
+                        @endif">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p> Dias</p>
                       </a>
                     </li>
                   </ul>

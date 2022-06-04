@@ -71,9 +71,9 @@
 
                         <div class="form-group">
                           <label for="estado">Activo:</label>
-                          <select  id="activo" name="activo" class="form-control  @error('activo') is-invalid @enderror">
-                            <option value="1" {{ old('activo') == '1' ? 'selected' : '' }}>Activo</option>
-                            <option value="0" {{ old('activo') == '0' ? 'selected' : '' }}>Inactivo</option>
+                          <select disabled  id="activo" name="activo" class="form-control  @error('activo') is-invalid @enderror">
+                            <option value="1" selected>Activo</option>
+                            <option value="0">Inactivo</option>
                         </select>
                         </div>
                         @error('activo')

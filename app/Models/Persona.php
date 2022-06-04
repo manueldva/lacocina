@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Persona extends Model
 {
-    use HasFactory;
+    //use HasFactory;
 
     protected $table = 'personas';
 
@@ -16,8 +16,18 @@ class Persona extends Model
 	];
 
 
-    public function cliente()
+    /*public function cliente()
     {
         return $this->hasOne(Cliente::class);
+    }*/
+
+    public function cliente(){
+    	return $this->hasOne(Cliente::class);
+    }
+
+    public function scopeBuscarpor($query, $tipo, $buscar) {
+    	if ( ($tipo) && ($buscar) ) {
+    		return $query->where($tipo,'like',"%$buscar%");
+    	}
     }
 }

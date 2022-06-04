@@ -36,10 +36,12 @@
                     <option value='apellido'>Apellido</option>
                     <option value='id'>Codigo</option>
                   </select>
+                  &nbsp;&nbsp;
                   <input name="buscarpor" id="buscarpor" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
-                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
-                        &nbsp;&nbsp;
-                      <a class="btn btn-outline-info" href="{{ route('clientes.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
+                  &nbsp;&nbsp;
+                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
+                  &nbsp;&nbsp;
+                  <a class="btn btn-outline-info" href="{{ route('clientes.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
                 </form>
                 <div class="card-tools">
                   <div class="input-group input-group-sm" style="width: 200px;">
@@ -75,22 +77,22 @@
                         <tr>
                           <td>
                             <center>
-                              {{ $cliente->codigo }}
+                              {{ $cliente->id }}
                             </center>
                           </td>
                           <td>
                             <center>
-                              {{ $cliente->apellido }}
+                              {{ $cliente->persona->nombre }}
                             </center>
                           </td>
                           <td>
                             <center>
-                              {{ $cliente->nombre }}
+                              {{ $cliente->persona->nombre }}
                             </center>
                           </td>
                           <td>
                             <center>
-                              @if($cliente->estado == 1)
+                              @if($cliente->activo == 1)
                                 <img src="{{url('image/on.ico')}}"  width="30" height="30" data-toggle="tooltip" data-placement="top" title="Activo">
                                
                               @else

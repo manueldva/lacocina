@@ -61,7 +61,7 @@
                       <div class="card-body">
                         <div class="form-group">
                           <label for="descripcion">Descripción:</label>
-                          <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" placeholder="Eje: Celular" value="{{ old('descripcion') }}">
+                          <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" placeholder="Eje: Fijo" value="{{ old('descripcion') }}">
                         </div>
                         @error('descripcion')
                           <div class="alert alert-info" role="alert">
@@ -71,9 +71,9 @@
 
                         <div class="form-group">
                           <label for="estado">Activo:</label>
-                          <select  id="activo" name="activo" class="form-control  @error('activo') is-invalid @enderror">
-                            <option value="1" {{ old('activo') == '1' ? 'selected' : '' }}>Activo</option>
-                            <option value="0" {{ old('activo') == '0' ? 'selected' : '' }}>Inactivo</option>
+                          <select disabled id="activo" name="activo" class="form-control  @error('activo') is-invalid @enderror">
+                            <option value="1" selected>Activo</option>
+                            <option value="0">Inactivo</option>
                         </select>
                         </div>
                         @error('activo')
@@ -81,8 +81,6 @@
                             {{ $message }}
                           </div>
                         @enderror
-
-
                       </div>
                       <!-- /.card-body -->
                   </div>

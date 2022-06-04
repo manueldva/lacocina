@@ -9,6 +9,8 @@ use App\User;
 use App\Models\Persona;
 use App\Models\Cliente;
 use App\Models\Tipocliente;
+use App\Models\Tipocontacto;
+use App\Models\Dia;
 use Auth;
 use Carbon\Carbon;
 
@@ -31,8 +33,10 @@ class ClienteController extends Controller
 
         $segment = 'clientes';
         //$clientes = Cliente::paginate(10);
-
+        
         $clientes =  Cliente::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
+        
+    
 
         return view('clientes.index',compact('clientes', 'segment'));
     }
@@ -47,8 +51,11 @@ class ClienteController extends Controller
         $fecha = date('Y-m-d'); 
         $segment = 'clientes';
 
-        $tipoclientes = Tipocliente::all();
-        return view('clientes.create', compact('segment','tipoclientes'));
+        $tipoclientes = Tipocliente::where('activo',1)->get();
+        $tipocontactos = Tipocontacto::where('activo',1)->get();
+        $dias = Dia::where('activo',1)->get();
+
+        return view('clientes.create', compact('segment','tipoclientes','tipocontactos','dias'));
     }
 
     /**
@@ -62,49 +69,31 @@ class ClienteController extends Controller
 
 
         $messages = [
-            'fechanacimiento.required' =>'El campo Fecha de alta es obligatorio.'
+            'fechanacimiento.required' =>'El campo Fecha de nacimiento es obligatorio.'
             
         ];
         $validatedData = $request->validate([
             //'descripcion' => 'required|max:200|unique:establecimientos,descripcion',
             'apellido' => 'required|max:100',
             'nombre' => 'required|max:100',
+            'tipocliente_id' => 'required',
             //'numerodocumento' => 'max:20',
             //'fechanacimiento' => 'required'
             
             //'body' => 'required',
         ], $messages);
-
-
         
-        if ($request->fechanacimiento >= now()->toDateString()) {
+        /*if ($request->fechanacimiento >= now()->toDateString()) {
             alert()->error('Error', 'La fecha de nacimiento no puede ser mayor a la fecha actual');
             return back()->withInput();
-        }
-
-    
-        /*$carbon = new Carbon(); 
-        if($request->input('fechaingreso') > $carbon ){
-            alert()->error('Fecha de alta incorrecta', 'no pude ser mayor a la fecha actual');
-            return redirect('clientes/create')->withInput();
         }*/
 
-        //dd($request);
-
-        $cliente = Persona::create($request->all());
-        //$max = Cliente::max('codigo') + 1;
-        //$cliente->fill(['codigo' => $max ])->save();
-
-        /* para crear varios registros
-             $carbon = new Carbon(); 
-                for ($i=0; 20 > $i; $i++) { 
-                            
-                    $miembro = Miembro::create($request->all());
-                    $max = Miembro::max('codigo') + 1;
-                    $miembro->fill(['codigo' => $max ])->save();
-                }
+        $persona = Persona::create($request->all());
         
-        */
+        $cliente = new Cliente;
+            $cliente->tipocliente_id = $request->input('tipocliente_id');
+            $cliente->persona_id = $persona->id;
+        $cliente->save();
 
         alert()->success('Cliente Creado', 'Exitosamente');
         return redirect()->route('clientes.edit', $cliente->id);   

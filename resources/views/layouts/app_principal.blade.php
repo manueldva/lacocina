@@ -34,6 +34,9 @@
   <!-- Google Font: Source Sans Pro -->
   <!--<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">-->
   <link href="{{ asset('css/googleapis.css') }}" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
+
   @yield('css')
 </head>
 <body class="hold-transition sidebar-mini">
@@ -369,6 +372,31 @@
 <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('dist/js/demo.js') }}"></script>
+
+<script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
+
+<script>
+
+  toastr.options = {
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": true,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": true,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  }
+</script>
+
+
 @yield('js')
 
 </body>

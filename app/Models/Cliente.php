@@ -12,13 +12,18 @@ class Cliente extends Model
     protected $table = 'clientes';
 
 	protected $fillable = [
-    	'persona_id', 'ocasional', 'envioadocimilio' ,'activo'
+    	'persona_id','tipocliente_id', 'envioadocimilio' ,'activo'
 	];
 
-	public function persona()
+	/*public function persona()
     {
         return $this->hasOne(Persona::class);
-    }
+    }*/
+
+	public function persona(){
+		
+		return $this->belongsTo(Persona::class);
+	}
 
 
     public function scopeBuscarpor($query, $tipo, $buscar) {

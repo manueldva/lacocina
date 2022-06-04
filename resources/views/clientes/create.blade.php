@@ -28,6 +28,7 @@
             <form method="POST" action="{{ route('clientes.store') }}">
               @csrf
               <div class="row">
+                <input type="hidden" name="listado_contactos" id="id_lista_contactos">
                 <div class="col-md-12">
                   <!-- general form elements -->
                     <div class="card card-default">
@@ -47,7 +48,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <!-- general form elements -->
                   <div class="card card-default">
                     <div class="card-header">
@@ -104,7 +105,13 @@
                           </div>
                         @enderror
 
-
+                        <div class="form-group">
+                          <label for="estado">Activo:</label>
+                          <select disabled id="activo" name="activo" class="form-control  @error('activo') is-invalid @enderror">
+                              <option value="1" selected>Activo</option>
+                              <option value="0">Inactivo</option>
+                          </select>
+                        </div>
                         
                       </div>
                       <!-- /.card-body -->
@@ -112,59 +119,99 @@
                   <!-- /.card -->
 
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <!-- general form elements -->
                   <div class="card card-default">
                     <div class="card-header">
                       <center>
-                        <h3 class="card-title">Datos de Contacto y Dirección</h3>
+                        <h3 class="card-title">Dias</h3>
                       </center>
                       
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                      <div class="card-body">
-                        <div class="form-group">
-                          <label for="celular">Telefono/Cel:</label>
-                          <input type="number" class="form-control @error('celular') is-invalid @enderror" id="celular" name="celular" placeholder="Eje: 3704003322" value="{{ old('celular') }}">
-                        </div>
-                        @error('celular')
-                          <div class="alert alert-info" role="alert">
-                            {{ $message }}
+                    <div class="card-body">
+                      <div class="form-group">
+                          <div class="card-header">
+                            <!--<div class="row justify-content-center align-items-center">-->
+                            <div class="row justify-content-center align-items-center">
+                              @foreach($dias as $dia)
+                                  <div class="form-group" >  
+                                    <label>
+                                        <input  type="checkbox" name="dias[]" value="{{ $dia['id'] }}" class="form-control" />
+                                        {{ $dia['descripcion'] }}
+                                    </label>
+                                  </div>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                              @endforeach
+                              <!-- /.col -->
+                            </div>
                           </div>
-                        @enderror
-
-                        <div class="form-group">
-                          <label for="email">Email:</label>
-                          <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Eje: juanperez@gmail.com" value="{{ old('email') }}">
-                        </div>
-                        @error('email')
-                          <div class="alert alert-info" role="alert">
-                            {{ $message }}
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                  <!-- /.card -->
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <!-- general form elements -->
+                  <div class="card card-default">
+                    <div class="card-header">
+                      <center>
+                        <h3 class="card-title">Datos de Contacto</h3>
+                      </center>
+                      
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <div class="card-body">
+                      <div class="form-group">
+                        <div class="table-responsive">
+                          <table class="table table-striped table-hover" data-form="Form">
+                            <thead>
+                              <tr>
+                                <td> 
+                                    <label for="tipocontacto_id">Tipo Contacto:</label>
+                                    <select  id="tipocontacto_id" name="tipocontacto_id" class="form-control  @error('tipocontacto_id') is-invalid @enderror">
+                                        <option value="" >Seleccionar</option>
+                                        @foreach($tipocontactos as $tipo)
+                                          <option value="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td> 
+                                  <label for="labelvalor">Valor:</label>
+                                  <input type="text" class="form-control @error('valor') is-invalid @enderror" id="valor" name="valor" placeholder="Eje: 3704334054" value="{{ old('valor') }}">
+                                </td>
+                                <td> 
+                                  <label for="labelvalor">&nbsp;&nbsp;</label>
+                                  <div class="form-group">
+                                    <a class="btn btn-outline-info" id="agregarcontacto" name="agregarcontacto"><i class="fas fa-plus"></i> </a>
+                                  </div>
+                                  
+                                </td>
+                              </tr>	
+                              
+                            </thead>
+                          </table>
+                          <div class="form-group">
+                            <div class="table-responsive">
+                              <table   id="table_contactos" class="table table-striped table-hover" data-form="Form">
+                                <thead>
+                                  <tr>
+                                  <!--<th width="10px"> ID</th>-->
+                                    <th style="display:none;"> Codigo contacto</th>
+                                    <th> Tipo Contacto</th>
+                                    <th> Valor</th>
+                                    <th></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
-                        @enderror
-
-                        <div class="form-group">
-                          <label for="direccion">Dirección:</label>
-                          <input type="text" class="form-control @error('direccion') is-invalid @enderror" id="direccion" name="direccion" placeholder="Eje: Moreno 143" value="{{ old('direccion') }}">
                         </div>
-                        @error('direccion')
-                          <div class="alert alert-info" role="alert">
-                            {{ $message }}
-                          </div>
-                        @enderror
-                        <div class="form-group">
-                          <label for="estado">Estado:</label>
-                          <select  id="estado" name="estado" class="form-control  @error('estado') is-invalid @enderror">
-                            <option value="1" {{ old('estado') == '1' ? 'selected' : '' }}>Activo</option>
-                            <option value="0" {{ old('estado') == '0' ? 'selected' : '' }}>Inactivo</option>
-                        </select>
-                        </div>
-                        @error('estado')
-                          <div class="alert alert-info" role="alert">
-                            {{ $message }}
-                          </div>
-                        @enderror
                       </div>
                       <!-- /.card-body -->
                     </div>
@@ -172,6 +219,7 @@
                   </div>
                 </div>
               </div>
+
             </form>
             </div>
           </div>
@@ -187,6 +235,41 @@
 <script type="text/javascript">
     $(".alert").delay(4000).slideUp(200, function() {
         $(this).alert('close');
+    });
+
+
+    $("#agregarcontacto").click(function() {
+
+      
+      if($('#tipocontacto_id').val() == ''  || $("#valor").val() == '') {
+
+        toastr.error('No se puede agregar este contacto. Faltan datos');
+        return false;
+      }
+    
+      //variables para guardar en la grilla
+      var valor = $('#valor').val();
+      //var descripcion = $("#descripcionarticulo").val();
+      var tipocontacto =$('select[name="tipocontacto_id"] option:selected').text();
+      var tipocontacto_id = $('#tipocontacto_id').val();
+      //var cantidad = parseInt($('#cantidadarticulo').val());
+
+      //cargo la grilla
+      $('#table_contactos tbody').prepend(
+        '<tr>' + 
+        '<td style="display:none;">' + tipocontacto_id + '</td>' +
+        '<td>' + tipocontacto + '</td>' +
+        '<td>' + valor + '</td>' +
+        "<td><a class='btn btn-sm btn-flat btn-outline-danger' onclick ='deletecontacto_row($(this))'><i class='fas fa-trash-alt'></i> </a></td>" +
+        '</td>' +
+        '</tr>');
+
+        $("#tipocontacto_id").val('');
+        $("#valor").val('');
+
+      toastr.success('Cantacto agregado a la lista');
+
+
     });
 </script>
 @endsection

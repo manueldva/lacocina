@@ -48,7 +48,7 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        $fecha = date('Y-m-d'); 
+        //$fecha = date('Y-m-d'); 
         $segment = 'clientes';
 
         $tipoclientes = Tipocliente::where('activo',1)->get();
@@ -126,7 +126,11 @@ class ClienteController extends Controller
         $show = 0;
         $segment = 'clientes';
 
-        return view('clientes.edit', compact('segment','cliente','show'));
+        $tipoclientes = Tipocliente::where('activo',1)->get();
+        $tipocontactos = Tipocontacto::where('activo',1)->get();
+        $dias = Dia::where('activo',1)->get();
+
+        return view('clientes.edit', compact('segment','tipoclientes','tipocontactos','dias', 'show'));
     }
 
     /**

@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('personas', function (Blueprint $table) {
             $table->id();
+            $table->string('documento',20)->nullable();
             $table->string('apellido',100);
             $table->string('nombre',100);
             $table->date('fechanacimiento')->nullable();
+            $table->string('domicilio',200)->nullable();
             $table->boolean('activo')->default(true);
             $table->timestamps();
         });

@@ -17,8 +17,8 @@ class CreateClientesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('persona_id');
             $table->foreign('persona_id')->references('id')->on('personas');
-            $table->unsignedBigInteger('tipocliente_id');
-            $table->foreign('tipocliente_id')->references('id')->on('tipoclientes');
+           /*$table->unsignedBigInteger('tipocliente_id');
+            $table->foreign('tipocliente_id')->references('id')->on('tipoclientes');*/
             $table->boolean('enviodomicilio')->default(false);
             $table->boolean('activo')->default(true);
             $table->timestamps();

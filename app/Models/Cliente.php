@@ -12,7 +12,7 @@ class Cliente extends Model
     protected $table = 'clientes';
 
 	protected $fillable = [
-    	'persona_id','tipocliente_id', 'envioadocimilio' ,'activo'
+    	'persona_id', 'envioadocimilio' ,'activo'
 	];
 
 	/*public function persona()

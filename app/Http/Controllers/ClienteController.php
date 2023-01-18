@@ -8,9 +8,9 @@ Use Alert;
 use App\User;
 use App\Models\Persona;
 use App\Models\Cliente;
-use App\Models\Tipocliente;
+//use App\Models\Tipocliente;
 use App\Models\Tipocontacto;
-use App\Models\Dia;
+//use App\Models\Dia;
 use Auth;
 use Carbon\Carbon;
 
@@ -51,11 +51,11 @@ class ClienteController extends Controller
         //$fecha = date('Y-m-d'); 
         $segment = 'clientes';
 
-        $tipoclientes = Tipocliente::where('activo',1)->get();
+        //$tipoclientes = Tipocliente::where('activo',1)->get();
         $tipocontactos = Tipocontacto::where('activo',1)->get();
-        $dias = Dia::where('activo',1)->get();
+        //$dias = Dia::where('activo',1)->get();
 
-        return view('clientes.create', compact('segment','tipoclientes','tipocontactos','dias'));
+        return view('clientes.create', compact('segment','tipocontactos'));
     }
 
     /**
@@ -76,7 +76,9 @@ class ClienteController extends Controller
             //'descripcion' => 'required|max:200|unique:establecimientos,descripcion',
             'apellido' => 'required|max:100',
             'nombre' => 'required|max:100',
-            'tipocliente_id' => 'required',
+            'documento' => 'max:20',
+            'domicilio' => 'max:200'
+            //'tipocliente_id' => 'required',
             //'numerodocumento' => 'max:20',
             //'fechanacimiento' => 'required'
             
@@ -88,10 +90,21 @@ class ClienteController extends Controller
             return back()->withInput();
         }*/
 
+        $existe = Persona::where('apellido',$request->apellido)->where('nombre', $request->nombre)->count();
+
+        //dd($existe);
+
+        if($existe > 0) 
+        {
+            alert()->error('Error', 'Ya existe un cliente con ese apellido y nombre');
+            return back()->withInput();
+        }
+
+
         $persona = Persona::create($request->all());
         
         $cliente = new Cliente;
-            $cliente->tipocliente_id = $request->input('tipocliente_id');
+            //$cliente->tipocliente_id = $request->input('tipocliente_id');
             $cliente->persona_id = $persona->id;
         $cliente->save();
 
@@ -126,11 +139,11 @@ class ClienteController extends Controller
         $show = 0;
         $segment = 'clientes';
 
-        $tipoclientes = Tipocliente::where('activo',1)->get();
+        //$tipoclientes = Tipocliente::where('activo',1)->get();
         $tipocontactos = Tipocontacto::where('activo',1)->get();
-        $dias = Dia::where('activo',1)->get();
+        //$dias = Dia::where('activo',1)->get();
 
-        return view('clientes.edit', compact('segment','tipoclientes','tipocontactos','dias', 'show'));
+        return view('clientes.edit', compact('cliente', 'segment','tipocontactos', 'show'));
     }
 
     /**
@@ -142,17 +155,21 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
+        
+        //dd($request->all());
         $messages = [
-            'fechaalta.required' =>'El campo Fecha de ingreso es obligatorio.'
+            'fechanacimiento.required' =>'El campo Fecha de nacimiento es obligatorio.'
             
         ];
         $validatedData = $request->validate([
             //'descripcion' => 'required|max:200|unique:establecimientos,descripcion',
             'apellido' => 'required|max:100',
             'nombre' => 'required|max:100',
-            'direccion' => 'max:200',
-            'fechaalta' => 'required',
-            'celular' => 'max:20'
+            'documento' => 'max:20',
+            'domicilio' => 'max:200'
+            //'tipocliente_id' => 'required',
+            //'numerodocumento' => 'max:20',
+            //'fechanacimiento' => 'required'
             
             //'body' => 'required',
         ], $messages);
@@ -165,6 +182,8 @@ class ClienteController extends Controller
         }
   
         $cliente->update($request->all());
+        $persona = Persona::find($cliente->persona_id);
+        $persona->update($request->all());
   
         alert()->success('Registro Actualizado', 'Exitosamente');
         return redirect()->route('clientes.edit', $cliente->id);   
@@ -179,6 +198,7 @@ class ClienteController extends Controller
     public function destroy(Cliente $cliente)
     {
         $cliente->delete();
+        Persona::where('id', $cliente->persona_id)->delete();
         alert()->success('Registro Eliminado', 'Exitosamente');
         return back();
     }

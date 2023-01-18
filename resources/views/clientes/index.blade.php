@@ -82,7 +82,7 @@
                           </td>
                           <td>
                             <center>
-                              {{ $cliente->persona->nombre }}
+                              {{ $cliente->persona->apellido }}
                             </center>
                           </td>
                           <td>
@@ -108,9 +108,11 @@
                               <form action="{{ route('clientes.destroy',$cliente->id) }}" method="POST">
                                   <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('clientes.show',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>
                                   <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('clientes.edit',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
-                                  @csrf
-                                  @method('DELETE')
-                                  <button type="submit" class="btn btn-sm btn-flat btn-outline-danger" onclick="return confirm('¿Esta Seguro de eliminar este registro?')"><i class="fas fa-trash-alt" data-toggle="tooltip" data-placement="top" title="Eliminar Cliente"></i></button>
+                                  @can('complementos.destroy')  
+                                    <a href="#" data-id="{{$cliente->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
+                                      <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                  @endcan
                               </form>
                             </center>
                           </td>
@@ -135,6 +137,34 @@
         </div>
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
+      <!-- Modal -->
+      <div class="modal modal-danger fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <!--<h4 class="modal-title text-center" id="myModalLabel">Eliminar confirmación</h4>-->
+            </div>
+            <form id="frmdelete" action="" method="POST">
+                {{method_field('delete')}}
+                {{csrf_field()}}
+              <div class="modal-body">
+              <p class="text-center">
+                <h5>
+                  <center>
+                    ¿Estás seguro de que quieres eliminar esto?
+                  </center>
+                </h5>
+              </p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">No, cancelar</button>
+                <button type="submit" class="btn btn-warning">Sí, eliminar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </section>
     <!-- /.content -->
 @endsection
@@ -142,6 +172,12 @@
 @section('js')
   <script type="text/javascript">
     
+    $('.btnDelete').on('click', function(){
+      var c = $(this).data('id');
+      $('#frmdelete').attr('action', '{{asset('clientes')}}/'+c);
+      //$('#deleteEmpleado').modal('show');
+    });
+
     function searchType(){ 
        var type = $('#tipo').val();
       if (type == 'id'){

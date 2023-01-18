@@ -25,8 +25,9 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
           <div class="col-md-12">
-            <form method="POST" action="{{ route('clientes.store') }}">
-              @csrf
+          <form action="{{ route('clientes.update',$cliente->id) }}" method="POST">
+            @csrf
+            @method('PUT')
               <div class="row">
                 <input type="hidden" name="listado_contactos" id="id_lista_contactos">
                 <div class="col-md-12">
@@ -62,7 +63,7 @@
                       <div class="card-body">
                         <div class="form-group">
                           <label for="apellido">Apellido:</label>
-                          <input type="text" class="form-control @error('apellido') is-invalid @enderror" id="apellido" name="apellido" placeholder="Eje: Perez" value="{{ old('apellido') }}">
+                          <input type="text" class="form-control @error('apellido') is-invalid @enderror" id="apellido" name="apellido" placeholder="Eje: Perez" value="{{ $cliente->persona->apellido }}">
                         </div>
                         @error('apellido')
                           <div class="alert alert-info" role="alert">
@@ -72,7 +73,7 @@
 
                         <div class="form-group">
                           <label for="nombre">Nombre:</label>
-                          <input type="text" class="form-control @error('nombre') is-invalid @enderror" id="nombre" name="nombre" placeholder="Eje: Juan" value="{{ old('nombre') }}">
+                          <input type="text" class="form-control @error('nombre') is-invalid @enderror" id="nombre" name="nombre" placeholder="Eje: Juan" value="{{ $cliente->persona->nombre }}">
                         </div>
                         @error('nombre')
                           <div class="alert alert-info" role="alert">
@@ -80,6 +81,17 @@
                           </div>
                         @enderror
 
+                        <div class="form-group">
+                          <label for="documento">Documento:</label>
+                          <input type="text" class="form-control @error('documento') is-invalid @enderror" id="documento" name="documento" placeholder="Eje: 15325642" value="{{ $cliente->persona->documento }}">
+                        </div>
+                        @error('documento')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
+
+                        <!--
                         <div class="form-group">
                           <label for="fechanacimiento">Fecha de Nacimiento:</label>
                           <input type="date" class="form-control @error('fechanacimiento') is-invalid @enderror" id="fechanacimiento" name="fechanacimiento" value="{{ old('fechanacimiento') ? old('fechanacimiento') : date('Y-m-d')  }}">
@@ -89,27 +101,22 @@
                             {{ $message }}
                           </div>
                         @enderror
-
+                        -->
                         <div class="form-group">
-                          <label for="tipocliente_id">Tipo de Cliente:</label>
-                          <select  id="tipocliente_id" name="tipocliente_id" class="form-control  @error('tipocliente_id') is-invalid @enderror">
-                            <option value="" >Seleccionar</option>
-                            @foreach($tipoclientes as $tipo)
-                              <option value="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
-                            @endforeach
-                        </select>
+                          <label>Domicilio</label>
+                          <textarea id= "domicilio" name="domicilio" class="form-control" rows="2" placeholder="Ingrese un domicilio">{{ $cliente->persona->domicilio }}</textarea>
                         </div>
-                        @error('tipocliente_id')
+                        @error('domicilio')
                           <div class="alert alert-info" role="alert">
                             {{ $message }}
                           </div>
                         @enderror
 
                         <div class="form-group">
-                          <label for="estado">Activo:</label>
-                          <select disabled id="activo" name="activo" class="form-control  @error('activo') is-invalid @enderror">
-                              <option value="1" selected>Activo</option>
-                              <option value="0">Inactivo</option>
+                          <label for="estado">Estado:</label>
+                          <select id="activo" name="activo" class="form-control  @error('activo') is-invalid @enderror">
+                              <option value="1" @if ($cliente->activo == 1) selected @endif >Activo</option>
+                              <option value="0" @if ($cliente->activo == 0) selected @endif>Inactivo</option>
                           </select>
                         </div>
                         
@@ -119,40 +126,7 @@
                   <!-- /.card -->
 
                 </div>
-                <div class="col-md-4">
-                  <!-- general form elements -->
-                  <div class="card card-default">
-                    <div class="card-header">
-                      <center>
-                        <h3 class="card-title">Dias</h3>
-                      </center>
-                      
-                    </div>
-                    <!-- /.card-header -->
-                    <!-- form start -->
-                    <div class="card-body">
-                      <div class="form-group">
-                          <div class="card-header">
-                            <!--<div class="row justify-content-center align-items-center">-->
-                            <div class="row justify-content-center align-items-center">
-                              @foreach($dias as $dia)
-                                  <div class="form-group" >  
-                                    <label>
-                                        <input  type="checkbox" name="dias[]" value="{{ $dia['id'] }}" class="form-control" />
-                                        {{ $dia['descripcion'] }}
-                                    </label>
-                                  </div>
-                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                              @endforeach
-                              <!-- /.col -->
-                            </div>
-                          </div>
-                      </div>
-                      <!-- /.card-body -->
-                    </div>
-                  <!-- /.card -->
-                  </div>
-                </div>
+                
                 <div class="col-md-4">
                   <!-- general form elements -->
                   <div class="card card-default">

@@ -28,8 +28,12 @@ class Cliente extends Model
 
     public function scopeBuscarpor($query, $tipo, $buscar) {
     	if ( ($tipo) && ($buscar) ) {
-    		return $query->where($tipo,'like',"%$buscar%");
+    		//return $query->where($tipo,'like',"%$buscar%");
+			return $query->whereHas('persona', function ($personas) use($tipo, $buscar) {
+    			$personas->where($tipo,'like',"%$buscar%");
+			})->orderBy('id', 'DESC');
     	}
+
     }
 
 }

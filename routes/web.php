@@ -41,11 +41,14 @@ route::put('/setting/{id}',		'ManageuserController@setting')->name('setting');
 Route::resource('roles', 'RoleController');
 
 Route::resource('clientes', 'ClienteController');
+Route::resource('viandas', 'ViandaController');
 Route::resource('tipocontactos', 'TipocontactoController');
+/*
 Route::resource('tipoantecedentemedicos', 'TipoantecedentemedicoController');
 Route::resource('antecedentemedicos', 'AntecedentemedicoController');
 Route::resource('calles', 'CalleController');
 Route::resource('barrios', 'BarrioController');
 Route::resource('dias', 'DiaController');
 Route::resource('tipoclientes', 'TipoclienteController');
+*/
 

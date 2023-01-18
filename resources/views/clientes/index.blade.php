@@ -32,12 +32,12 @@
                 <form class="form-inline float-right">
                   <select name="tipo" class="form-control mr-sm-2" id="tipo">
                     <option value=''>Buscar por...</option>
-                    <option value='nombre'>Nombre</option>
-                    <option value='apellido'>Apellido</option>
-                    <option value='id'>Codigo</option>
+                    <option value='nombre' @if($buscador == 'nombre') selected @endif>Nombre</option>
+                    <option value='apellido' @if($buscador == 'apellido') selected @endif>Apellido</option>
+                    <option value='documento' @if($buscador == 'documento') selected @endif>Documento</option>
                   </select>
                   &nbsp;&nbsp;
-                  <input name="buscarpor" id="buscarpor" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
+                  <input name="buscarpor" id="buscarpor"  value="{{ $dato }}" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
                   &nbsp;&nbsp;
                   <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
                   &nbsp;&nbsp;
@@ -180,7 +180,7 @@
 
     function searchType(){ 
        var type = $('#tipo').val();
-      if (type == 'id'){
+      if (type == 'documento'){
         $('#buscarpor').attr('type','number');
         $('#buscarpor').focus();
       } else

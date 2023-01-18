@@ -6,12 +6,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Gestionar Clientes</h1>
+            <h1 class="m-0 text-dark">@if($show == 1) Ver @else Editar @endif Cliente</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ route('clientes.index') }}">Cliente</a></li>
-              <li class="breadcrumb-item active">Nuevo</li>
+              <li class="breadcrumb-item active">@if($show == 1) Ver @else Editar @endif</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -35,10 +35,18 @@
                     <div class="card card-default">
                       <div class="card-header">
                         <div class="row justify-content-center align-items-center">
-                          <div class="form-group">
-                            <button name="guardar" id="guardar" type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar</button>
-                          </div> 
-                          &nbsp; &nbsp; 
+                          @if($show == 0)
+                            <div class="form-group">
+                              <button name="guardar" id="guardar" type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar</button>
+                            </div>
+                            @can('clientes.create')  
+                            &nbsp; &nbsp; 
+                            <div class="form-group">
+                              <a class="btn btn-outline-info" href="{{ route('clientes.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
+                            </div>
+                            @endcan
+                            &nbsp; &nbsp; 
+                          @endif
                           <div class="form-group">
                             <a class="btn btn-outline-success" href="{{ route('clientes.index') }}"><i class="fas fa-list"></i> Listado</a>
                           </div>
@@ -127,7 +135,7 @@
 
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-4" style="display:none"> <!-- Oculto por el momento-->
                   <!-- general form elements -->
                   <div class="card card-default">
                     <div class="card-header">

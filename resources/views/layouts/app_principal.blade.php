@@ -151,6 +151,21 @@
             
           </li>
           @endcan
+          @can('viandas.index')
+          <li class="nav-item">
+            <a href="{{ route('viandas.index') }}" class="nav-link 
+              @if($segment == 'viandas')
+              active
+              @endif
+              ">
+              <i class="nav-icon fas fa-user  nav-icon"></i>
+              <p>
+                Viandas
+              </p>
+            </a>
+            
+          </li>
+          @endcan
           @if(auth()->user()->can('manageusers.index'))
           <li class="nav-item has-treeview
             @if($segment=='users' || $segment=='roles')
@@ -223,61 +238,7 @@
                         <p>Tipo Contactos</p>
                       </a>
                     </li>
-                    <li class="nav-item">
-                      <a href="{{ route('tipoantecedentemedicos.index') }}" class="nav-link  
-                        @if($segment=='tipoantecedentemedicos_c')
-                        active
-                        @endif">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p>T. Antecedente M.</p>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="{{ route('antecedentemedicos.index') }}" class="nav-link  
-                        @if($segment=='antecedentemedicos_c')
-                        active
-                        @endif">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p> Antecedente M.</p>
-                      </a>
-                    </li>
-
-                    <li class="nav-item">
-                      <a href="{{ route('calles.index') }}" class="nav-link  
-                        @if($segment=='calles_c')
-                        active
-                        @endif">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p> Calles</p>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="{{ route('barrios.index') }}" class="nav-link  
-                        @if($segment=='barrios_c')
-                        active
-                        @endif">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p> Barrios</p>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="{{ route('tipoclientes.index') }}" class="nav-link  
-                        @if($segment=='tipoclientes_c')
-                        active
-                        @endif">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p> Tipo Clientes</p>
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a href="{{ route('dias.index') }}" class="nav-link  
-                        @if($segment=='dias_c')
-                        active
-                        @endif">
-                        <i class="far fa-circle nav-icon"></i>
-                        <p> Dias</p>
-                      </a>
-                    </li>
+                   
                   </ul>
                 </li>
             </ul>

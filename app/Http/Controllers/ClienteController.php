@@ -33,12 +33,14 @@ class ClienteController extends Controller
 
         $segment = 'clientes';
         //$clientes = Cliente::paginate(10);
+        $buscador = $request->get('tipo'); // se agrega para que queden seleccionados los filtros al recargar la pagina
+        $dato = $request->get('buscarpor'); // despues ver como refactorizar
         
         $clientes =  Cliente::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
         
     
 
-        return view('clientes.index',compact('clientes', 'segment'));
+        return view('clientes.index',compact('clientes', 'segment','buscador','dato'));
     }
 
     /**
@@ -122,8 +124,9 @@ class ClienteController extends Controller
     {
         $segment = 'clientes';
         $show = 1;
+        $tipocontactos = Tipocontacto::where('activo',1)->get();
         //Alert::toast('Toast Message', 'success');
-        return view('clientes.edit', compact('segment','cliente', 'show'));
+        return view('clientes.edit', compact('segment','cliente', 'show','tipocontactos'));
     }
 
     /**
@@ -174,12 +177,27 @@ class ClienteController extends Controller
             //'body' => 'required',
         ], $messages);
 
+        
 
-
-        if ($request->fechanacimiento >= now()->toDateString()) {
+        /*if ($request->fechanacimiento >= now()->toDateString()) {
             alert()->error('Error', 'La fecha de nacimiento no puede ser mayor a la fecha actual');
             return back();
+        }*/
+
+
+        $existe = Persona::where('apellido',$request->apellido)
+                                ->where('nombre', $request->nombre)
+                                ->where('id','<>', $cliente->persona_id)
+                                ->count();
+
+        //dd($existe);
+
+        if($existe > 0) 
+        {
+            alert()->error('Error', 'Ya existe un cliente con ese apellido y nombre');
+            return back()->withInput();
         }
+
   
         $cliente->update($request->all());
         $persona = Persona::find($cliente->persona_id);

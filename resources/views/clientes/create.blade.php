@@ -127,7 +127,7 @@
                 </div>
                
         
-                <div class="col-md-4">
+                <div class="col-md-4" style="display:none"> <!-- Oculto por el momento-->
                   <!-- general form elements -->
                   <div class="card card-default">
                     <div class="card-header">

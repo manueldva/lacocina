@@ -267,7 +267,7 @@
         $("#tipocontacto_id").val('');
         $("#valor").val('');
 
-      toastr.success('Cantacto agregado a la lista');
+      toastr.success('Contacto agregado a la lista');
 
 
     });

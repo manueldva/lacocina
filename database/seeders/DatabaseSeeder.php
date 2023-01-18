@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
 
 
 
-        DB::table('dias')->insert([
+        /*DB::table('dias')->insert([
             'descripcion' => 'Lunes',
             'activo' => 1
         ]);
@@ -90,6 +90,6 @@ class DatabaseSeeder extends Seeder
         DB::table('dias')->insert([
             'descripcion' => 'Domingo',
             'activo' => 0
-        ]);
+        ]);*/
     }
 }

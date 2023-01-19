@@ -238,6 +238,15 @@
                         <p>Tipo Contactos</p>
                       </a>
                     </li>
+                    <li class="nav-item">
+                      <a href="{{ route('tipopagos.index') }}" class="nav-link  
+                        @if($segment=='tipopago_c')
+                        active
+                        @endif">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Tipo Pagos</p>
+                      </a>
+                    </li>
                    
                   </ul>
                 </li>

@@ -111,7 +111,7 @@
                         @enderror
                         -->
                         <div class="form-group">
-                          <label>Domicilio</label>
+                          <label>Domicilio:</label>
                           <textarea id= "domicilio" name="domicilio" class="form-control" rows="2" placeholder="Ingrese un domicilio">{{ $cliente->persona->domicilio }}</textarea>
                         </div>
                         @error('domicilio')

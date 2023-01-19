@@ -43,6 +43,7 @@ Route::resource('roles', 'RoleController');
 Route::resource('clientes', 'ClienteController');
 Route::resource('viandas', 'ViandaController');
 Route::resource('tipocontactos', 'TipocontactoController');
+Route::resource('tipopagos', 'TipopagoController');
 /*
 Route::resource('tipoantecedentemedicos', 'TipoantecedentemedicoController');
 Route::resource('antecedentemedicos', 'AntecedentemedicoController');

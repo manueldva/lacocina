@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 Use Alert;
 use App\User;
-use App\Models\Vianda;
+use App\Models\Tipopago;
 use Auth;
 use Carbon\Carbon;
 
-
-class ViandaController extends Controller
+class TipopagoController extends Controller
 {
     public function __construct()
     {
@@ -25,16 +24,16 @@ class ViandaController extends Controller
     public function index(Request $request)
     {
 
-        $segment = 'viandas';
+        $segment = 'tipopago_c';
 
         $buscador = $request->get('tipo'); // se agrega para que queden seleccionados los filtros al recargar la pagina
         $dato = $request->get('buscarpor'); // despues ver como refactorizar
 
-        $viandas =  Vianda::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
+        $tipopagos =  Tipopago::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
 
         
 
-        return view('viandas.index', compact('viandas', 'segment','buscador','dato'));
+        return view('tipopagos.index', compact('tipopagos', 'segment','buscador','dato'));
     }
 
     /**
@@ -44,9 +43,9 @@ class ViandaController extends Controller
      */
     public function create()
     {
-         $segment = 'viandas';
+         $segment = 'tipopago_c';
 
-        return view('viandas.create', compact('segment'));
+        return view('tipopagos.create', compact('segment'));
     }
 
     /**
@@ -63,14 +62,13 @@ class ViandaController extends Controller
  
         ];
         $validatedData = $request->validate([
-            'descripcion' => 'required|max:200|unique:viandas,descripcion',
-            'precio' => 'required'
+            'descripcion' => 'required|max:100|unique:tipopagos,descripcion'
         ], $messages);
 
-        $vianda = Vianda::create($request->all());
+        $tipopago = Tipopago::create($request->all());
 
-        Alert::success('Vianda Creada', 'Exitosamente');
-        return redirect()->route('viandas.edit', $vianda->id);   
+        Alert::success('Tipo de Pago Creado', 'Exitosamente');
+        return redirect()->route('tipopagos.edit', $tipopago->id);   
     }
 
     /**
@@ -79,13 +77,13 @@ class ViandaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Vianda $vianda)
+    public function show(Tipopago $tipopago)
     {
        // $tipocontacto = Tipocontacto::find($id);
-        $segment = 'viandas';
+        $segment = 'tipopago_c';
         $show = 1;
         //Alert::toast('Toast Message', 'success');
-        return view('viandas.edit', compact('segment','vianda', 'show'));
+        return view('tipopagos.edit', compact('segment','tipopago', 'show'));
     }
 
     /**
@@ -94,15 +92,15 @@ class ViandaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Vianda $vianda)
+    public function edit(Tipopago $tipopago)
     {
         
         //$tipocontacto = Tipocontacto::find($id);
         //dd($plan);
         $show = 0;
-        $segment = 'viandas';
+        $segment = 'tipopago_c';
 
-        return view('viandas.edit', compact('segment', 'vianda','show'));
+        return view('tipopagos.edit', compact('segment', 'tipopago','show'));
     }
 
     /**
@@ -112,7 +110,7 @@ class ViandaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Vianda $vianda)
+    public function update(Request $request, Tipopago $tipopago)
     {
         //$tipocontacto = Tipocontacto::find($id);
 
@@ -121,16 +119,15 @@ class ViandaController extends Controller
             
         ];
         $validatedData = $request->validate([
-            'descripcion' => 'required|max:200|unique:viandas,descripcion,' . $vianda->id,
-            'precio' => 'required'
+            'descripcion' => 'required|max:100|unique:tipopagos,descripcion,' . $tipopago->id
         ], $messages);
 
 
   
-        $vianda->update($request->all());
+        $tipopago->update($request->all());
   
         Alert::success('Registro Actualizado', 'Exitosamente');
-        return redirect()->route('viandas.edit', $vianda->id);   
+        return redirect()->route('tipopagos.edit', $tipopago->id);   
     }
 
     /**
@@ -139,14 +136,14 @@ class ViandaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Vianda $vianda)
+    public function destroy(Tipopago $tipopago)
     {
         
         /*if(Cliente::where('plan_id', '=', $id)->first()) {
             alert()->error('Este registro no se puede eliminar', 'Error');
             return back();
         } else {*/
-            $vianda->delete();
+            $tipopago->delete();
             //Alert::success('Eliminado correctamente')->persistent();
             //alert()->success('Registro Eliminado', 'Exitosamente')->toToast();
             Alert::success('Registro Eliminado', 'Exitosamente');

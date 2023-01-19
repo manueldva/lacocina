@@ -46,6 +46,12 @@ class RoleSeeder extends Seeder
         permission::create(['name' => 'complementos.create', 'description' => 'Alta', 'father' => 'Complemento'])->syncRoles([$role2,$role3]);
         permission::create(['name' => 'complementos.edit', 'description' => 'Modi', 'father' => 'Complemento'])->syncRoles([$role2,$role3]);
         permission::create(['name' => 'complementos.destroy', 'description' => 'Baja', 'father' => 'Complemento'])->syncRoles([$role2,$role3]);
+
+        permission::create(['name' => 'viandas.index', 'description' => 'Solo Lectura', 'father' => 'Vianda'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'viandas.show', 'description' => 'Detalle', 'father' => 'Vianda'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'viandas.create', 'description' => 'Alta', 'father' => 'Vianda'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'viandas.edit', 'description' => 'Modi', 'father' => 'Vianda'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'viandas.destroy', 'description' => 'Baja', 'father' => 'Vianda'])->syncRoles([$role2,$role3]);
         /*
         permission::create(['name' => 'planes.index'])->syncRoles([$role1,$role2]);
         permission::create(['name' => 'planes.create'])->syncRoles([$role1,$role2]);

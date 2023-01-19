@@ -103,8 +103,8 @@
                         -->
 
                         <div class="form-group">
-                          <label>Domicilio</label>
-                          <textarea id= "domicilio" name="domicilio" class="form-control" rows="3" placeholder="Ingrese un domicilio">{{ old('domicilio') }}</textarea>
+                          <label>Domicilio:</label>
+                          <textarea id= "domicilio" name="domicilio" class="form-control" rows="2" placeholder="Ingrese un domicilio">{{ old('domicilio') }}</textarea>
                         </div>
                         @error('domicilio')
                           <div class="alert alert-info" role="alert">

@@ -131,5 +131,25 @@
     $(".alert").delay(4000).slideUp(200, function() {
         $(this).alert('close');
     });
+
+		
+    function habilitarMotivoEstado(){
+			var estado = $("#recargo").val();
+			if(estado == 1 ) {
+				$("#porcentajerecargo").prop( "disabled", false );
+        $("#porcentajerecargo").focus();
+			} else {
+				$("#porcentajerecargo").prop( "disabled", true );
+        $("#porcentajerecargo").val('');
+			}
+		}
+
+    habilitarMotivoEstado();
+
+		$('#recargo').on('change', function(e){
+      habilitarMotivoEstado();
+		});
+
+
 </script>
 @endsection

@@ -65,6 +65,13 @@ class TipopagoController extends Controller
             'descripcion' => 'required|max:100|unique:tipopagos,descripcion'
         ], $messages);
 
+        if ($request->recargo == 1 & $request->porcentajerecargo == null)
+        {
+            alert()->error('Debe cargar el porcentaje del recargo', 'Error');
+            return back()->withInput();
+        }
+        
+
         $tipopago = Tipopago::create($request->all());
 
         Alert::success('Tipo de Pago Creado', 'Exitosamente');
@@ -122,7 +129,11 @@ class TipopagoController extends Controller
             'descripcion' => 'required|max:100|unique:tipopagos,descripcion,' . $tipopago->id
         ], $messages);
 
-
+        if ($request->recargo == 1 & $request->porcentajerecargo == null)
+        {
+            alert()->error('Debe cargar el porcentaje del recargo', 'Error');
+            return back();
+        }
   
         $tipopago->update($request->all());
   

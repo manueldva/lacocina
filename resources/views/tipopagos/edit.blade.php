@@ -6,11 +6,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">@if($show == 1) Ver @else Editar @endif T. Contacto</h1>
+            <h1 class="m-0 text-dark">@if($show == 1) Ver @else Editar @endif T. Pago</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('tipocontactos.index') }}">T. Contactos</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('tipopagos.index') }}">T. Pagos</a></li>
               <li class="breadcrumb-item active">Editar</li>
             </ol>
           </div><!-- /.col -->
@@ -25,7 +25,7 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
           <div class="col-md-12">
-            <form action="{{ route('tipocontactos.update',$tipocontacto->id) }}" method="POST">
+            <form action="{{ route('tipopagos.update',$tipopago->id) }}" method="POST">
             @csrf
             @method('PUT')
               <div class="row">
@@ -41,13 +41,13 @@
                             @can('complementos.create')  
                             &nbsp; &nbsp; 
                             <div class="form-group">
-                              <a class="btn btn-outline-info" href="{{ route('tipocontactos.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
+                              <a class="btn btn-outline-info" href="{{ route('tipopagos.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
                             </div>
                             @endcan
                           @endif
                           &nbsp; &nbsp; 
                           <div class="form-group">
-                            <a class="btn btn-outline-success" href="{{ route('tipocontactos.index') }}"><i class="fas fa-list"></i> Listado</a>
+                            <a class="btn btn-outline-success" href="{{ route('tipopagos.index') }}"><i class="fas fa-list"></i> Listado</a>
                           </div>
                           <!-- /.col -->
                         </div>
@@ -71,19 +71,40 @@
                         
                         <div class="form-group">
                           <label for="descripcion">Descripción:</label>
-                          <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" value="{{ $tipocontacto->descripcion }}">
+                          <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" value="{{ $tipopago->descripcion }}">
                         </div>
                         @error('descripcion')
                           <div class="alert alert-info" role="alert">
                             {{ $message }}
                           </div>
                         @enderror
+                        <div class="form-group">
+                          <label for="recargo">Recargo:</label>
+                          <select  id="recargo" name="recargo" class="form-control  @error('recargo') is-invalid @enderror">
+                            <option value="0" {{ $tipopago->recargo == '0' ? 'selected' : '' }}>No</option>
+                            <option value="1" {{ $tipopago->recargo == '1' ? 'selected' : '' }}>Si</option>
+                        </select>
+                        </div>
+                        @error('recargo')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
 
+                        <div class="form-group">
+                          <label for="porcentajerecargo">% Recargo:</label>
+                          <input type="input" class="form-control @error('porcentajerecargo') is-invalid @enderror" id="porcentajerecargo" name="porcentajerecargo" value="{{ $tipopago->porcentajerecargo }}">
+                        </div>
+                        @error('porcentajerecargo')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
                         <div class="form-group">
                           <label for="estado">Activo:</label>
                           <select  id="activo" name="activo" class="form-control  @error('activo') is-invalid @enderror">
-                            <option value="1" {{ $tipocontacto->activo == '1' ? 'selected' : '' }}>Activo</option>
-                            <option value="0" {{ $tipocontacto->activo == '0' ? 'selected' : '' }}>Inactivo</option>
+                            <option value="1" {{ $tipopago->activo == '1' ? 'selected' : '' }}>Activo</option>
+                            <option value="0" {{ $tipopago->activo == '0' ? 'selected' : '' }}>Inactivo</option>
                         </select>
                         </div>
                         @error('activo')
@@ -117,5 +138,23 @@
     $(".alert").delay(4000).slideUp(200, function() {
         $(this).alert('close');
     });
+
+    function habilitarMotivoEstado(){
+			var estado = $("#recargo").val();
+			if(estado == 1 ) {
+				$("#porcentajerecargo").prop( "disabled", false );
+        $("#porcentajerecargo").focus();
+			} else {
+				$("#porcentajerecargo").prop( "disabled", true );
+        $("#porcentajerecargo").val('');
+			}
+		}
+
+    habilitarMotivoEstado();
+
+		$('#recargo').on('change', function(e){
+      habilitarMotivoEstado();
+		});
+    
 </script>
 @endsection

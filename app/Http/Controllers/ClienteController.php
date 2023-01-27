@@ -79,6 +79,9 @@ class ClienteController extends Controller
             'apellido' => 'required|max:100',
             'nombre' => 'required|max:100',
             'documento' => 'max:20',
+            'telefono' => 'max:20',
+            'email' => 'max:150',
+            'otrocontacto' => 'max:300',
             'domicilio' => 'max:200'
             //'tipocliente_id' => 'required',
             //'numerodocumento' => 'max:20',

@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('nombre',100);
             $table->date('fechanacimiento')->nullable();
             $table->string('domicilio',200)->nullable();
+            $table->string('telefono',20)->nullable();
+            $table->string('email',150)->nullable();
+            $table->string('otrocontacto',300)->nullable();
             $table->boolean('activo')->default(true);
             $table->timestamps();
         });

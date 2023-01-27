@@ -102,15 +102,6 @@
 
                         -->
 
-                        <div class="form-group">
-                          <label>Domicilio:</label>
-                          <textarea id= "domicilio" name="domicilio" class="form-control" rows="2" placeholder="Ingrese un domicilio">{{ old('domicilio') }}</textarea>
-                        </div>
-                        @error('domicilio')
-                          <div class="alert alert-info" role="alert">
-                            {{ $message }}
-                          </div>
-                        @enderror
 
                         <div class="form-group">
                           <label for="estado">Estado:</label>
@@ -127,12 +118,12 @@
                 </div>
                
         
-                <div class="col-md-4" style="display:none"> <!-- Oculto por el momento-->
+                <div class="col-md-4" > <!-- Oculto por el momento-->
                   <!-- general form elements -->
                   <div class="card card-default">
                     <div class="card-header">
                       <center>
-                        <h3 class="card-title">Datos de Contacto</h3>
+                        <h3 class="card-title">Contacto y Domicilio</h3>
                       </center>
                       
                     </div>
@@ -140,52 +131,45 @@
                     <!-- form start -->
                     <div class="card-body">
                       <div class="form-group">
-                        <div class="table-responsive">
-                          <table class="table table-striped table-hover" data-form="Form">
-                            <thead>
-                              <tr>
-                                <td> 
-                                    <label for="tipocontacto_id">Tipo Contacto:</label>
-                                    <select  id="tipocontacto_id" name="tipocontacto_id" class="form-control  @error('tipocontacto_id') is-invalid @enderror">
-                                        <option value="" >Seleccionar</option>
-                                        @foreach($tipocontactos as $tipo)
-                                          <option value="{{ $tipo->id }}" >{{ $tipo->descripcion }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td> 
-                                  <label for="labelvalor">Valor:</label>
-                                  <input type="text" class="form-control @error('valor') is-invalid @enderror" id="valor" name="valor" placeholder="Eje: 3704334054" value="{{ old('valor') }}">
-                                </td>
-                                <td> 
-                                  <label for="labelvalor">&nbsp;&nbsp;</label>
-                                  <div class="form-group">
-                                    <a class="btn btn-outline-info" id="agregarcontacto" name="agregarcontacto"><i class="fas fa-plus"></i> </a>
-                                  </div>
-                                  
-                                </td>
-                              </tr>	
-                              
-                            </thead>
-                          </table>
-                          <div class="form-group">
-                            <div class="table-responsive">
-                              <table   id="table_contactos" class="table table-striped table-hover" data-form="Form">
-                                <thead>
-                                  <tr>
-                                  <!--<th width="10px"> ID</th>-->
-                                    <th style="display:none;"> Codigo contacto</th>
-                                    <th> Tipo Contacto</th>
-                                    <th> Valor</th>
-                                    <th></th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
+                        <div class="form-group">
+                          <label for="telefono">Telefono/Celular:</label>
+                          <input type="number" class="form-control @error('telefono') is-invalid @enderror" id="telefono" name="telefono" placeholder="Eje: 3704662448" value="{{ old('telefono') }}">
                         </div>
+                        @error('telefono')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
+
+                        <div class="form-group">
+                          <label for="email">Correo:</label>
+                          <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Eje: santydebil@gmail.com" value="{{ old('email') }}">
+                        </div>
+                        @error('email')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
+
+                    
+                        <div class="form-group">
+                          <label>Otro tipo de contacto:</label>
+                          <textarea id= "otros" name="otros" class="form-control" rows="1" placeholder="Ingrese algun tipo de contacto">{{ old('otros') }}</textarea>
+                        </div>
+                        @error('otros')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
+                        <div class="form-group">
+                          <label>Domicilio:</label>
+                          <textarea id= "domicilio" name="domicilio" class="form-control" rows="1" placeholder="Ingrese un domicilio">{{ old('domicilio') }}</textarea>
+                        </div>
+                        @error('domicilio')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
                       </div>
                       <!-- /.card-body -->
                     </div>

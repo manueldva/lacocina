@@ -61,7 +61,7 @@
                       <div class="card-body">
                         <div class="form-group">
                           <label for="descripcion">Descripción:</label>
-                          <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" placeholder="Eje: Celular" value="{{ old('descripcion') }}">
+                          <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" placeholder="Eje: Efectivo" value="{{ old('descripcion') }}">
                         </div>
                         @error('descripcion')
                           <div class="alert alert-info" role="alert">

@@ -9,8 +9,12 @@ use App\User;
 use App\Models\Persona;
 use App\Models\Cliente;
 //use App\Models\Tipocliente;
-use App\Models\Tipocontacto;
-//use App\Models\Dia;
+use App\Models\MetodoPago;
+use App\Models\Vianda;
+use App\Models\Tipopago;
+use App\Models\ClienteVianda;
+use App\Models\Venta;
+use App\Models\VentaDetalle;
 use Auth;
 use Carbon\Carbon;
 
@@ -36,9 +40,11 @@ class ClienteController extends Controller
         $buscador = $request->get('tipo'); // se agrega para que queden seleccionados los filtros al recargar la pagina
         $dato = $request->get('buscarpor'); // despues ver como refactorizar
         
-        $clientes =  Cliente::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
+        //$clientes =  Cliente::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
         
-    
+        $clientes = Cliente::buscarpor($request->get('tipo'), $request->get('buscarpor'))
+        ->withMontoAdeudado()
+        ->paginate(10);
 
         return view('clientes.index',compact('clientes', 'segment','buscador','dato'));
     }
@@ -54,10 +60,13 @@ class ClienteController extends Controller
         $segment = 'clientes';
 
         //$tipoclientes = Tipocliente::where('activo',1)->get();
-        $tipocontactos = Tipocontacto::where('activo',1)->get();
+        //$tipocontactos = Tipocontacto::where('activo',1)->get();
+        $metodopagos = MetodoPago::where('activo',1)->get();
+        $viandas = Vianda::where('activo', 1)->get();
+
         //$dias = Dia::where('activo',1)->get();
 
-        return view('clientes.create', compact('segment','tipocontactos'));
+        return view('clientes.create', compact('segment','metodopagos','viandas'));
     }
 
     /**
@@ -111,7 +120,29 @@ class ClienteController extends Controller
         $cliente = new Cliente;
             //$cliente->tipocliente_id = $request->input('tipocliente_id');
             $cliente->persona_id = $persona->id;
+            $cliente->metodopago_id = $request->metodopago_id;
         $cliente->save();
+
+
+        // Obtener las viandas seleccionadas y las cantidades ingresadas
+        $viandas = $request->input('viandas');
+        $cantidades = $request->except('_token', 'viandas');
+
+        // Procesar los datos y guardarlos en tu lógica de negocio
+        if ($viandas) {
+            foreach ($viandas as $vianda) {
+                $cantidad = $cantidades['cantidad_'.$vianda];
+                // Aquí puedes realizar las operaciones necesarias con la vianda y la cantidad
+                // Guardar en la base de datos, hacer cálculos, etc.
+                $clienteVianda = new ClienteVianda();
+                    $clienteVianda->cliente_id = $cliente->id;
+                    $clienteVianda->vianda_id = $vianda;
+                    $clienteVianda->cantidad = $cantidad;
+                $clienteVianda->save();
+            }
+
+        } 
+          
 
         alert()->success('Cliente Creado', 'Exitosamente');
         return redirect()->route('clientes.edit', $cliente->id);   
@@ -127,9 +158,9 @@ class ClienteController extends Controller
     {
         $segment = 'clientes';
         $show = 1;
-        $tipocontactos = Tipocontacto::where('activo',1)->get();
+        $metodopagos = MetodoPago::where('activo',1)->get();
         //Alert::toast('Toast Message', 'success');
-        return view('clientes.edit', compact('segment','cliente', 'show','tipocontactos'));
+        return view('clientes.edit', compact('segment','cliente', 'show','metodopagos'));
     }
 
     /**
@@ -146,10 +177,20 @@ class ClienteController extends Controller
         $segment = 'clientes';
 
         //$tipoclientes = Tipocliente::where('activo',1)->get();
-        $tipocontactos = Tipocontacto::where('activo',1)->get();
+        $metodopagos = MetodoPago::where('activo',1)->get();
         //$dias = Dia::where('activo',1)->get();
+        $viandas = Vianda::where('activo', 1)->get();
 
-        return view('clientes.edit', compact('cliente', 'segment','tipocontactos', 'show'));
+        $viandasSeleccionadas = $cliente->viandas()->pluck('vianda_id')->toArray();
+
+        // Obtener las cantidades de las viandas relacionadas
+        $cantidades = [];
+        foreach ($cliente->viandas as $vianda) {
+            $cantidades[$vianda->vianda_id] = $vianda->pivot->cantidad;
+        }
+
+
+        return view('clientes.edit', compact('cliente', 'segment','metodopagos','viandas','viandasSeleccionadas','cantidades', 'show'));
     }
 
     /**
@@ -205,6 +246,27 @@ class ClienteController extends Controller
         $cliente->update($request->all());
         $persona = Persona::find($cliente->persona_id);
         $persona->update($request->all());
+
+
+        // Actualizar los registros de ClienteVianda asociados al cliente
+        $viandas = $request->input('viandas', []);
+
+    
+        // Eliminar los registros existentes de ClienteVianda
+        ClienteVianda::where('cliente_id', $cliente->id)->delete();
+
+        // Crear nuevos registros de ClienteVianda
+
+        if ($viandas) {
+            foreach ($viandas as $viandaId) {
+                $cantidad = $request->input('cantidad_' . $viandaId, 0);
+                $clienteVianda = new ClienteVianda();
+                    $clienteVianda->cliente_id = $cliente->id;
+                    $clienteVianda->vianda_id = $viandaId;
+                    $clienteVianda->cantidad = $cantidad;
+                $clienteVianda->save();
+            }
+        }
   
         alert()->success('Registro Actualizado', 'Exitosamente');
         return redirect()->route('clientes.edit', $cliente->id);   
@@ -218,9 +280,138 @@ class ClienteController extends Controller
      */
     public function destroy(Cliente $cliente)
     {
+        // Eliminar los registros de ClienteVianda asociados al cliente
+        ClienteVianda::where('cliente_id', $cliente->id)->delete();
+
         $cliente->delete();
         Persona::where('id', $cliente->persona_id)->delete();
         alert()->success('Registro Eliminado', 'Exitosamente');
         return back();
+    }
+
+    public function cargarViandas(Cliente $cliente)
+    {
+         //$miembro = Miembro::find($id);
+        $show = 0;
+        $segment = 'clientes';
+ 
+         //$tipoclientes = Tipocliente::where('activo',1)->get();
+        $tipopagos = TipoPago::where('activo',1)->get();
+         //$dias = Dia::where('activo',1)->get();
+        $viandas = Vianda::where('activo', 1)->get();
+ 
+        $viandasSeleccionadas = $cliente->viandas()->pluck('vianda_id')->toArray();
+ 
+        // Obtener las cantidades de las viandas relacionadas y calcular el monto total
+        $cantidades = [];
+        $montoTotal = 0;
+        foreach ($cliente->viandas as $vianda) {
+            $cantidad = $vianda->pivot->cantidad;
+            $cantidades[$vianda->vianda_id] = $cantidad;
+            $montoTotal += $vianda->precio * $cantidad;
+        }
+
+        $ventasDelDia = Venta::where('cliente_id',$cliente->id)->paginate(5);
+
+        $detallesDeVentas = [];
+        foreach ($ventasDelDia as $venta) {
+            $detalles = VentaDetalle::where('venta_id', $venta->id)->paginate(10);
+            $detallesDeVentas[$venta->id] = $detalles;
+        }
+        
+        
+        
+        //dd($montoTotal);
+        return view('clientes.cargar', compact('cliente', 'segment','tipopagos','viandas','viandasSeleccionadas','ventasDelDia', 'detallesDeVentas','cantidades','montoTotal', 'show'));
+    }
+
+
+
+    public function guardarViandas(Request $request, Cliente $cliente)
+    {
+        
+         //dd($request->all());
+        $messages = [
+            'tipopago_id.required' =>'El campo Tipo de pago es obligatorio.'
+            
+        ];
+        $validatedData = $request->validate([
+            //'descripcion' => 'required|max:200|unique:establecimientos,descripcion',
+            'tipopago_id' => 'required',
+            'fecha' => 'required'
+            //'numerodocumento' => 'max:20',
+            //'fechanacimiento' => 'required'
+            
+            //'body' => 'required',
+        ], $messages);
+        
+        
+        $venta = new Venta;
+            //$cliente->tipocliente_id = $request->input('tipocliente_id');
+            $venta->cliente_id = $cliente->id;
+            $venta->tipopago_id = $request->tipopago_id;
+            $venta->fecha = $request->fecha;
+            $venta->totalpagado = $request->totalpagado ?? 0;
+            $venta->envio = $request->has('envio') ? true : false;
+        $venta->save();
+
+
+         // Actualizar los registros de ClienteVianda asociados al cliente
+        $viandas = $request->input('viandas', []);
+        $total = 0;
+
+        
+         // Crear nuevos registros de ClienteVianda
+        
+        if ($viandas) {
+             foreach ($viandas as $viandaId) {
+                $cantidad = $request->input('cantidad_' . $viandaId, 0);
+                $precio = Vianda::where('id', $viandaId)->pluck('precio')->first();
+                $ventadetalle = new VentaDetalle();
+                    $ventadetalle->venta_id = $venta->id;
+                    $ventadetalle->vianda_id = $viandaId;
+                    $ventadetalle->cantidad = $cantidad;
+                    $ventadetalle->precio = $precio;
+                $ventadetalle->save();
+
+                $total += $cantidad * $precio;
+            }
+        }
+        
+
+        // Actualizar el campo total de la venta
+        $venta->total = $total;
+        $venta->save();
+
+        alert()->success('Venta Creada', 'Exitosamente');
+        return redirect()->route('clientes.index');
+
+    }
+
+    public function eliminarVenta(Cliente $cliente, Venta $venta)
+    {
+        echo "entra";
+        // Verificar que la venta pertenezca al cliente
+        if ($cliente->id !== $venta->cliente_id) {
+            abort(404); // O mostrar un mensaje de error adecuado
+        }
+
+        // Eliminar la venta
+        $venta->delete();
+
+        // Redirigir al cliente o a la página adecuada
+        alert()->success('Registro Eliminado', 'Exitosamente');
+        return redirect()->route('clientes.index');
+    }
+
+    public function eliminar(Cliente $cliente, Venta $venta)
+    {
+        // Realiza las operaciones necesarias para eliminar la venta
+
+        VentaDetalle::where('venta_id', $venta->id)->delete();
+        $venta->delete();
+
+        alert()->success('Registro Eliminado', 'Exitosamente');
+        return redirect()->route('clientes.cargarviandas', $cliente->id);
     }
 }

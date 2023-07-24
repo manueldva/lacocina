@@ -15,6 +15,11 @@ class Tipopago extends Model
     	'descripcion','recargo','porcentajerecargo','activo'
 	];
 
+    // Relación con el modelo Venta
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class);
+    }
     
     public function scopeBuscarpor($query, $tipo, $buscar) {
         if ( ($tipo) && ($buscar) ) {

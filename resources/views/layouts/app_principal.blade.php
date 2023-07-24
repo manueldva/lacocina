@@ -229,7 +229,8 @@
                     </p>
                   </a>
                   <ul class="nav nav-treeview">
-                    <li class="nav-item">
+                  <!--  
+                  <li class="nav-item">
                       <a href="{{ route('tipocontactos.index') }}" class="nav-link  
                         @if($segment=='tipocontacto_c')
                         active
@@ -238,6 +239,7 @@
                         <p>Tipo Contactos</p>
                       </a>
                     </li>
+                                        -->
                     <li class="nav-item">
                       <a href="{{ route('tipopagos.index') }}" class="nav-link  
                         @if($segment=='tipopago_c')
@@ -247,7 +249,15 @@
                         <p>Tipo Pagos</p>
                       </a>
                     </li>
-                   
+                    <li class="nav-item">
+                      <a href="{{ route('metodopagos.index') }}" class="nav-link  
+                        @if($segment=='metodopagos_c')
+                        active
+                        @endif">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Metodo Pagos</p>
+                      </a>
+                    </li>
                   </ul>
                 </li>
             </ul>

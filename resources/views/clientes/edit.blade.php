@@ -183,8 +183,67 @@
                       <!-- /.card-body -->
                     </div>
                   <!-- /.card -->
-                  </div>
                 </div>
+                
+                <div class="col-md-4"> <!-- Oculto por el momento-->
+                  <!-- general form elements -->
+                  <div class="card card-default">
+                    <div class="card-header">
+                      <center>
+                        <h3 class="card-title">Datos Viandas</h3>
+                      </center>
+                      
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <div class="card-body">
+                      <div class="form-group">
+                          
+                          <div class="form-group">
+                              <label for="metodopago_id">Metodo de Pago:</label>
+                              <select id="metodopago_id" name="metodopago_id" class="form-control @error('metodopago_id') is-invalid @enderror">
+                                  <option value="">Seleccionar un Metodo</option>
+                                  @foreach($metodopagos as $metodopago)
+                                      <option value="{{ $metodopago->id }}" {{ $metodopago->id == $cliente->metodopago_id ? 'selected' : '' }}>
+                                          {{ $metodopago->descripcion }}
+                                      </option>
+                                  @endforeach
+                              </select>
+                          </div>
+                          @error('metodopago_id')
+                              <div class="alert alert-info" role="alert">
+                                  {{ $message }}
+                              </div>
+                          @enderror
+
+                          <div class="form-group">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    @foreach($viandas as $vianda)
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    <input type="checkbox" name="viandas[]" value="{{ $vianda->id }}" {{ in_array($vianda->id, $viandasSeleccionadas) ? 'checked' : '' }} onclick="toggleCantidad(this)"> {{ Str::limit($vianda->descripcion, 10, '') }}
+                                                </label>
+                                            </td>
+                                            <td>
+                                            <input class="form-control form-control-sm" type="number" name="cantidad_{{ $vianda->id }}" id="cantidad_{{ $vianda->id }}" value="{{ old('cantidad_' . $vianda->id, $cantidades[$vianda->id] ?? '') }}" {{ in_array($vianda->id, $viandasSeleccionadas) ? '' : 'disabled' }}>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                          </div>
+  
+                        </div>
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                  <!-- /.card -->
+                  </div>
+
+                </div>
+                
               </div>
 
             </form>
@@ -203,5 +262,15 @@
     $(".alert").delay(4000).slideUp(200, function() {
         $(this).alert('close');
     });
+
+    function toggleCantidad(checkbox) {
+        var cantidadInput = checkbox.parentNode.parentNode.nextElementSibling.querySelector('input[type="number"]');
+        cantidadInput.disabled = !checkbox.checked;
+        if (checkbox.checked) {
+            cantidadInput.value = 1;
+        } else {
+            cantidadInput.value = '';
+        }
+    }
 </script>
 @endsection

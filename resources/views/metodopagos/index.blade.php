@@ -6,11 +6,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Listado de Clientes</h1>
+            <h1 class="m-0 text-dark">Listado M. Pagos</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('clientes.index') }}">Clientes</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('metodopagos.index') }}">M. Pagos</a></li>
               <li class="breadcrumb-item active">Listado</li>
             </ol>
           </div><!-- /.col -->
@@ -27,21 +27,19 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <!-- <h3 class="card-title">Listado de Clientes</h3>-->
+              <!--<h3 class="card-title">Listado de T. Contactos</h3>-->
 
                 <form class="form-inline float-right">
                   <select name="tipo" class="form-control mr-sm-2" id="tipo">
                     <option value=''>Buscar por...</option>
-                    <option value='nombre' @if($buscador == 'nombre') selected @endif>Nombre</option>
-                    <option value='apellido' @if($buscador == 'apellido') selected @endif>Apellido</option>
-                    <option value='documento' @if($buscador == 'documento') selected @endif>Documento</option>
+                    <option value='descripcion' @if($buscador == 'descripcion') selected @endif>Descripción</option>
                   </select>
-                  &nbsp;&nbsp;
-                  <input name="buscarpor" id="buscarpor"  value="{{ $dato }}" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search">
-                  &nbsp;&nbsp;
-                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
-                  &nbsp;&nbsp;
-                  <a class="btn btn-outline-info" href="{{ route('clientes.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
+                  <input name="buscarpor" id="buscarpor" value="{{ $dato }}" class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Search"> 
+                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>Buscar</button>
+                        &nbsp;&nbsp;
+                      @can('complementos.create')  
+                      <a class="btn btn-outline-info" href="{{ route('metodopagos.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
+                      @endcan
                 </form>
                 <div class="card-tools">
                   <div class="input-group input-group-sm" style="width: 200px;">
@@ -66,42 +64,27 @@
                     <thead>
                       <tr>
                         <th><center>Codigo</center></th>
-                        <th><center>Apellido</center></th>
-                        <th><center>Nombre</center></th>
-                        <th><center>Deuda</center></th>
-                        <th><center>Estado</center></th>
+                        <th><center>Descripción</center></th>
+                        <th><center>Activo</center></th>
                         <th width="280px"></th>
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach($clientes as $cliente)
+                      @foreach($metodopagos as $metodopago)
                         <tr>
                           <td>
                             <center>
-                              {{ $cliente->id }}
+                              {{ $metodopago->id }}
                             </center>
                           </td>
                           <td>
                             <center>
-                              {{ $cliente->persona->apellido }}
+                              {{ $metodopago->descripcion }}
                             </center>
                           </td>
                           <td>
                             <center>
-                              {{ $cliente->persona->nombre }}
-                            </center>
-                          </td>
-                          <td><center>
-                          @if ($cliente->monto_adeudado > 0)
-                            <span class="text-danger">Debe: ${{ $cliente->monto_adeudado }}</span>
-                          @else
-                            <span class="text-success">@if ($cliente->monto_adeudado !=  0) A Favor: @endif ${{ abs($cliente->monto_adeudado) }}</span>
-                          @endif
-                          </center>
-                          </td>
-                          <td>
-                            <center>
-                              @if($cliente->activo == 1)
+                              @if($metodopago->activo == 1)
                                 <img src="{{url('image/on.ico')}}"  width="30" height="30" data-toggle="tooltip" data-placement="top" title="Activo">
                                
                               @else
@@ -112,19 +95,18 @@
                           </td>
                          <td>
                             <center>
-                           
-
-                              <form action="{{ route('clientes.destroy',$cliente->id) }}" method="POST">
-                                  
-                                  <a class="btn btn-sm btn-flat btn-outline-primary" href="{{ route('clientes.cargarviandas',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Cargar Vianda"><i class="fas fa-address-card"></i> </a>
-                                  <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('clientes.show',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>
-                                  <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('clientes.edit',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
-                                  @can('complementos.destroy')  
-                                    <a href="#" data-id="{{$cliente->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
-                                      <i class="fas fa-trash-alt"></i>
-                                    </a>
-                                  @endcan
-                              </form>
+                              @can('complementos.show')  
+                                <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('metodopagos.show',$metodopago->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>
+                              @endcan
+                              @can('complementos.edit')  
+                                <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('metodopagos.edit',$metodopago->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
+                              @endcan
+                              @can('complementos.destroy')  
+                                <a href="#" data-id="{{$metodopago->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
+                                  <i class="fas fa-trash-alt"></i>
+                                </a>
+                              @endcan
+    
                             </center>
                           </td>
                         </tr>
@@ -135,8 +117,8 @@
                   <br>
                   <div>
                     <strong>
-                      <?php echo  'Mostrando ' . $clientes->firstItem() . ' a ' . $clientes->lastItem() . ' de ' . $clientes->total() . ' registros'; ?> 
-                       {{ $clientes->appends(Request::only(['tipo','buscarpor']))->links() }}
+                      <?php echo  'Mostrando ' . $metodopagos->firstItem() . ' a ' . $metodopagos->lastItem() . ' de ' . $metodopagos->total() . ' registros'; ?> 
+                       {{ $metodopagos->appends(Request::only(['tipo','buscarpor']))->links() }}
                     </strong>  
                 <!--</div>-->
               </div>
@@ -148,8 +130,8 @@
         </div>
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
-      <!-- Modal -->
-      <div class="modal modal-danger fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+       <!-- Modal -->
+       <div class="modal modal-danger fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -182,16 +164,17 @@
 
 @section('js')
   <script type="text/javascript">
-    
+
+
     $('.btnDelete').on('click', function(){
-      var c = $(this).data('id');
-      $('#frmdelete').attr('action', '{{asset('clientes')}}/'+c);
+      var mp = $(this).data('id');
+      $('#frmdelete').attr('action', '{{asset('metodopagos')}}/'+mp);
       //$('#deleteEmpleado').modal('show');
     });
-
+    
     function searchType(){ 
        var type = $('#tipo').val();
-      if (type == 'documento'){
+      if (type == 'id'){
         $('#buscarpor').attr('type','number');
         $('#buscarpor').focus();
       } else

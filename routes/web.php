@@ -41,9 +41,16 @@ route::put('/setting/{id}',		'ManageuserController@setting')->name('setting');
 Route::resource('roles', 'RoleController');
 
 Route::resource('clientes', 'ClienteController');
+Route::get('clientes/{cliente}/cargarviandas', 'ClienteController@cargarViandas')->name('clientes.cargarviandas');
+// Ruta para almacenar los datos enviados desde el formulario
+Route::post('clientes/{cliente}/guardarviandas', 'ClienteController@guardarViandas')->name('clientes.guardarviandas');
+Route::post('clientes/{cliente}/ventas/{venta}', 'ClienteController@eliminar')->name('clientes.ventas.eliminar');
+
+
 Route::resource('viandas', 'ViandaController');
 Route::resource('tipocontactos', 'TipocontactoController');
 Route::resource('tipopagos', 'TipopagoController');
+Route::resource('metodopagos', 'MetodoPagoController');
 /*
 Route::resource('tipoantecedentemedicos', 'TipoantecedentemedicoController');
 Route::resource('antecedentemedicos', 'AntecedentemedicoController');

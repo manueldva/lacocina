@@ -45,7 +45,9 @@ Route::get('clientes/{cliente}/cargarviandas', 'ClienteController@cargarViandas'
 // Ruta para almacenar los datos enviados desde el formulario
 Route::post('clientes/{cliente}/guardarviandas', 'ClienteController@guardarViandas')->name('clientes.guardarviandas');
 Route::post('clientes/{cliente}/ventas/{venta}', 'ClienteController@eliminar')->name('clientes.ventas.eliminar');
-
+// Rutas
+Route::get('/ventasDelCliente/{clienteId}', 'ClienteController@ventasDelCliente')->name('clientes.ventas.delcliente');
+Route::get('/clientes/{cliente}/ventas/pdf', 'ClienteController@generatePDF')->name('clientes.ventas.pdf');
 
 Route::resource('viandas', 'ViandaController');
 Route::resource('tipocontactos', 'TipocontactoController');

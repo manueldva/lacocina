@@ -19,6 +19,7 @@ class Venta extends Model
         'total',
         'totalpagado',
         'envio',
+        'pago'
     ];
 
 
@@ -40,5 +41,9 @@ class Venta extends Model
         return $this->hasMany(VentaDetalle::class);
     }
 
+    public function cantidadTotalViandas()
+    {
+        return $this->ventaDetalles->sum('cantidad');
+    }
     
 }

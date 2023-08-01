@@ -18,6 +18,7 @@ use App\Models\VentaDetalle;
 use Auth;
 use Carbon\Carbon;
 
+
 class ClienteController extends Controller
 {
     
@@ -311,7 +312,7 @@ class ClienteController extends Controller
             $montoTotal += $vianda->precio * $cantidad;
         }
 
-        $ventasDelDia = Venta::where('cliente_id',$cliente->id)->paginate(5);
+        $ventasDelDia = Venta::where('cliente_id',$cliente->id)->whereDate('fecha', Carbon::today())->paginate(5);
 
         $detallesDeVentas = [];
         foreach ($ventasDelDia as $venta) {
@@ -353,6 +354,7 @@ class ClienteController extends Controller
             $venta->fecha = $request->fecha;
             $venta->totalpagado = $request->totalpagado ?? 0;
             $venta->envio = $request->has('envio') ? true : false;
+            $venta->pago = $request->has('pago') ? true : false;
         $venta->save();
 
 
@@ -388,30 +390,43 @@ class ClienteController extends Controller
 
     }
 
-    public function eliminarVenta(Cliente $cliente, Venta $venta)
+
+    public function ventasDelCliente($clienteId)
     {
-        echo "entra";
-        // Verificar que la venta pertenezca al cliente
-        if ($cliente->id !== $venta->cliente_id) {
-            abort(404); // O mostrar un mensaje de error adecuado
-        }
+        /*$ventas = Venta::with('tipoPago:id,descripcion')
+            ->select('id', 'total', 'totalpagado', 'tipopago_id', 'fecha')
+            ->withCount('ventaDetalles as cantidadviandas')
+            ->where('cliente_id', $clienteId)
+            ->orderby('fecha','DESC')
+            ->paginate(5); // Paginar 5 registros por página (puedes ajustar este número)*/
+        $ventas = Venta::with([
+            'tipoPago:id,descripcion',
+            'cliente.persona:id,apellido,nombre'
+        ])
+        ->select('id', 'total', 'totalpagado', 'tipopago_id', 'fecha', 'cliente_id','pago')
+        ->withCount('ventaDetalles as cantidadviandas')
+        ->where('cliente_id', $clienteId)
+        ->when(request()->input('fechaDesde'), function ($query, $fechaDesde) {
+            return $query->where('fecha', '>=', $fechaDesde);
+        })
+        ->when(request()->input('fechaHasta'), function ($query, $fechaHasta) {
+            return $query->where('fecha', '<=', $fechaHasta);
+        })
+        ->orderBy('fecha', 'DESC')
+        ->paginate(5);
+    
+        $cliente = Cliente::with('persona:id,apellido,nombre')
+            ->select('persona_id')
+            ->where('id', $clienteId)->first();
 
-        // Eliminar la venta
-        $venta->delete();
-
-        // Redirigir al cliente o a la página adecuada
-        alert()->success('Registro Eliminado', 'Exitosamente');
-        return redirect()->route('clientes.index');
+        return response()->json([
+            'ventas' => $ventas->items(),
+            'currentPage' => $ventas->currentPage(),
+            'lastPage' => $ventas->lastPage(),
+            'cliente'=>  $cliente
+        ]);
     }
 
-    public function eliminar(Cliente $cliente, Venta $venta)
-    {
-        // Realiza las operaciones necesarias para eliminar la venta
-
-        VentaDetalle::where('venta_id', $venta->id)->delete();
-        $venta->delete();
-
-        alert()->success('Registro Eliminado', 'Exitosamente');
-        return redirect()->route('clientes.cargarviandas', $cliente->id);
-    }
 }
+
+

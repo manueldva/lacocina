@@ -68,11 +68,11 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-danger">
+            <div class="small-box bg-success">
               <div class="inner">
-                <h3>3</h3>
+                <h3>{{ $ventasDelDia }}</h3>
 
-                <p>Pagos Pendientes</p>
+                <p>Ventas del Dia</p>
               </div>
               <div class="icon">
                 <i class="fas fa-money"></i>
@@ -85,7 +85,7 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>65</h3>
+                <h3>{{ $clientesConMontoAdeudado }}</h3>
 
                 <p>Pagos Atrasados</p>
               </div>

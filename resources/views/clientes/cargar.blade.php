@@ -6,7 +6,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Cargar Venta</h1>
+            <h1 class="m-0 text-dark">Cargar Venta-Pago</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -38,12 +38,12 @@
                             <div class="form-group">
                               <button name="guardar" id="guardar" type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar</button>
                             </div>
-                            @can('clientes.create')  
+                            <!--@can('clientes.create')  
                             &nbsp; &nbsp; 
                             <div class="form-group">
                               <a class="btn btn-outline-info" href="{{ route('clientes.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
                             </div>
-                            @endcan
+                            @endcan-->
                             &nbsp; &nbsp; 
                           @endif
                           <div class="form-group">
@@ -99,6 +99,10 @@
 
                           <div class="form-group">
                             <label>
+                            <input type="checkbox" name="pago" value="1"> Realiza un pago
+                            </label>
+                            &nbsp;&nbsp;
+                            <label>
                             <input type="checkbox" name="envio" value="1"> Con Envio
                             </label>
                           </div>
@@ -151,9 +155,10 @@
                                 <tr>
                                   <th><center>Fecha</center></th>
                                   <th><center>Tipo Pago</center></th>
+                                  <th><center>Concepto</center></th>
                                   <th><center>Total</center></th>
                                   <th><center>TotalPagado</center></th>
-                                  <th width="140px"></th>
+  
                                 </tr>
                               </thead>
                               <tbody>
@@ -161,15 +166,10 @@
                                 <tr>
                                     <td><center>{{ $venta->fecha }}</center></td>
                                     <td><center>{{ $venta->tipoPago ? $venta->tipoPago->descripcion : 'Sin tipo de pago' }}</center></td>
+                                    <td><center>{{ $venta->pago == 1 ? 'Pago' : 'Venta' }}</center></td>
                                     <td><center>{{ $venta->total }}</center></td>
                                     <td><center>{{ $venta->totalpagado }}</center></td>
-                                    <td>
-                                      <form action="{{ route('clientes.ventas.eliminar', ['cliente' => $cliente->id, 'venta' => $venta->id]) }}" method="POST">
-                                          @csrf
-                                          @method('POST') <!-- Cambia DELETE por POST -->
-                                          <button type="submit" class="btn btn-danger">Eliminar</button>
-                                      </form>
-                                    </td>
+                                    
                                   </tr>
                                 @endforeach
                                
@@ -219,13 +219,15 @@
         }
     }
 
+    // Array para almacenar las cantidades originales de los checkboxes secundarios
+    let cantidadesOriginales = [];
 
     // Obtener los elementos necesarios
     const cantidadInputs = document.querySelectorAll('.cantidad-input');
     const checkboxes = document.querySelectorAll('input[name="viandas[]"]');
     const totalInput = document.getElementById('total');
-    
-  
+    const totalPagadoInput = document.getElementById('totalpagado');
+
     // Escuchar el evento change en los campos de cantidad
     cantidadInputs.forEach(function(input) {
         input.addEventListener('change', calcularMontoTotal);
@@ -236,7 +238,7 @@
         checkbox.addEventListener('change', calcularMontoTotal);
     });
 
-    // Calcular el monto total
+    // Función para calcular el monto total y actualizar los campos correspondientes
     function calcularMontoTotal() {
         let montoTotal = 0;
         cantidadInputs.forEach(function(input, index) {
@@ -247,14 +249,63 @@
             }
         });
         totalInput.value = montoTotal.toFixed(2);
-        
-        if (montoTotal.toFixed(2) === '0.00') {
-          document.getElementById('guardar').disabled = true;
-        } else {
-          document.getElementById('guardar').disabled = false;
-        }
+
+        // Habilitar o deshabilitar el botón "Guardar" según el monto total y el estado del checkbox "pago"
+        document.getElementById('guardar').disabled = (montoTotal.toFixed(2) === '0.00' && !$('input[name="pago"]').is(':checked'));
+
+        totalPagadoInput.value = ($('input[name="pago"]').is(':checked')) ? 0 : 0;
+        totalPagadoInput.min = ($('input[name="pago"]').is(':checked')) ? 1 : 0;
     }
 
+    // Evento change para el checkbox principal
+    $('input[name="pago"]').change(function() {
+        if ($(this).is(':checked')) {
+            // El checkbox está marcado (realiza un pago)
+            console.log('El checkbox está marcado');
+
+            // Guardar las cantidades actuales de los checkboxes secundarios antes de desmarcarlos
+            cantidadesOriginales = [];
+            $('input[name="viandas[]"]').not('#envio').each(function() {
+                cantidadesOriginales.push({
+                    checked: this.checked,
+                    cantidad: this.value
+                });
+                this.checked = false;
+                toggleCantidad(this);
+            });
+        } else {
+            // El checkbox no está marcado (no realiza un pago)
+            console.log('El checkbox no está marcado');
+
+            // Si hay cantidades guardadas, restaurar los checkboxes secundarios a sus valores originales
+            if (cantidadesOriginales.length > 0) {
+                $('input[name="viandas[]"]').not('#envio').each(function(index) {
+                    this.checked = cantidadesOriginales[index].checked;
+                    toggleCantidad(this);
+                });
+            }
+
+            // Vaciar el array de cantidades originales
+            cantidadesOriginales = [];
+        }
+
+        // Recalcular el monto total cuando se marque o desmarque "pago" o un checkbox secundario
+        calcularMontoTotal();
+    });
+
+    // Evento change para los checkboxes secundarios
+    $('input[name="viandas[]"]').not('#envio').change(function() {
+        // Desmarcar el checkbox principal si algún checkbox secundario se marca
+        $('input[name="pago"]').prop('checked', false);
+
+        // Recalcular el monto total cuando se marque o desmarque un checkbox secundario
+        calcularMontoTotal();
+    });
+
+    // Calcular el monto total al cargar la página
+    calcularMontoTotal();
+
+    
 
 </script>
 @endsection

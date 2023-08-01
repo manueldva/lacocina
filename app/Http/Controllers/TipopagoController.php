@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 Use Alert;
 use App\User;
 use App\Models\Tipopago;
+use App\Models\Venta;
 use Auth;
 use Carbon\Carbon;
 
@@ -150,16 +151,16 @@ class TipopagoController extends Controller
     public function destroy(Tipopago $tipopago)
     {
         
-        /*if(Cliente::where('plan_id', '=', $id)->first()) {
+        if(Venta::where('tipopago_id', '=', $tipopago->id)->first()) {
             alert()->error('Este registro no se puede eliminar', 'Error');
             return back();
-        } else {*/
-            $tipopago->delete();
-            //Alert::success('Eliminado correctamente')->persistent();
-            //alert()->success('Registro Eliminado', 'Exitosamente')->toToast();
-            Alert::success('Registro Eliminado', 'Exitosamente');
-            return back();
-        //}
-        
+        }
+
+        $tipopago->delete();
+        //Alert::success('Eliminado correctamente')->persistent();
+        //alert()->success('Registro Eliminado', 'Exitosamente')->toToast();
+        Alert::success('Registro Eliminado', 'Exitosamente');
+        return back();
+
     }
 }

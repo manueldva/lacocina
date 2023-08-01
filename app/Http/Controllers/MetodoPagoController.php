@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 Use Alert;
 use App\User;
 use App\Models\MetodoPago;
+use App\Models\Cliente;
 use Auth;
 use Carbon\Carbon;
 
@@ -138,7 +139,11 @@ class MetodoPagoController extends Controller
      */
     public function destroy(MetodoPago $metodopago)
     {
-        
+        if (Cliente::where('metodopago_id', '=', $metodopago->id)->first()) {
+            Alert::error('Este registro no se puede eliminar', 'Error');
+            return back();
+
+        }
         /*if(Cliente::where('plan_id', '=', $id)->first()) {
             alert()->error('Este registro no se puede eliminar', 'Error');
             return back();

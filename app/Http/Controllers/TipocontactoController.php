@@ -14,6 +14,11 @@ class TipocontactoController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:complementos.index')->only('index');
+        $this->middleware('can:complementos.create')->only('create','store');
+        $this->middleware('can:complementos.edit')->only('edit','update');
+        $this->middleware('can:complementos.show')->only('show');
+        $this->middleware('can:complementos.destroy')->only('destroy');
     }
 
     /**

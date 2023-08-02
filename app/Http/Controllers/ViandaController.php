@@ -15,6 +15,11 @@ class ViandaController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('can:viandas.index')->only('index');
+        $this->middleware('can:viandas.create')->only('create','store');
+        $this->middleware('can:viandas.edit')->only('edit','update');
+        $this->middleware('can:viandas.show')->only('show');
+        $this->middleware('can:viandas.destroy')->only('destroy');
     }
 
     /**

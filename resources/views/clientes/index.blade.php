@@ -131,11 +131,13 @@
                            
 
                               <form action="{{ route('clientes.destroy',$cliente->id) }}" method="POST">
+                                  @can('clientes.show')  
+                                    <a class="btn btn-sm btn-flat btn-outline-dark" href="#" data-toggle="modal" data-target="#modalVentas" data-cliente-id="{{ $cliente->id }}" data-placement="top" title="Detalle ventas"><i class="fas fa-list"></i> </a>
+                                  @endcan
                                   @can('clientes.edit')  
-                                  <a class="btn btn-sm btn-flat btn-outline-dark" href="#" data-toggle="modal" data-target="#modalVentas" data-cliente-id="{{ $cliente->id }}" data-placement="top" title="Detalle ventas"><i class="fas fa-list"></i> </a>
-                                  <a class="btn btn-sm btn-flat btn-outline-primary" href="{{ route('clientes.cargarviandas',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Cargar Venta"><i class="fas fa-address-card"></i> </a>
-                                  <!--<a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('clientes.show',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>-->
-                                  <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('clientes.edit',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
+                                    <a class="btn btn-sm btn-flat btn-outline-primary" href="{{ route('clientes.cargarviandas',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Cargar Venta"><i class="fas fa-address-card"></i> </a>
+                                    <!--<a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('clientes.show',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>-->
+                                    <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('clientes.edit',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
                                   @endcan
                                   @can('clientes.destroy')  
                                     <a href="#" data-id="{{$cliente->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">

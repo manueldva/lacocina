@@ -4,8 +4,14 @@
     <style>
         /* Aquí puedes agregar tus estilos personalizados */
         .fecha-column {
-            width: 100px;
+            width: 150px;
         }
+
+        /* Asegúrate de agregar este estilo en una etiqueta <style> o en un archivo .css */
+      .custom-modal-dialog {
+        max-width: 800px; /* Ajusta el ancho deseado */
+        width: 90%; /* También puedes usar porcentajes para mayor flexibilidad */
+      }
     </style>
 @endsection
 
@@ -71,6 +77,7 @@
               <!-- /.card-header -->
               <div class="card-body  p-3">
                 <!--<div class="card-body p-0">-->
+                <div class="table-responsive">
                   <table class="table table-striped table-valign-middle table-bordered">
                     <thead>
                       <tr>
@@ -140,7 +147,7 @@
                       @endforeach
                     </tbody>
                   </table>
-
+                  </div>
                   <br>
                   <div>
                     <strong>
@@ -159,7 +166,7 @@
       </div><!-- /.container-fluid -->
       <!-- Modal para mostrar las ventas del cliente -->
       <div class="modal fade" id="modalVentas" tabindex="-1" role="dialog" aria-labelledby="modalVentasLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-scrollable" role="document">
+          <div class="modal-dialog modal-dialog-scrollable custom-modal-dialog" role="document">
               <div class="modal-content">
                   <div class="modal-header">
                       <h5 class="modal-title" id="modalVentasLabel">Ventas de <span id="clienteNombre"></span></h5>

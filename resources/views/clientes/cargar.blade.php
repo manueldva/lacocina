@@ -150,6 +150,7 @@
                           <hr>
                           <div class="card-body  p-3">
                           <!--<div class="card-body p-0">-->
+                          <div class="table-responsive">
                             <table class="table table-striped table-valign-middle table-bordered">
                               <thead>
                                 <tr>
@@ -175,7 +176,7 @@
                                
                               </tbody>
                             </table>
-                            
+                            </div>
                             <br>
                             {{ $ventasDelDia->links() }}
                             <div>

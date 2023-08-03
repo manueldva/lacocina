@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             
         ])->syncRoles('superadmin');*/
 
-        User::create([
+        /*User::create([
             'name' => 'Avila David',
             'username' => 'mavila',
             'email' => 'manudva22@gmail.com',

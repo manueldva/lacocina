@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 Use Alert;
 use App\User;
 use App\Models\Vianda;
+use App\Models\ClienteVianda;
+use App\Models\VentaDetalle;
 use Auth;
 use Carbon\Carbon;
 
@@ -146,7 +148,15 @@ class ViandaController extends Controller
      */
     public function destroy(Vianda $vianda)
     {
-        
+        if(ClienteVianda::where('vianda_id', '=', $vianda->id)->first()) {
+            alert()->error('Este registro no se puede eliminar', 'Error');
+            return back();
+        }
+
+        if(VentaDetalle::where('vianda_id', '=', $vianda->id)->first()) {
+            alert()->error('Este registro no se puede eliminar', 'Error');
+            return back();
+        }
         /*if(Cliente::where('plan_id', '=', $id)->first()) {
             alert()->error('Este registro no se puede eliminar', 'Error');
             return back();
@@ -157,6 +167,7 @@ class ViandaController extends Controller
             Alert::success('Registro Eliminado', 'Exitosamente');
             return back();
         //}
+        
         
     }
 }

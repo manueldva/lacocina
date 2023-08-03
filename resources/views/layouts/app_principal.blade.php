@@ -262,7 +262,22 @@
                 </li>
             </ul>
           </li>
-          @endif
+          @endcan
+          @can('informes.index')
+          <li class="nav-item">
+            <a href="{{ route('informes.index') }}" class="nav-link 
+              @if($segment == 'informes')
+              active
+              @endif
+              ">
+              <i class="nav-icon fas fa-file-pdf-o  nav-icon"></i>
+              <p>
+                Informes
+              </p>
+            </a>
+            
+          </li>
+          @endcan
           <!--
           <li class="nav-header">Acción</li>
           <li class="nav-item">

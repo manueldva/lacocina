@@ -51,10 +51,65 @@ class Cliente extends Model
 
     }
 
-	public function scopeWithMontoAdeudado(Builder $query)
+	/*public function scopeWithMontoAdeudado(Builder $query)
     {
         $query->select('clientes.*')
             ->selectRaw('(SELECT SUM(total) FROM ventas WHERE ventas.cliente_id = clientes.id) - (SELECT SUM(totalpagado) FROM ventas WHERE ventas.cliente_id = clientes.id) AS monto_adeudado');
+    }*/
+
+	
+	
+    /*public function scopeWithMontoAdeudado(Builder $query)
+    {
+        $query->select('clientes.*')
+            ->selectSub(function ($subquery) {
+                $subquery->selectRaw('COALESCE(SUM(total), 0)')
+                    ->from('ventas')
+                    ->whereColumn('ventas.cliente_id', 'clientes.id');
+            }, 'monto_ventas')
+            ->selectSub(function ($subquery) {
+                $subquery->selectRaw('COALESCE(SUM(totalpagado), 0)')
+                    ->from('ventas')
+                    ->whereColumn('ventas.cliente_id', 'clientes.id');
+            }, 'monto_pagado')
+            ->addSelect(['monto_adeudado' => function ($query) {
+                $query->selectRaw('monto_ventas - monto_pagado');
+            }]);
+    }*/
+
+
+	public function scopeWithMontoAdeudado(Builder $query, $fechaDesde = null, $fechaHasta = null)
+    {
+        $query->select('clientes.*')
+            ->selectSub(function ($subquery) use ($fechaDesde, $fechaHasta) {
+                $subquery->selectRaw('COALESCE(SUM(total), 0)')
+                    ->from('ventas')
+                    ->whereColumn('ventas.cliente_id', 'clientes.id');
+
+                if ($fechaDesde) {
+                    $subquery->where('fecha', '>=', $fechaDesde);
+                }
+
+                if ($fechaHasta) {
+                    $subquery->where('fecha', '<=', $fechaHasta);
+                }
+            }, 'monto_ventas')
+            ->selectSub(function ($subquery) use ($fechaDesde, $fechaHasta) {
+                $subquery->selectRaw('COALESCE(SUM(totalpagado), 0)')
+                    ->from('ventas')
+                    ->whereColumn('ventas.cliente_id', 'clientes.id');
+
+                if ($fechaDesde) {
+                    $subquery->where('fecha', '>=', $fechaDesde);
+                }
+
+                if ($fechaHasta) {
+                    $subquery->where('fecha', '<=', $fechaHasta);
+                }
+            }, 'monto_pagado')
+            ->addSelect(['monto_adeudado' => function ($query) {
+                $query->selectRaw('monto_ventas - monto_pagado');
+            }]);
     }
 
 }

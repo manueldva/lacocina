@@ -47,7 +47,6 @@ Route::post('clientes/{cliente}/guardarviandas', 'ClienteController@guardarViand
 Route::post('clientes/{cliente}/ventas/{venta}', 'ClienteController@eliminar')->name('clientes.ventas.eliminar');
 // Rutas
 Route::get('/ventasDelCliente/{clienteId}', 'ClienteController@ventasDelCliente')->name('clientes.ventas.delcliente');
-Route::get('/clientes/{cliente}/ventas/pdf', 'ClienteController@generatePDF')->name('clientes.ventas.pdf');
 
 Route::resource('viandas', 'ViandaController');
 Route::resource('tipocontactos', 'TipocontactoController');
@@ -61,4 +60,9 @@ Route::resource('barrios', 'BarrioController');
 Route::resource('dias', 'DiaController');
 Route::resource('tipoclientes', 'TipoclienteController');
 */
+
+Route::resource('informes', 'InformeController');
+
+route::get('/print1/{cliente}/{fechadesde}/{fechahasta}',		'InformeController@print1')->name('print1');
+
 

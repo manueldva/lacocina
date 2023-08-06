@@ -77,18 +77,18 @@
 					<h3>
 						<div class="form-group">
 
-                        	@if ($cliente->monto_adeudado > 0)
+                        	<!--@if ($cliente->monto_adeudado > 0)
 								<label>Debe en el rango de fecha seleccionado: ${{ $cliente->monto_adeudado }}  </b> </label>
 							@else
 								<label>@if ($cliente->monto_adeudado !=  0) A favor en el rango de fecha seleccionado: @endif ${{ abs($cliente->monto_adeudado) }}  </b> </label>
 							@endif
 							
 							<br>
-							<br>
+							<br>-->
 							@if ($cantidadgeneral > 0)
-								<label>Deuda Total: ${{ $cantidadgeneral }}  </b> </label>
+								<label>Deuda Actual: ${{ $cantidadgeneral }}  </b> </label>
 							@else
-								<label>@if ($cantidadgeneral !=  0) A favor sin filtros: @endif ${{ abs($cantidadgeneral) }}  </b> </label>
+								<label>@if ($cantidadgeneral !=  0) Saldo a favor:  {{ abs($cantidadgeneral) }}  @else Esta al dia @endif  </b> </label>
 							@endif
 
 						</div>

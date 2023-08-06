@@ -159,7 +159,7 @@
                                   <th><center>Concepto</center></th>
                                   <th><center>Total</center></th>
                                   <th><center>TotalPagado</center></th>
-  
+                                 
                                 </tr>
                               </thead>
                               <tbody>
@@ -306,7 +306,7 @@
     // Calcular el monto total al cargar la página
     calcularMontoTotal();
 
-    
+
 
 </script>
 @endsection

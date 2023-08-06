@@ -48,6 +48,7 @@ Route::post('clientes/{cliente}/ventas/{venta}', 'ClienteController@eliminar')->
 // Rutas
 Route::get('/ventasDelCliente/{clienteId}', 'ClienteController@ventasDelCliente')->name('clientes.ventas.delcliente');
 
+
 Route::resource('viandas', 'ViandaController');
 Route::resource('tipocontactos', 'TipocontactoController');
 Route::resource('tipopagos', 'TipopagoController');

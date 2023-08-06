@@ -286,6 +286,11 @@ class ClienteController extends Controller
      */
     public function destroy(Cliente $cliente)
     {
+        
+        if(Venta::where('cliente_id', '=', $cliente->id)->first()) {
+            alert()->error('Este registro no se puede eliminar', 'Error');
+            return back();
+        }
         // Eliminar los registros de ClienteVianda asociados al cliente
         ClienteVianda::where('cliente_id', $cliente->id)->delete();
 

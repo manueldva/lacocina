@@ -210,6 +210,7 @@
                                       <th><center>Concepto</center></th>
                                       <th><center>Total</center></th>
                                       <th><center>Pagado</center></th>
+                                   
                                   </tr>
                               </thead>
                               <tbody id="ventasDelClienteBody">
@@ -321,6 +322,8 @@
                     row += '<td><center>' + (venta.pago == 1 ? 'Pago' : 'Venta') + '</center></td>';
                     row += '<td><center>' + venta.total + '</center></td>';
                     row += '<td><center>' + venta.totalpagado + '</center></td>';
+
+                
                     row += '</tr>';
                     ventasDelClienteBody.append(row);
                 });
@@ -391,7 +394,7 @@
         return anio + '-' + mes + '-' + dia;
     }
 
-   
+
   </script> 
 
 @endsection

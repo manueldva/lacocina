@@ -74,7 +74,13 @@ class InformeController extends Controller
         $segment = 'informes';
 
         if($id == 1) { // ventas por repartidor
-            return view('informes.show1', compact('segment'));
+
+            $clientes = Cliente::join('personas', 'clientes.persona_id', '=', 'personas.id')
+            ->select('clientes.id', 'personas.Apellido', 'personas.Nombre')
+            ->get();
+
+
+            return view('informes.show1', compact('segment','clientes'));
 
         }
     }
@@ -121,13 +127,6 @@ class InformeController extends Controller
         $cliente = Cliente::with('persona:id,apellido,nombre')
         ->select('persona_id')
         ->where('id', $clienteId)->withMontoAdeudado($fechadesde,$fechahasta)->first();
-
-        if(!$cliente){
-            alert()->error('No se encontro el ID cliente', 'Error');
-            return back();
-            //return redirect()->route('informes.show', 1);   
-        }
-
     
         $ventas = Venta::with([
             'tipoPago:id,descripcion',
@@ -145,7 +144,7 @@ class InformeController extends Controller
         ->orderBy('fecha', 'DESC')
         ->get();
     
-        $cantidadgeneral = 1500;
+        $cantidadgeneral = Cliente::where('id', $clienteId)->withMontoAdeudado()->value('monto_adeudado');
          
         $pdf = PDF::loadView('informes.print1', compact('ventas', 'fechadesde', 'fechahasta', 'cliente','cantidadgeneral'));
             //$pdf->setPaper('Legal', 'landscape'); --Portrait 

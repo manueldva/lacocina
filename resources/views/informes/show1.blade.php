@@ -1,5 +1,11 @@
 @extends('layouts.app_principal')
 
+@section('css')
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endsection
+
+
+
 @section('content')
 <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -50,15 +56,22 @@
                                 <label for="fechaHasta">Fecha Hasta</label>
                                 <input type="date" class="form-control" id="fechahasta" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
                             </div>
-                            <div class="form-group col-md-5">
-                                <label for="fechaHasta">ID del Cliente</label>
-                                <input type="number" class="form-control" id="cliente">
+                            <div class="form-group  col-md-5">
+                              <label for="cliente_id">ID del Cliente</label>
+                              <select class="form-control" name="cliente_id" id="cliente_id">
+                                  <option value="">Seleccione un cliente</option>
+                                  @foreach ($clientes as $cliente)
+                                      <option value="{{ $cliente->id }}">{{ $cliente->Apellido }} {{ $cliente->Nombre }}</option>
+                                  @endforeach
+                              </select>
+
                             </div>
 
-                            <a target="_blank" href="#" id="imprimir"> 
-                                <button  type="button" class="btn btn btn-primary">  Generar Informe</button>
+                            
+                            <a target="_blank" href="#" id="imprimir">
+                                <button type="button" class="btn btn btn-primary" id="btnGenerarInforme">Generar Informe</button>
                             </a>
-                        
+                                                    
                         </div>
                       </div>
                       <!-- /.card-body -->
@@ -79,27 +92,50 @@
 
 
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+
 <script type="text/javascript">
-    $('#imprimir').on('click', function(e){
-        
-        /*var usuario = $("#usuario option:selected").attr("value")
-        //alert(usuario);
-        if (usuario == '')
-        {
-            usuario = 'Todos';
-        }*/
-
-        /*if(usuario == 'Todos') {
-            toastr.error('Debe seleccionar un vendedor para generar el informe');
-            return false;
-        }*/
-        var fechadesde = $("#fechadesde").val();
-        var fechahasta = $("#fechahasta").val();
-        var cliente = $("#cliente").val();
-        e.preventDefault();
-        window.open("{{url('print1')}}/"+ cliente + "/" + fechadesde + "/" + fechahasta);
 
 
+
+    // In your Javascript (external .js resource or <script> tag)
+  $(document).ready(function() {
+      $('#cliente_id').select2();
+  });
+
+  $('#imprimir').on('click', function(e){
+      
+      
+      var fechadesde = $("#fechadesde").val();
+      var fechahasta = $("#fechahasta").val();
+      var cliente = $("#cliente_id").val();
+      e.preventDefault();
+      window.open("{{url('print1')}}/"+ cliente + "/" + fechadesde + "/" + fechahasta);
+
+
+  });
+
+
+  $(document).ready(function() {
+        // Agregar evento click al botón "Generar Informe"
+        $("#btnGenerarInforme").click(function() {
+            // Obtener el valor seleccionado en el campo de selección
+            var cliente = $("#cliente_id").val();
+            
+            // Validar si se ha seleccionado un cliente antes de generar el informe
+            if (!cliente) {
+                // Mostrar una alerta con SweetAlert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Por favor, seleccione un cliente antes de generar el informe.'
+                });
+                // Detener la ejecución del botón
+                return false;
+            }
+        });
     });
 </script>
 @endsection

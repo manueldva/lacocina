@@ -2,7 +2,7 @@
 
 @section('cuerpo')
 
-<h3><center>Cliente: {{ $cliente->persona->apellido}} {{ $cliente->persona->nombre}}</h3>
+<h3><center>Cliente: {{ $cliente ?  $cliente->persona->apellido  : ''}} {{ $cliente ?  $cliente->persona->nombre  : ''}}</h3>
 <h3><center>Desde el  @if($fechadesde) {{ $fechadesde}} @endif Hasta el @if($fechahasta) {{ $fechahasta}} @endif</center></h3>
 
 <div class="row">
@@ -42,22 +42,26 @@
 											
                                             <th><center>Fecha</center></th>
                                             <th><center>Tipo Pago</center></th>
+											<th><center>Cantidad</center></th>
                                             <th><center>Concepto</center></th>
                                             <th><center>Total</center></th>
                                             <th><center>TotalPagado</center></th>
 										</tr>
 									</thead>
 									<tbody>
-                                        @foreach ($ventas as $venta)
+
+										@foreach ($ventas as $venta)
 											<tr>
 											
-                                            <td><center>{{ $venta->fecha }}</center></td>
-                                            <td><center>{{ $venta->tipoPago ? $venta->tipoPago->descripcion : 'Sin tipo de pago' }}</center></td>
-                                            <td><center>{{ $venta->pago == 1 ? 'Pago' : 'Venta' }}</center></td>
-                                            <td><center>{{ $venta->total }}</center></td>
-                                            <td><center>{{ $venta->totalpagado }}</center></td>
+											<td><center>{{ $venta->fecha }}</center></td>
+											<td><center>{{ $venta->tipoPago ? $venta->tipoPago->descripcion : 'Sin tipo de pago' }}</center></td>
+											<td><center>{{ $venta->pago == 1 ?  '-' : $venta->cantidadviandas }}</center></td>
+											<td><center>{{ $venta->pago == 1 ? 'Pago' : 'Venta' }}</center></td>
+											<td><center>{{  $venta->pago == 1 ?  '-' : $venta->total }}</center></td>
+											<td><center>{{ $venta->totalpagado }}</center></td>
 											</tr>
 										@endforeach
+
 										
 									</tbody>
 								</table>
@@ -73,12 +77,19 @@
 					<h3>
 						<div class="form-group">
 
-                        @if ($cliente->monto_adeudado > 0)
-                            <label>Debe: ${{ $cliente->monto_adeudado }}  </b> </label>
-                          @else
-                            <label>@if ($cliente->monto_adeudado !=  0) A Favor: @endif ${{ abs($cliente->monto_adeudado) }}  </b> </label>
-                          @endif
+                        	@if ($cliente->monto_adeudado > 0)
+								<label>Debe en el rango de fecha seleccionado: ${{ $cliente->monto_adeudado }}  </b> </label>
+							@else
+								<label>@if ($cliente->monto_adeudado !=  0) A favor en el rango de fecha seleccionado: @endif ${{ abs($cliente->monto_adeudado) }}  </b> </label>
+							@endif
 							
+							<br>
+							<br>
+							@if ($cantidadgeneral > 0)
+								<label>Deuda Total: ${{ $cantidadgeneral }}  </b> </label>
+							@else
+								<label>@if ($cantidadgeneral !=  0) A favor sin filtros: @endif ${{ abs($cantidadgeneral) }}  </b> </label>
+							@endif
 
 						</div>
 					</h3>

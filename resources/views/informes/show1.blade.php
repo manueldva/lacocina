@@ -106,10 +106,22 @@
   });
 
   $('#imprimir').on('click', function(e){
-      
-      
-      var fechadesde = $("#fechadesde").val();
-      var fechahasta = $("#fechahasta").val();
+    
+      /*var fechadesde = $("#fechadesde").val();
+      var fechahasta = $("#fechahasta").val();*/
+
+      var fechaActual = new Date();
+      var añoActual = fechaActual.getFullYear();
+      var mesActual = fechaActual.getMonth() + 1; // Los meses se cuentan desde 0 (enero) hasta 11 (diciembre)
+      var diaActual = fechaActual.getDate();
+
+      // Ajustar el formato de la fecha actual a "YYYY-MM-DD"
+      var fechaActualFormateada = añoActual + '-' + (mesActual < 10 ? '0' : '') + mesActual + '-' + (diaActual < 10 ? '0' : '') + diaActual;
+
+      // Obtener las fechas desde el formulario o usar las predeterminadas si están vacías o nulas
+      var fechadesde = $("#fechadesde").val() || "2023-01-01";
+      var fechahasta = $("#fechahasta").val() || fechaActualFormateada;
+
       var cliente = $("#cliente_id").val();
       e.preventDefault();
       window.open("{{url('print1')}}/"+ cliente + "/" + fechadesde + "/" + fechahasta);

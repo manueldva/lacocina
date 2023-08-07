@@ -17,7 +17,7 @@ class CreateClientesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('persona_id');
             $table->foreign('persona_id')->references('id')->on('personas');
-            $table->unsignedBigInteger('metodopago_id');
+            $table->unsignedBigInteger('metodopago_id')->nullable();
             $table->foreign('metodopago_id')->references('id')->on('metodopagos');
            /*$table->unsignedBigInteger('tipocliente_id');
             $table->foreign('tipocliente_id')->references('id')->on('tipoclientes');*/

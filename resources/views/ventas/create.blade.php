@@ -146,7 +146,7 @@
                 </div>
                
         
-                <div class="col-md-4" > <!-- Oculto por el momento-->
+                <div class="col-md-8" > <!-- Oculto por el momento-->
                   <!-- general form elements -->
                   <div class="card card-default">
                     <div class="card-header">
@@ -185,29 +185,7 @@
                   </div>
                 </div>
 
-                <div class="col-md-4" > <!-- Oculto por el momento-->
-                  <!-- general form elements -->
-                  <div class="card card-default">
-                    <div class="card-header">
-                      <center>
-                        <h3 class="card-title">Datos Viandas</h3>
-                      </center>
-                      
-                    </div>
-                    <!-- /.card-header -->
-                    <!-- form start -->
-                    <div class="card-body">
-                      <div class="form-group">
-
-                        
-                        
-                        
-                      </div>
-                      <!-- /.card-body -->
-                    </div>
-                  <!-- /.card -->
-                  </div>
-                </div>
+                <!--aca agregar div->
 
               </div>
 
@@ -300,6 +278,23 @@
         $(this).alert('close');
     });
 
+
+    $('#guardar').click(function(event) {
+        // Obtener la cantidad de checkboxes de viandas seleccionados
+        var viandasSeleccionadas = $('input[name="viandas[]"]:checked').length;
+
+        // Si no se ha seleccionado ninguna vianda, mostrar un mensaje de alerta
+        if (viandasSeleccionadas === 0) {
+            event.preventDefault(); // Evita que el formulario se envíe
+            Swal.fire({
+                icon: 'error', // Cambiamos el icono a 'error'
+                title: '¡Atención!',
+                text: 'Debes seleccionar al menos una vianda antes de guardar.',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    });
 
     
 </script>

@@ -53,14 +53,9 @@ Route::resource('viandas', 'ViandaController');
 Route::resource('tipocontactos', 'TipocontactoController');
 Route::resource('tipopagos', 'TipopagoController');
 Route::resource('metodopagos', 'MetodoPagoController');
-/*
-Route::resource('tipoantecedentemedicos', 'TipoantecedentemedicoController');
-Route::resource('antecedentemedicos', 'AntecedentemedicoController');
-Route::resource('calles', 'CalleController');
-Route::resource('barrios', 'BarrioController');
-Route::resource('dias', 'DiaController');
-Route::resource('tipoclientes', 'TipoclienteController');
-*/
+
+Route::resource('ventas', 'VentaController');
+Route::get('/ajax/get-cliente-info/{clienteId}', 'VentaController@getClienteInfo');
 
 Route::resource('informes', 'InformeController');
 

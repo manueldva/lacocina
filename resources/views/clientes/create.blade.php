@@ -192,7 +192,7 @@
                       <div class="form-group">
 
                         <div class="form-group">
-                          <label for="role_id">Metodo de Pago:</label>
+                          <label for="role_id">Metodo de Pago(*):</label>
                             <select  id="metodopago_id" name="metodopago_id" class="form-control  @error('metodopago_id') is-invalid @enderror">
                             <option value="">Seleccionar un Metodo</option>
                             @foreach($metodopagos as $metodopago)

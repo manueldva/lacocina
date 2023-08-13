@@ -70,7 +70,7 @@
                       <div class="card-body">
                         
                         <div class="form-group">
-                          <label for="descripcion">Descripción:</label>
+                          <label for="descripcion">Descripción(*):</label>
                           <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" value="{{ $vianda->descripcion }}">
                         </div>
                         @error('descripcion')
@@ -90,7 +90,7 @@
                         @enderror
 
                         <div class="form-group">
-                          <label for="precio">Descripción:</label>
+                          <label for="precio">Precio(*):</label>
                           <input type="number" class="form-control @error('precio') is-invalid @enderror" id="precio" name="precio" value="{{ $vianda->precio }}">
                         </div>
                         @error('precio')

@@ -69,7 +69,14 @@ class RoleSeeder extends Seeder
         permission::create(['name' => 'ejercicios.destroy'])->syncRoles([$role1,$role2]);
         */
 
-        permission::create(['name' => 'informes.index', 'description' => 'Solo Lectura', 'father' => 'Informe']);
-        permission::create(['name' => 'informes.show', 'description' => 'Detalle', 'father' => 'Informe']);
+        permission::create(['name' => 'informes.index', 'description' => 'Solo Lectura', 'father' => 'Informe'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'informes.show', 'description' => 'Detalle', 'father' => 'Informe'])->syncRoles([$role2,$role3]);
+
+
+        permission::create(['name' => 'ventas.index', 'description' => 'Solo Lectura', 'father' => 'ventas'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'ventas.show', 'description' => 'Detalle', 'father' => 'ventas'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'ventas.create', 'description' => 'Alta', 'father' => 'ventas'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'ventas.edit', 'description' => 'Modi', 'father' => 'ventas'])->syncRoles([$role2,$role3]);
+        permission::create(['name' => 'ventas.destroy', 'description' => 'Baja', 'father' => 'ventas'])->syncRoles([$role2,$role3]);
     }
 }

@@ -63,7 +63,9 @@ class MetodoPagoController extends Controller
  
         ];
         $validatedData = $request->validate([
-            'descripcion' => 'required|max:100|unique:metodopagos,descripcion'
+            'descripcion' => 'required|max:100|unique:metodopagos,descripcion',
+            'dias' => 'required|min:0',
+            'aviso' => 'required|min:0' 
         ], $messages);
 
         $metodopago = MetodoPago::create($request->all());
@@ -116,11 +118,15 @@ class MetodoPagoController extends Controller
         //$tipocontacto = Tipocontacto::find($id);
 
         $messages = [
-            'descripcion.required' => 'El campo descripcion es obligatorio.'
+            'descripcion.required' => 'El campo descripcion es obligatorio.',
+            'dias.required' => 'El campo Cantidad de dias es obligatorio.',
+            'aviso.required' => 'El campo Aviso es obligatorio.'
             
         ];
         $validatedData = $request->validate([
-            'descripcion' => 'required|max:100|unique:metodopagos,descripcion,' . $metodopago->id
+            'descripcion' => 'required|max:100|unique:metodopagos,descripcion,' . $metodopago->id,
+            'dias' => 'required|min:0',
+            'aviso' => 'required|min:0' 
         ], $messages);
 
 

@@ -68,6 +68,24 @@
                             {{ $message }}
                           </div>
                         @enderror
+                       <div class="form-group">
+                          <label for="dias">Cantidad de dias:</label>
+                          <input type="number" class="form-control @error('dias') is-invalid @enderror" id="dias" name="dias" value="{{ old('dias') }}">
+                        </div>
+                        @error('dias')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
+                        <div class="form-group">
+                          <label for="aviso">Aviso:</label>
+                          <input type="number" class="form-control @error('aviso') is-invalid @enderror" id="aviso" name="aviso"  value="{{ old('aviso') }}">
+                        </div>
+                        @error('aviso')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
 
                         <div class="form-group">
                           <label for="estado">Activo:</label>

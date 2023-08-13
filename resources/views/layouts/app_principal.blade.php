@@ -14,6 +14,7 @@
   <!-- Ionicons -->
   <!--<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">-->
   <link rel="stylesheet" href="{{ asset('css/ionicons.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
   <!-- Theme style -->
   <!--<link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">-->
   <link rel="stylesheet" href="{{ asset('dist/css/adminlte.css') }}">
@@ -36,6 +37,10 @@
   <link href="{{ asset('css/googleapis.css') }}" rel="stylesheet">
 
   <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
+
+  
+  <link rel="stylesheet" href="{{ asset('plugins/bootstrap-switch/css/bootstrap3/bootstrap-switch.min.css') }}">
+
 
   @yield('css')
 </head>
@@ -136,6 +141,21 @@
             
           </li>
           @endcan
+          @can('ventas.index')
+          <li class="nav-item">
+            <a href="{{ route('ventas.index') }}" class="nav-link 
+              @if($segment == 'ventas')
+              active
+              @endif
+              ">
+              <i class="nav-icon fas fa-money  nav-icon"></i>
+              <p>
+                Ventas
+              </p>
+            </a>
+            
+          </li>
+          @endcan
           @can('clientes.index')
           <li class="nav-item">
             <a href="{{ route('clientes.index') }}" class="nav-link 
@@ -158,7 +178,7 @@
               active
               @endif
               ">
-              <i class="nav-icon fas fa-user  nav-icon"></i>
+              <i class="nav-icon fas fa-file  nav-icon"></i>
               <p>
                 Viandas
               </p>
@@ -353,6 +373,10 @@
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>-->
 <script src="{{ asset('js/moment.min.js') }}"></script>
 <script src="{{ asset('plugins/daterangepicker/daterangepicker.js') }}"></script>
+
+<!-- Bootstrap Switch -->
+<script src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
+
 <!-- datepicker -->
 <script src="{{ asset('plugins/datepicker/bootstrap-datepicker.js') }}"></script>
 <!-- Bootstrap WYSIHTML5 -->
@@ -369,6 +393,8 @@
 <script src="{{ asset('dist/js/demo.js') }}"></script>
 
 <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
+
+<script src="{{ asset('js/select2.min.js') }}"></script>
 
 <script>
 

@@ -15,22 +15,21 @@ use App\Models\Tipopago;
 use App\Models\ClienteVianda;
 use App\Models\Venta;
 use App\Models\VentaDetalle;
+use App\Models\Ventafecha;
 use Auth;
 use Carbon\Carbon;
 
 
-class ClienteController extends Controller
+class VentaController extends Controller
 {
-    
-
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('can:clientes.index')->only('index');
-        $this->middleware('can:clientes.create')->only('create','store');
-        $this->middleware('can:clientes.edit')->only('edit','update');
-        $this->middleware('can:clientes.show')->only('show');
-        $this->middleware('can:clientes.destroy')->only('destroy');
+        $this->middleware('can:ventas.index')->only('index');
+        $this->middleware('can:ventas.create')->only('create','store');
+        $this->middleware('can:ventas.edit')->only('edit','update');
+        $this->middleware('can:ventas.show')->only('show');
+        $this->middleware('can:ventas.destroy')->only('destroy');
     }
 
     /**
@@ -41,18 +40,18 @@ class ClienteController extends Controller
     public function index(Request $request)
     {
 
-        $segment = 'clientes';
+        $segment = 'ventas';
         //$clientes = Cliente::paginate(10);
         $buscador = $request->get('tipo'); // se agrega para que queden seleccionados los filtros al recargar la pagina
         $dato = $request->get('buscarpor'); // despues ver como refactorizar
         
         //$clientes =  Cliente::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
         
-        $clientes = Cliente::buscarpor($request->get('tipo'), $request->get('buscarpor'))
-        ->withMontoAdeudado()
+        $ventas = Venta::buscarpor($request->get('tipo'), $request->get('buscarpor'))
+        //->withMontoAdeudado()
         ->paginate(10);
 
-        return view('clientes.index',compact('clientes', 'segment','buscador','dato'));
+        return view('ventas.index',compact('ventas', 'segment','buscador','dato'));
     }
 
     /**
@@ -63,16 +62,25 @@ class ClienteController extends Controller
     public function create()
     {
         //$fecha = date('Y-m-d'); 
-        $segment = 'clientes';
+        $segment = 'ventas';
 
-        //$tipoclientes = Tipocliente::where('activo',1)->get();
-        //$tipocontactos = Tipocontacto::where('activo',1)->get();
-        $metodopagos = MetodoPago::where('activo',1)->get();
+        $clientes = Cliente::join('personas', 'clientes.persona_id', '=', 'personas.id')
+        ->select('clientes.id','clientes.metodopago_id', 'personas.Apellido', 'personas.Nombre')
+        ->where('clientes.activo',1)
+        ->get();
+
+       //dd($clientes);
+
+        $metodopagos= MetodoPago::where('activo',1)->get();
+
+        $tipopagos = Tipopago::where('activo',1)->get();
         $viandas = Vianda::where('activo', 1)->get();
+
+
 
         //$dias = Dia::where('activo',1)->get();
 
-        return view('clientes.create', compact('segment','metodopagos','viandas'));
+        return view('ventas.create', compact('segment','metodopagos','viandas','clientes','tipopagos'));
     }
 
     /**
@@ -84,6 +92,7 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
 
+        dd($request->all());
 
         $messages = [
             'fechanacimiento.required' =>'El campo Fecha de nacimiento es obligatorio.'
@@ -305,143 +314,15 @@ class ClienteController extends Controller
         return back();
     }
 
-    public function cargarViandas(Cliente $cliente)
+    public function getClienteInfo($id)
     {
-         //$miembro = Miembro::find($id);
-        $show = 0;
-        $segment = 'clientes';
- 
-         //$tipoclientes = Tipocliente::where('activo',1)->get();
-        $tipopagos = TipoPago::where('activo',1)->get();
-         //$dias = Dia::where('activo',1)->get();
-        $viandas = Vianda::where('activo', 1)->get();
- 
-        $viandasSeleccionadas = $cliente->viandas()->pluck('vianda_id')->toArray();
- 
-        // Obtener las cantidades de las viandas relacionadas y calcular el monto total
-        $cantidades = [];
-        $montoTotal = 0;
-        foreach ($cliente->viandas as $vianda) {
-            $cantidad = $vianda->pivot->cantidad;
-            $cantidades[$vianda->vianda_id] = $cantidad;
-            $montoTotal += $vianda->precio * $cantidad;
-        }
-
-        $ventasDelDia = Venta::where('cliente_id',$cliente->id)->whereDate('fecha', Carbon::today())->paginate(5);
-
-        $detallesDeVentas = [];
-        foreach ($ventasDelDia as $venta) {
-            $detalles = VentaDetalle::where('venta_id', $venta->id)->paginate(10);
-            $detallesDeVentas[$venta->id] = $detalles;
-        }
-        
-        
-        
-        //dd($montoTotal);
-        return view('clientes.cargar', compact('cliente', 'segment','tipopagos','viandas','viandasSeleccionadas','ventasDelDia', 'detallesDeVentas','cantidades','montoTotal', 'show'));
-    }
-
-
-
-    public function guardarViandas(Request $request, Cliente $cliente)
-    {
-        
-         //dd($request->all());
-        $messages = [
-            'tipopago_id.required' =>'El campo Tipo de pago es obligatorio.'
-            
-        ];
-        $validatedData = $request->validate([
-            //'descripcion' => 'required|max:200|unique:establecimientos,descripcion',
-            'tipopago_id' => 'required',
-            'fecha' => 'required'
-            //'numerodocumento' => 'max:20',
-            //'fechanacimiento' => 'required'
-            
-            //'body' => 'required',
-        ], $messages);
-        
-        
-        $venta = new Venta;
-            //$cliente->tipocliente_id = $request->input('tipocliente_id');
-            $venta->cliente_id = $cliente->id;
-            $venta->tipopago_id = $request->tipopago_id;
-            $venta->fecha = $request->fecha;
-            $venta->totalpagado = $request->totalpagado ?? 0;
-            $venta->envio = $request->has('envio') ? true : false;
-            $venta->pago = $request->has('pago') ? true : false;
-        $venta->save();
-
-
-         // Actualizar los registros de ClienteVianda asociados al cliente
-        $viandas = $request->input('viandas', []);
-        $total = 0;
-
-        
-         // Crear nuevos registros de ClienteVianda
-        
-        if ($viandas) {
-             foreach ($viandas as $viandaId) {
-                $cantidad = $request->input('cantidad_' . $viandaId, 0);
-                $precio = Vianda::where('id', $viandaId)->pluck('precio')->first();
-                $ventadetalle = new VentaDetalle();
-                    $ventadetalle->venta_id = $venta->id;
-                    $ventadetalle->vianda_id = $viandaId;
-                    $ventadetalle->cantidad = $cantidad;
-                    $ventadetalle->precio = $precio;
-                $ventadetalle->save();
-
-                $total += $cantidad * $precio;
-            }
-        }
-        
-
-        // Actualizar el campo total de la venta
-        $venta->total = $total;
-        $venta->save();
-
-        alert()->success('Venta Creada', 'Exitosamente');
-        return redirect()->route('clientes.index');
-
-    }
-
-
-    public function ventasDelCliente($clienteId)
-    {
-        /*$ventas = Venta::with('tipoPago:id,descripcion')
-            ->select('id', 'total', 'totalpagado', 'tipopago_id', 'fecha')
-            ->withCount('ventaDetalles as cantidadviandas')
-            ->where('cliente_id', $clienteId)
-            ->orderby('fecha','DESC')
-            ->paginate(5); // Paginar 5 registros por página (puedes ajustar este número)*/
-        $ventas = Venta::with([
-            'tipoPago:id,descripcion',
-            'cliente.persona:id,apellido,nombre'
-        ])
-        ->select('id', 'total', 'totalpagado', 'tipopago_id', 'fecha', 'cliente_id','pago')
-        ->withCount('ventaDetalles as cantidadviandas')
-        ->where('cliente_id', $clienteId)
-        ->when(request()->input('fechaDesde'), function ($query, $fechaDesde) {
-            return $query->where('fecha', '>=', $fechaDesde);
-        })
-        ->when(request()->input('fechaHasta'), function ($query, $fechaHasta) {
-            return $query->where('fecha', '<=', $fechaHasta);
-        })
-        ->orderBy('fecha', 'DESC')
-        ->paginate(5);
-    
-        $cliente = Cliente::with('persona:id,apellido,nombre')
-            ->select('persona_id')
-            ->where('id', $clienteId)->first();
+        $viandasSeleccionadas = Vianda::join('clienteviandas', 'viandas.id', '=', 'clienteviandas.vianda_id')
+        ->where('clienteviandas.cliente_id', $id)
+        ->pluck('clienteviandas.cantidad','viandas.id')
+        ->toArray();
 
         return response()->json([
-            'ventas' => $ventas->items(),
-            'currentPage' => $ventas->currentPage(),
-            'lastPage' => $ventas->lastPage(),
-            'cliente'=>  $cliente
+            'viandasSeleccionadas' => $viandasSeleccionadas  
         ]);
     }
-
 }
-
-

@@ -60,7 +60,7 @@
                     <!-- form start -->
                       <div class="card-body">
                         <div class="form-group">
-                          <label for="descripcion">Descripción:</label>
+                          <label for="descripcion">Descripción(*):</label>
                           <input type="text" class="form-control @error('descripcion') is-invalid @enderror" id="descripcion" name="descripcion" placeholder="Eje: Clasica" value="{{ old('descripcion') }}">
                         </div>
                         @error('descripcion')
@@ -79,7 +79,7 @@
                         @enderror
 
                         <div class="form-group">
-                          <label for="precio">Precio:</label>
+                          <label for="precio">Precio(*):</label>
                           <input type="number" class="form-control @error('precio') is-invalid @enderror" id="precio" name="precio" placeholder="Eje: 700" value="{{ old('precio') }}">
                         </div>
                         @error('precio')

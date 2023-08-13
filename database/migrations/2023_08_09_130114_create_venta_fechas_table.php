@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('metodopagos', function (Blueprint $table) {
+        Schema::create('ventafechas', function (Blueprint $table) {
             $table->id();
-            $table->string('descripcion',100);
-            $table->integer('dias');
-            $table->integer('aviso')->default(0);
-            $table->boolean('activo')->default(true);
+            $table->unsignedBigInteger('venta_id');
+            $table->foreign('venta_id')->references('id')->on('ventas');
+            $table->date('fecha');
+            $table->boolean('envio')->default(false);
+            $table->boolean('entregado')->default(false);
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('metodopagos');
+        Schema::dropIfExists('ventafechas');
     }
 };

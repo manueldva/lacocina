@@ -12,8 +12,20 @@ class MetodoPago extends Model
     protected $table = 'metodopagos';
 
 	protected $fillable = [
-    	'descripcion','activo'
+    	'descripcion','dias','aviso','activo'
 	];
+
+
+    public function clientes()
+    {
+        return $this->hasMany(Cliente::class);
+    }
+
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class);
+    }
+
 
 
 	public function scopeBuscarpor($query, $tipo, $buscar) {

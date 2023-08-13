@@ -40,6 +40,12 @@ class Cliente extends Model
         return $this->hasMany(Venta::class);
     }
 
+    public function MetodoPago()
+    {
+        return $this->belongsTo(MetodoPago::class, 'metodopago_id');
+    }
+
+
 
     public function scopeBuscarpor($query, $tipo, $buscar) {
     	if ( ($tipo) && ($buscar) ) {
@@ -51,6 +57,12 @@ class Cliente extends Model
 
     }
 
+    public function totalPrecioViandas()
+    {
+        return $this->viandas->sum(function ($vianda) {
+            return ($vianda->pivot->cantidad * $vianda->precio) * $this->metodoPago->dias;
+        });
+    }
 	/*public function scopeWithMontoAdeudado(Builder $query)
     {
         $query->select('clientes.*')

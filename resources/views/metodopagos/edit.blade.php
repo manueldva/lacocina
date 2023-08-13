@@ -80,6 +80,26 @@
                         @enderror
 
                         <div class="form-group">
+                          <label for="dias">Cantidad de dias:</label>
+                          <input type="number" class="form-control @error('dias') is-invalid @enderror" id="dias" name="dias" value="{{ $metodopago->dias }}">
+                        </div>
+                        @error('dias')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
+                        <div class="form-group">
+                          <label for="aviso">Aviso:</label>
+                          <input type="number" class="form-control @error('aviso') is-invalid @enderror" id="aviso" name="aviso"  value="{{ $metodopago->aviso }}">
+                        </div>
+                        @error('aviso')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
+
+
+                        <div class="form-group">
                           <label for="estado">Activo:</label>
                           <select  id="activo" name="activo" class="form-control  @error('activo') is-invalid @enderror">
                             <option value="1" {{ $metodopago->activo == '1' ? 'selected' : '' }}>Activo</option>

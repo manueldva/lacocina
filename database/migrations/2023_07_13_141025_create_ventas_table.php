@@ -17,12 +17,15 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('id')->on('clientes');
-            $table->unsignedBigInteger('tipopago_id');
+            $table->unsignedBigInteger('metodopago_id');
+            $table->foreign('metodopago_id')->references('id')->on('metodopagos');
+            $table->unsignedBigInteger('tipopago_id')->nullable();
             $table->foreign('tipopago_id')->references('id')->on('tipopagos');
             $table->date('fecha');
             $table->string('total',10,2)->nullable();
-            $table->string('totalpagado',10,2)->nullable();
-            $table->boolean('envio')->default(false);
+            //$table->boolean('envio')->default(false);
+            $table->boolean('pago')->default(false);
+            $table->boolean('estado')->default(false);
             $table->timestamps();
         });
     }

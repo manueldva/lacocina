@@ -163,11 +163,25 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
-        $segment = 'clientes';
+        //$miembro = Miembro::find($id);
         $show = 1;
+        $segment = 'clientes';
+
+        //$tipoclientes = Tipocliente::where('activo',1)->get();
         $metodopagos = MetodoPago::where('activo',1)->get();
-        //Alert::toast('Toast Message', 'success');
-        return view('clientes.edit', compact('segment','cliente', 'show','metodopagos'));
+        //$dias = Dia::where('activo',1)->get();
+        $viandas = Vianda::where('activo', 1)->get();
+
+        $viandasSeleccionadas = $cliente->viandas()->pluck('vianda_id')->toArray();
+
+        // Obtener las cantidades de las viandas relacionadas
+        $cantidades = [];
+        foreach ($cliente->viandas as $vianda) {
+            $cantidades[$vianda->vianda_id] = $vianda->pivot->cantidad;
+        }
+
+
+        return view('clientes.edit', compact('cliente', 'segment','metodopagos','viandas','viandasSeleccionadas','cantidades', 'show'));
     }
 
     /**

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreign('tipopago_id')->references('id')->on('tipopagos');
             $table->date('fecha');
             $table->string('total',10,2)->nullable();
+            $table->string('totalpagado',10,2)->nullable();
             //$table->boolean('envio')->default(false);
             $table->boolean('pago')->default(false);
             $table->boolean('estado')->default(false);

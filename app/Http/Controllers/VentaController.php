@@ -48,8 +48,12 @@ class VentaController extends Controller
         //$clientes =  Cliente::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
         
         $ventas = Venta::buscarpor($request->get('tipo'), $request->get('buscarpor'))
-        //->withMontoAdeudado()
+        ->withCount('ventafechasNoEntregadas as entregado') // Cargar las Ventafechas no entregadas
+        ->withCount('ventafechasTotal as aEntregar') // Cargar las Ventafechas no entregadas
+        ->orderBy('fecha', 'desc')
+        ->orderBy('id', 'desc')
         ->paginate(10);
+
 
         return view('ventas.index',compact('ventas', 'segment','buscador','dato'));
     }
@@ -92,76 +96,98 @@ class VentaController extends Controller
     public function store(Request $request)
     {
 
-        dd($request->all());
-
+          //dd($request->all());
         $messages = [
-            'fechanacimiento.required' =>'El campo Fecha de nacimiento es obligatorio.'
+            'metodopago_id.required' =>'El campo Metodo de pago es obligatorio.'
             
         ];
         $validatedData = $request->validate([
             //'descripcion' => 'required|max:200|unique:establecimientos,descripcion',
-            'apellido' => 'required|max:100',
-            'nombre' => 'required|max:100',
-            'documento' => 'max:20',
-            'telefono' => 'max:20',
-            'email' => 'max:150',
-            'otrocontacto' => 'max:300',
             'metodopago_id' => 'required',
-            'domicilio' => 'max:200'
-            //'tipocliente_id' => 'required',
+            'fecha' => 'required'
             //'numerodocumento' => 'max:20',
             //'fechanacimiento' => 'required'
             
             //'body' => 'required',
         ], $messages);
         
-        /*if ($request->fechanacimiento >= now()->toDateString()) {
-            alert()->error('Error', 'La fecha de nacimiento no puede ser mayor a la fecha actual');
-            return back()->withInput();
-        }*/
+        $tieneRegistros = Venta::where('estado',1)->where('cliente_id',$request->cliente_id)->count();  
 
-        $existe = Persona::where('apellido',$request->apellido)->where('nombre', $request->nombre)->count();
+        if ( $tieneRegistros > 0 ) {
+            alert()->error('Error', 'Este cliente tiene una venta sin cerrar');
+            return back();
+        }
 
-        //dd($existe);
+        $venta = new Venta;
+            //$cliente->tipocliente_id = $request->input('tipocliente_id');
+            $venta->cliente_id =  $request->cliente_id;
+            $venta->tipopago_id = $request->tipopago_id;
+            $venta->metodopago_id = $request->metodopago_id;
+            $venta->fecha = $request->fecha;
+            $venta->total = $request->total ?? 0;
+            //$venta->totalpagado = $request->totalpagado ?? 0;
+            $venta->estado = true; //$request->has('estado') ? true : false;
+            $venta->pago = $request->has('pago') ? true : false;
+        $venta->save();
 
-        if($existe > 0) 
-        {
-            alert()->error('Error', 'Ya existe un cliente con ese apellido y nombre');
-            return back()->withInput();
+
+         // Actualizar los registros de ClienteVianda asociados al cliente
+        $viandas = $request->input('viandas', []);
+        $total = 0;
+
+        
+         // Crear nuevos registros de ClienteVianda
+        
+        if ($viandas) {
+             foreach ($viandas as $viandaId) {
+                $cantidad = $request->input('cantidad_' . $viandaId, 0);
+                $precio = Vianda::where('id', $viandaId)->pluck('precio')->first();
+                $ventadetalle = new VentaDetalle();
+                    $ventadetalle->venta_id = $venta->id;
+                    $ventadetalle->vianda_id = $viandaId;
+                    $ventadetalle->cantidad = $cantidad;
+                    $ventadetalle->precio = $precio;
+                $ventadetalle->save();
+
+                $total += $cantidad * $precio;
+            }
+        }
+        
+
+
+        // Actualizar el campo total de la venta
+        /*$venta->total = $total;
+        $venta->save();*/
+        $dias = MetodoPago::where('id', $request->metodopago_id)->pluck('dias')->first();
+        $fechaInicio = $request->fecha;
+
+    
+        $fechaObj = new \DateTime($fechaInicio);
+    
+        for ($i = 0; $i < $dias; $i++) {
+            $nuevaFecha = $fechaObj->format('Y-m-d');
+    
+            $diaSemana = $fechaObj->format('w');
+
+            if (!in_array($diaSemana, [0, 6])) {
+            // Insertar el registro en la tabla Ventafecha
+                $ventafecha = new Ventafecha();
+                    $ventafecha->venta_id = $venta->id;
+                    $ventafecha->fecha = $nuevaFecha;
+                    $ventafecha->envio = $request->has('envio') ? true : false;
+                    $ventafecha->entregado = false;
+                $ventafecha->save();
+            } else {
+                $dias++;
+            }
+            // Incrementar la fecha en un día
+            $fechaObj->add(new \DateInterval('P1D'));
         }
 
 
-        $persona = Persona::create($request->all());
-        
-        $cliente = new Cliente;
-            //$cliente->tipocliente_id = $request->input('tipocliente_id');
-            $cliente->persona_id = $persona->id;
-            $cliente->metodopago_id = $request->metodopago_id;
-        $cliente->save();
-
-
-        // Obtener las viandas seleccionadas y las cantidades ingresadas
-        $viandas = $request->input('viandas');
-        $cantidades = $request->except('_token', 'viandas');
-
-        // Procesar los datos y guardarlos en tu lógica de negocio
-        if ($viandas) {
-            foreach ($viandas as $vianda) {
-                $cantidad = $cantidades['cantidad_'.$vianda];
-                // Aquí puedes realizar las operaciones necesarias con la vianda y la cantidad
-                // Guardar en la base de datos, hacer cálculos, etc.
-                $clienteVianda = new ClienteVianda();
-                    $clienteVianda->cliente_id = $cliente->id;
-                    $clienteVianda->vianda_id = $vianda;
-                    $clienteVianda->cantidad = $cantidad;
-                $clienteVianda->save();
-            }
-
-        } 
-          
-
-        alert()->success('Cliente Creado', 'Exitosamente');
-        return redirect()->route('clientes.edit', $cliente->id);   
+        alert()->success('Venta Creada', 'Exitosamente');
+        return redirect()->route('ventas.edit', $venta->id);
+        //return redirect()->route('ventas.index');
     }
 
     /**
@@ -170,13 +196,38 @@ class VentaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Cliente $cliente)
+    public function show(Venta $venta)
     {
-        $segment = 'clientes';
-        $show = 1;
-        $metodopagos = MetodoPago::where('activo',1)->get();
-        //Alert::toast('Toast Message', 'success');
-        return view('clientes.edit', compact('segment','cliente', 'show','metodopagos'));
+        $segment = 'ventas';
+       $show = 1;
+
+       $tipopagos = Tipopago::where('activo',1)->get();
+
+       $ventadetalles = Ventadetalle::where('venta_id',$venta->id)->get();
+
+       $ventafechas = Ventafecha::where('venta_id',$venta->id)
+       ->where('entregado',0)
+       ->take('5')
+       ->orderBy('fecha', 'desc') // Ordenar por la fecha en orden descendente
+       ->get();
+
+       $ultimaFechatemp = Ventafecha::where('venta_id', $venta->id)
+        ->orderBy('fecha') // Ordenar por la fecha en orden descendente
+        ->pluck('fecha')
+        ->first();
+
+        $ultimaFecha = Carbon::parse($ultimaFechatemp)->isoFormat('dddd D [de] MMMM'); // Formatear la fecha
+
+
+       $totalRegistrosRestantes = max(
+            Ventafecha::where('venta_id', $venta->id)
+                ->where('entregado', 0)
+                ->count() - 5,
+            0
+        );
+        
+
+       return view('ventas.edit', compact('venta', 'segment','tipopagos','ventadetalles','ventafechas','totalRegistrosRestantes', 'ultimaFecha', 'show'));
     }
 
     /**
@@ -185,28 +236,46 @@ class VentaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cliente $cliente)
+    public function edit(Venta $venta)
     {
 
-        //$miembro = Miembro::find($id);
-        $show = 0;
-        $segment = 'clientes';
+       //$fecha = date('Y-m-d'); 
+       $segment = 'ventas';
+       $show = 0;
 
-        //$tipoclientes = Tipocliente::where('activo',1)->get();
-        $metodopagos = MetodoPago::where('activo',1)->get();
-        //$dias = Dia::where('activo',1)->get();
-        $viandas = Vianda::where('activo', 1)->get();
+       $tipopagos = Tipopago::where('activo',1)->get();
 
-        $viandasSeleccionadas = $cliente->viandas()->pluck('vianda_id')->toArray();
+       $ventadetalles = Ventadetalle::where('venta_id',$venta->id)->get();
 
-        // Obtener las cantidades de las viandas relacionadas
-        $cantidades = [];
-        foreach ($cliente->viandas as $vianda) {
-            $cantidades[$vianda->vianda_id] = $vianda->pivot->cantidad;
-        }
+       
+       $ventafechas = Ventafecha::where('venta_id',$venta->id)
+       ->where('entregado',0)
+       ->take('5')
+       ->orderBy('fecha') // Ordenar por la fecha en orden descendente
+       ->get();
 
+        $ultimaFechatemp = Ventafecha::where('venta_id', $venta->id)
+        ->orderBy('fecha', 'desc') // Ordenar por la fecha en orden descendente
+        ->pluck('fecha')
+        ->first();
 
-        return view('clientes.edit', compact('cliente', 'segment','metodopagos','viandas','viandasSeleccionadas','cantidades', 'show'));
+        $ultimaFecha = Carbon::parse($ultimaFechatemp)->isoFormat('dddd D [de] MMMM'); // Formatear la fecha
+
+       $ultimaFecha = Ventafecha::where('venta_id', $venta->id)
+        ->orderBy('fecha', 'desc') // Ordenar por la fecha en orden descendente
+        ->pluck('fecha')
+        ->first();
+
+       $totalRegistrosRestantes = max(
+            Ventafecha::where('venta_id', $venta->id)
+                ->where('entregado', 0)
+                ->count() - 5,
+            0
+        );
+        
+
+       return view('ventas.edit', compact('venta', 'segment','tipopagos','ventadetalles','ventafechas','totalRegistrosRestantes', 'ultimaFecha', 'show'));
+
     }
 
     /**
@@ -216,80 +285,24 @@ class VentaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cliente $cliente)
+    public function update(Request $request, Venta $venta)
     {
         
-        //dd($request->all());
-        $messages = [
-            'fechanacimiento.required' =>'El campo Fecha de nacimiento es obligatorio.'
-            
-        ];
-        $validatedData = $request->validate([
-            //'descripcion' => 'required|max:200|unique:establecimientos,descripcion',
-            'apellido' => 'required|max:100',
-            'nombre' => 'required|max:100',
-            'documento' => 'max:20',
-            'telefono' => 'max:20',
-            'email' => 'max:150',
-            'otrocontacto' => 'max:300',
-            'metodopago_id' => 'required',
-            'domicilio' => 'max:200'
-            //'tipocliente_id' => 'required',
-            //'numerodocumento' => 'max:20',
-            //'fechanacimiento' => 'required'
-            
-            //'body' => 'required',
-        ], $messages);
+        $estado = $request->has('estado') ? true : false;
+        $pago = $request->has('pago') ? true : false;
+       
 
-        
-
-        /*if ($request->fechanacimiento >= now()->toDateString()) {
-            alert()->error('Error', 'La fecha de nacimiento no puede ser mayor a la fecha actual');
+        if ($estado == false && $pago == false) {
+            alert()->error('Error', 'Debe seleccionar un tipo de pago para cerrar la venta');
             return back();
-        }*/
-
-
-        $existe = Persona::where('apellido',$request->apellido)
-                                ->where('nombre', $request->nombre)
-                                ->where('id','<>', $cliente->persona_id)
-                                ->count();
-
-        //dd($existe);
-
-        if($existe > 0) 
-        {
-            alert()->error('Error', 'Ya existe un cliente con ese apellido y nombre');
-            return back()->withInput();
         }
 
-  
-        $cliente->update($request->all());
-        $persona = Persona::find($cliente->persona_id);
-        $persona->update($request->all());
-
-
-        // Actualizar los registros de ClienteVianda asociados al cliente
-        $viandas = $request->input('viandas', []);
-
-    
-        // Eliminar los registros existentes de ClienteVianda
-        ClienteVianda::where('cliente_id', $cliente->id)->delete();
-
-        // Crear nuevos registros de ClienteVianda
-
-        if ($viandas) {
-            foreach ($viandas as $viandaId) {
-                $cantidad = $request->input('cantidad_' . $viandaId, 0);
-                $clienteVianda = new ClienteVianda();
-                    $clienteVianda->cliente_id = $cliente->id;
-                    $clienteVianda->vianda_id = $viandaId;
-                    $clienteVianda->cantidad = $cantidad;
-                $clienteVianda->save();
-            }
-        }
+        Venta::where('id', $venta->id)->update(['estado' => $estado, 'pago'=>$pago, 'tipopago_id' => $request->tipopago_id, 'total'=>  $request->total]);
   
         alert()->success('Registro Actualizado', 'Exitosamente');
-        return redirect()->route('clientes.edit', $cliente->id);   
+        return redirect()->route('ventas.edit', $venta->id);  
+        
+
     }
 
     /**
@@ -298,18 +311,17 @@ class VentaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cliente $cliente)
+    public function destroy(Venta $venta)
     {
         
-        if(Venta::where('cliente_id', '=', $cliente->id)->first()) {
+        /*if(Venta::where('cliente_id', '=', $cliente->id)->first()) {
             alert()->error('Este registro no se puede eliminar', 'Error');
             return back();
-        }
+        }*/
         // Eliminar los registros de ClienteVianda asociados al cliente
-        ClienteVianda::where('cliente_id', $cliente->id)->delete();
-
-        $cliente->delete();
-        Persona::where('id', $cliente->persona_id)->delete();
+        Ventafecha::where('venta_id', $venta->id)->delete();
+        VentaDetalle::where('venta_id', $venta->id)->delete();
+        $venta->delete();
         alert()->success('Registro Eliminado', 'Exitosamente');
         return back();
     }
@@ -325,4 +337,78 @@ class VentaController extends Controller
             'viandasSeleccionadas' => $viandasSeleccionadas  
         ]);
     }
+
+
+    public function actualizarEntregado(Request $request)
+    {
+        $id = $request->input('ventaf_id');
+        $entregado = $request->input('entregado');
+        $envio = $request->input('envio');
+        $cancelar = $request->input('cancelar');
+
+        // Convertir el valor 'entregado' a booleano
+        $entregado = filter_var($entregado, FILTER_VALIDATE_BOOLEAN);
+        $envio = filter_var($envio, FILTER_VALIDATE_BOOLEAN);
+        $cancelar = filter_var($cancelar, FILTER_VALIDATE_BOOLEAN);
+
+        // Si se desea cancelar
+        if ($cancelar) {
+            $venta_id = Ventafecha::where('id', $id)
+            ->pluck('venta_id')
+            ->first();
+
+            $ultimaFecha = Ventafecha::where('venta_id', $venta_id)
+            ->orderBy('fecha', 'desc') // Ordenar por la fecha en orden descendente
+            ->pluck('fecha')
+            ->first();
+
+            // Convertir la fecha a un objeto Carbon
+            $carbonFecha = Carbon::parse($ultimaFecha);
+            
+            // Verificar si el día de la semana es viernes (5)
+            if ($carbonFecha->dayOfWeek === Carbon::FRIDAY) {
+                // Sumar 3 días a la fecha si es viernes
+                $carbonFecha->addDays(3);
+            } else {
+                // Sumar 1 día a la fecha si no es viernes
+                $carbonFecha->addDay(1);
+            }
+
+            // Actualizar el campo 'fecha' en la base de datos
+            Ventafecha::where('id', $id)->update(['entregado' => $entregado, 'envio' => $envio, 'fecha' => $carbonFecha]);
+        } else {
+            // Actualizar el campo 'entregado' en la base de datos sin modificar la fecha
+            Ventafecha::where('id', $id)->update(['entregado' => $entregado, 'envio' => $envio]);
+        }
+
+
+
+        // Actualizar el campo 'entregado' en la base de datos
+        //Ventafecha::where('id', $id)->update(['entregado' => $entregado, 'envio'=>$envio]);
+
+        return response()->json(['success' => true]);
+    }
+
+
+
+    public function detallesVenta($id)
+    {
+        $ventaDetalles = VentaDetalle::where('venta_id', $id)->with('vianda')->get();
+        $ventaFechas = Ventafecha::where('venta_id', $id)->orderby('fecha')->get();
+
+        $result = [];
+
+        foreach ($ventaFechas as $ventaFecha) {
+            $detallesTexto = $ventaDetalles->pluck('cantidad', 'vianda.descripcion')->map(function ($cantidad, $descripcion) {
+                return "$cantidad $descripcion";
+            })->implode(', ');
+
+            $ventaFecha['detallesTexto'] = $detallesTexto;
+
+            $result[] = $ventaFecha;
+        }
+
+        return response()->json(['fechas' => $result]);
+    }
+
 }

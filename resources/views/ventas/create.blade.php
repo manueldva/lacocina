@@ -63,9 +63,9 @@
                       <div class="card-body">
 
                       <div class="form-group">
-                          <label for="cliente_id">Cliente</label>
+                          <label for="cliente_id">Cliente(*):</label>
                           <select class="form-control" name="cliente_id" id="cliente_id">
-                              <option value="0">Seleccione un cliente</option>
+                              <option value="">Seleccione un cliente</option>
                               @foreach ($clientes as $cliente)
                                   <option value="{{ $cliente->id }}" data-total="{{ $cliente->totalPrecioViandas() }}" data-metodopago="{{ $cliente->metodopago_id }}">{{ $cliente->Apellido }} {{ $cliente->Nombre }}</option>
                               @endforeach
@@ -79,11 +79,11 @@
                         @enderror
 
                         <div class="form-group">
-                            <label for="metodopago_id">Metodo de pago:</label>
+                            <label for="metodopago_id">Metodo de pago(*):</label>
                             <select id="metodopago_id" name="metodopago_id" class="form-control @error('metodopago_id') is-invalid @enderror">
                                 <option value="">Seleccionar</option>
                                 @foreach($metodopagos as $metodopago)
-                                    <option value="{{ $metodopago->id }}">
+                                    <option value="{{ $metodopago->id }}"  data-dias="{{ $metodopago->dias }}">
                                         {{ $metodopago->descripcion }} ({{ $metodopago->dias }})
                                     </option>
                                 @endforeach
@@ -115,7 +115,7 @@
 
                       <div class="form-group">
                           <label for="fecha">Fecha(*)</label>
-                          <input type="date" class="form-control" id="fecha" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                          <input type="date" class="form-control" id="fecha" name="fecha" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
                       </div>
                       @error('fecha')
                           <div class="alert alert-info" role="alert">
@@ -135,8 +135,12 @@
 
                       <div class="form-group">
                         
+                        <!--
                         <input type="checkbox" name="estado" id="estado"  checked data-bootstrap-switch data-off-color="danger" data-on-color="success"  data-on-text="Activo" data-off-text="Cerrado">
+                        &nbsp;  -->
                         <input type="checkbox" name="pago" id="pago" data-bootstrap-switch data-off-color="danger" data-on-color="success"  data-on-text="Pago" data-off-text="No pago">
+                        &nbsp; 
+                        <input type="checkbox" name="envio" id="envio" data-bootstrap-switch data-off-color="danger" data-on-color="success"  data-on-text="Envio" data-off-text="Retira">
                       </div>
                         
                       </div>
@@ -173,6 +177,7 @@
                                           <td>
                                             <input class="form-control form-control-sm cantidad-input" type="number" name="cantidad_{{ $vianda->id }}" id="cantidad_{{ $vianda->id }}" min="1" disabled>
                                           </td>
+                                          <td style="display: none;" class="precio">{{ $vianda->precio }}</td>
                                       </tr>
                                   @endforeach
                               </tbody>
@@ -203,6 +208,17 @@
 @section('js')
 
 <script type="text/javascript">
+
+    $(document).ready(function() {
+        // Capturar el evento keydown en todos los campos de entrada
+        $("input").keydown(function(event) {
+            // Verificar si la tecla presionada es "Enter"
+            if (event.which === 13) {
+                event.preventDefault(); // Prevenir el comportamiento predeterminado (enviar el formulario)
+                // Otras acciones que puedas querer realizar aquí
+            }
+        });
+    });
 
         // In your Javascript (external .js resource or <script> tag)
     $(document).ready(function() {
@@ -283,19 +299,84 @@
         // Obtener la cantidad de checkboxes de viandas seleccionados
         var viandasSeleccionadas = $('input[name="viandas[]"]:checked').length;
 
-        // Si no se ha seleccionado ninguna vianda, mostrar un mensaje de alerta
-        if (viandasSeleccionadas === 0) {
+        // Obtener el valor del campo de selección de cliente
+        var clienteSeleccionado = $('#cliente_id').val();
+
+        // Obtener el valor del campo de selección de método de pago
+        var metodoPagoSeleccionado = $('#metodopago_id').val();
+
+        // Obtener el valor del campo de selección de método de pago
+        var fechaSeleccionado = $('#fecha').val();
+
+
+        // Si no se ha seleccionado ninguna vianda, o el cliente o el método de pago están vacíos, mostrar un mensaje de alerta
+        if (viandasSeleccionadas === 0 || clienteSeleccionado === '' || metodoPagoSeleccionado === ''  || fechaSeleccionado === '') {
             event.preventDefault(); // Evita que el formulario se envíe
+
             Swal.fire({
                 icon: 'error', // Cambiamos el icono a 'error'
                 title: '¡Atención!',
-                text: 'Debes seleccionar al menos una vianda antes de guardar.',
+                text: 'Debes seleccionar al menos una vianda, un cliente y un método de pago antes de guardar.',
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Aceptar'
             });
         }
     });
 
+
+    $(document).ready(function() {
+        var checkboxPago = $("#pago");
+        var selectTipoPago = $("#tipopago_id");
+
+        checkboxPago.on("switchChange.bootstrapSwitch", function(event, state) {
+            if (state) {
+                if (selectTipoPago.val() === "") {
+                    checkboxPago.bootstrapSwitch("state", false);
+                }
+            }
+        });
+
+        selectTipoPago.on("change", function() {
+            if (selectTipoPago.val() === "") {
+                checkboxPago.bootstrapSwitch("state", false);
+            }
+        });
+    });
+
+    // Obtener los elementos necesarios
+    const cantidadInputs = document.querySelectorAll('.cantidad-input');
+    const checkboxes = document.querySelectorAll('input[name="viandas[]"]');
+    const totalInput = document.getElementById('total');
+    //const totalPagadoInput = document.getElementById('totalpagado');
+
+    // Escuchar el evento change en los campos de cantidad
+    cantidadInputs.forEach(function(input) {
+        input.addEventListener('change', calcularMontoTotal);
+    });
+
+    // Escuchar el evento change en los checkboxes
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', calcularMontoTotal);
+    });
+
+    // Función para calcular el monto total y actualizar los campos correspondientes
+    function calcularMontoTotal() {
+        let montoTotal = 0;
+        cantidadInputs.forEach(function(input, index) {
+            if (input.value !== '' && !isNaN(input.value) && checkboxes[index].checked) {
+                const cantidad = parseInt(input.value);
+                const precio = parseFloat(input.closest('tr').querySelector('.precio').textContent);
+                montoTotal += cantidad * precio;
+            }
+        });
+
+        var selectedOption = $('#metodopago_id').find(":selected");
+        var dias = selectedOption.data("dias");
+
+        totalInput.value = montoTotal.toFixed(2) * dias;
+    }
+
     
 </script>
+
 @endsection

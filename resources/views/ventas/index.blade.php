@@ -85,6 +85,8 @@
                       <tr>
                         <th><center>Fecha</center></th>
                         <th><center>Cliente</center></th>
+                        <th><center>Total a Entregar</center></th>
+                        <th><center>Entregado</center></th>
                         <th><center>Estado</center></th>
                         <th width="280px"></th>
                       </tr>
@@ -94,7 +96,7 @@
                         <tr>
                           <td>
                             <center>
-                              {{ $cliente->fecha }}
+                              {{ $venta->fecha }}
                             </center>
                           </td>
                           <td>
@@ -102,10 +104,20 @@
                               {{ $venta->cliente->persona->apellido }} {{ $venta->cliente->persona->nombre }}
                             </center>
                           </td>
+                          <td>
+                            <center>
+                              {{ $venta->aEntregar }}
+                            </center>
+                          </td>
+                          <td>
+                            <center>
+                              {{ $venta->entregado }}
+                            </center>
+                          </td>
                           
                           <td>
                             <center>
-                              @if($cliente->estado == 1)
+                              @if($venta->estado == 1)
                                 <img src="{{url('image/on.ico')}}"  width="30" height="30" data-toggle="tooltip" data-placement="top" title="Activo">
                                
                               @else
@@ -119,14 +131,17 @@
                            
 
                               <form action="{{ route('ventas.destroy',$venta->id) }}" method="POST">
-                                  @can('ventas.show')  
-                                    <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('ventas.show',$venta->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>                                  @endcan
+                                  @can('ventas.show') 
+                                    <a class="btn btn-sm btn-flat btn-outline-info btnDetalles" href="#" data-id="{{$venta->id}}" data-toggle="modal" data-target="#modalDetalles" data-toggle="tooltip" data-placement="top" title="Ver Detalles"><i class="fas fa-list"></i></a>
+                                     
+                                    <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('ventas.show',$venta->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>                                  
+                                  @endcan
                                   @can('ventas.edit')  
-                                    <!--<a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('clientes.show',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>-->
+                                    <!--<a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('clientes.show',$venta->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>-->
                                     <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('ventas.edit',$venta->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
                                   @endcan
                                   @can('ventas.destroy')  
-                                    <a href="#" data-id="{{$venta->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
+                                    <a  href="#" data-id="{{$venta->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete  @if($venta->estado == 0) disabled @endif" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
                                       <i class="fas fa-trash-alt"></i>
                                     </a>
                                   @endcan
@@ -154,65 +169,40 @@
         </div>
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->
-      <!-- Modal para mostrar las ventas del cliente -->
-      <div class="modal fade" id="modalVentas" tabindex="-1" role="dialog" aria-labelledby="modalVentasLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-scrollable custom-modal-dialog" role="document">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="modalVentasLabel">Ventas de <span id="clienteNombre"></span></h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                      </button>
-                      
-                  </div>
-                  <div class="modal-body">
-                              <!-- Filtros de fecha -->
-                      <div class="form-row">
-                          <div class="form-group col-md-5">
-                              <label for="fechaDesde">Fecha Desde</label>
-                              <input type="date" class="form-control" id="fechaDesde" value="{{ \Carbon\Carbon::now()->subDays(7)->format('Y-m-d') }}">
-                          </div>
-                          <div class="form-group col-md-5">
-                              <label for="fechaHasta">Fecha Hasta</label>
-                              <input type="date" class="form-control" id="fechaHasta" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
-                          </div>
-                          <div class="form-group col-md-2">
-                           <!-- Agregar botón para aplicar el filtro de fechas -->
-                            <label for="fechaHasta">&nbsp</label>
-                            <br>
-                            <button type="button" class="btn btn-primary" id="btnFiltrarVentas">Filtrar</button>
-                          </div>
-                      </div>
-                      
-                      <div class="table-responsive">
-                          <table class="table table-striped table-valign-middle table-bordered">
-                              <thead>
-                                  <tr>
-                                      <th class="fecha-column"><center>Fecha</center></th>
-                                      <th><center>Tipo Pago</center></th>
-                                      <th><center>Cantidad</center></th>
-                                      <th><center>Concepto</center></th>
-                                      <th><center>Total</center></th>
-                                      <th><center>Pagado</center></th>
-                                   
-                                  </tr>
-                              </thead>
-                              <tbody id="ventasDelClienteBody">
-                                  <!-- Aquí se cargarán las ventas del cliente mediante JavaScript -->
-                              </tbody>
-                          </table>
-                      </div>
-                  </div>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                  </div>
-                  <!-- Agregar el contenedor de paginación -->
-                  <div class="modal-footer justify-content-center">
-                      <ul class="pagination"></ul>
-                  </div>
-              </div>
+     <!-- Modal para mostrar los detalles de la venta -->
+<div class="modal fade" id="modalDetalles" tabindex="-1" role="dialog" aria-labelledby="modalDetallesLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable custom-modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="modalDetallesLabel">Detalles de Venta</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-striped table-valign-middle table-bordered">
+                <thead>
+                    <tr>
+                        <th><center>Fecha</center></th>
+                        <th><center>Detalle</center></th>
+                        <th><center>Envio</center></th>
+                        <th><center>Entregado</center></th>
+                    </tr>
+                </thead>
+                <tbody id="detallesVentaBody">
+                    <!-- Aquí se cargarán los detalles de la venta mediante JavaScript -->
+                </tbody>
+            </table>
+            <div class="pagination-container">
+                <ul class="pagination"></ul>
+            </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
           </div>
       </div>
+  </div>
+</div>
       <!-- Modal -->
       <div class="modal modal-danger fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -275,107 +265,42 @@
     });
     
 
-   // Actualizar la función cargarVentas para aceptar las fechas como parámetros
-   function cargarVentas(page, clienteId, fechaDesde, fechaHasta) {
-        var ventasDelClienteBody = $('#ventasDelClienteBody');
-        ventasDelClienteBody.empty(); // Limpiar contenido actual de la tabla
+   
 
-        // Actualizar el título del modal con el apellido y nombre del cliente
-        $('#clienteNombre').text('');
+    $('.btnDetalles').on('click', function() {
+        var ventaId = $(this).data('id');
+        cargarDetallesVenta(ventaId);
+    });
+
+    function cargarDetallesVenta(ventaId) {
+        var detallesVentaBody = $('#detallesVentaBody');
+        detallesVentaBody.empty(); // Limpiar contenido actual de la tabla
 
         $.ajax({
-            url: '{{ url('ventasDelCliente') }}/' + clienteId + '?page=' + page,
+            url: '{{ url('detallesVenta') }}/' + ventaId,
             type: 'GET',
-            data: {
-                fechaDesde: fechaDesde,
-                fechaHasta: fechaHasta
-            },
             success: function(data) {
-                // Construir el contenido de la tabla con las ventas del cliente
-                var ventasDelClienteBody = $('#ventasDelClienteBody');
-                ventasDelClienteBody.empty(); // Limpiar contenido actual de la tabla
+                // Construir el contenido de la tabla con los detalles de la venta
+                var detallesVentaBody = $('#detallesVentaBody');
+                detallesVentaBody.empty(); // Limpiar contenido actual de la tabla
 
-                // Actualizar el título del modal con el apellido y nombre del cliente
-                $('#clienteNombre').text(data.cliente.persona.apellido + ' ' + data.cliente.persona.nombre);
-
-                data.ventas.forEach(function(venta) {
+                data.fechas.forEach(function(fecha) {
+                    //var rowClass = fecha.entregado === 1 ? 'background-color: #e6f7ff;' : 'background-color: #f1f1f1;';
+                    var envioIcon = fecha.envio === 1 ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>';
+                    var entregadoIcon = fecha.entregado === 1 ? '<i class="fas fa-check-circle text-success"></i>' : '<i class="fas fa-times-circle text-danger"></i>';
                     var row = '<tr>';
-                    row += '<td><center>' + venta.fecha + '</center></td>';
-                    row += '<td><center>' + (venta.tipo_pago ? venta.tipo_pago.descripcion : 'Sin tipo de pago') + '</center></td>';
-                    row += '<td><center>' + venta.cantidadviandas + '</center></td>';
-                    row += '<td><center>' + (venta.pago == 1 ? 'Pago' : 'Venta') + '</center></td>';
-                    row += '<td><center>' + venta.total + '</center></td>';
-                    row += '<td><center>' + venta.totalpagado + '</center></td>';
-
-                
+                    row += '<td><center>' + fecha.fecha + '</center></td>';
+                    row += '<td><center>' + fecha.detallesTexto + '</center></td>';
+                    row += '<td><center>' + envioIcon + '</center></td>';
+                    row += '<td><center>' + entregadoIcon + '</center></td>';
                     row += '</tr>';
-                    ventasDelClienteBody.append(row);
+                    detallesVentaBody.append(row);
                 });
-
-                // Actualizar los enlaces de paginación manualmente
-                var pagination = '';
-                for (var i = 1; i <= data.lastPage; i++) {
-                    pagination += '<li class="page-item ' + (i === data.currentPage ? 'active' : '') + '">';
-                    pagination += '<a class="page-link" href="#" data-page="' + i + '">' + i + '</a>';
-                    pagination += '</li>';
-                }
-                $('.pagination').html(pagination);
             },
             error: function() {
-                console.error('Error al cargar las ventas del cliente');
+                console.error('Error al cargar los detalles de la venta');
             }
         });
-    }
-
-    // Cuando el modal se muestre, cargar las ventas del cliente seleccionado
-    $('#modalVentas').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        clienteId = button.data('cliente-id');
-
-        // Obtener las fechas seleccionadas al mostrar el modal
-        var fechaDesde = $('#fechaDesde').val();
-        var fechaHasta = $('#fechaHasta').val();
-
-        // Cargar las ventas del cliente con las fechas filtradas
-        cargarVentas(1, clienteId, fechaDesde, fechaHasta);
-
-        // Manejar clic en los enlaces de paginación dentro del modal
-        $('#modalVentas').on('click', '.pagination a', function(event) {
-            event.preventDefault();
-            var page = $(this).data('page');
-            cargarVentas(page, clienteId, fechaDesde, fechaHasta); // Cargar las ventas de la página seleccionada
-        });
-    });
-
-    // Agregar evento al botón "Filtrar" dentro del modal
-    $('#modalVentas').on('click', '#btnFiltrarVentas', function() {
-        // Obtener las fechas seleccionadas
-        var fechaDesde = $('#fechaDesde').val();
-        var fechaHasta = $('#fechaHasta').val();
-
-        // Cargar las ventas con el filtro de fechas
-        cargarVentas(1, clienteId, fechaDesde, fechaHasta);
-    });
-
-     // Establecer las fechas seleccionadas al cerrar el modal
-    $('#modalVentas').on('hide.bs.modal', function(event) {
-        // Obtener la fecha actual y la fecha de una semana atrás
-        var fechaActual = obtenerFechaActual();
-        var fechaUnaSemanaAtras = new Date();
-        fechaUnaSemanaAtras.setDate(fechaUnaSemanaAtras.getDate() - 7);
-        var fechaUnaSemanaAtrasStr = fechaUnaSemanaAtras.toISOString().slice(0, 10);
-
-        // Establecer los valores de fecha en los campos "Fecha Desde" y "Fecha Hasta" del modal
-        $('#fechaDesde').val(fechaUnaSemanaAtrasStr);
-        $('#fechaHasta').val(fechaActual);
-    });
-
-    function obtenerFechaActual() {
-        var fecha = new Date();
-        var anio = fecha.getFullYear();
-        var mes = ('0' + (fecha.getMonth() + 1)).slice(-2);
-        var dia = ('0' + fecha.getDate()).slice(-2);
-        return anio + '-' + mes + '-' + dia;
     }
 
 

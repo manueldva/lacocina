@@ -131,7 +131,7 @@ class MetodoPagoController extends Controller
 
 
   
-        $tipocontacto->update($request->all());
+        $metodopago->update($request->all());
   
         Alert::success('Registro Actualizado', 'Exitosamente');
         return redirect()->route('metodopagos.edit', $metodopago->id);   

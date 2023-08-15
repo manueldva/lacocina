@@ -47,5 +47,6 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         return parent::render($request, $exception);
+        //return redirect()->route('login'); // Cambia 'login' por el nombre de tu ruta de inicio de sesión
     }
 }

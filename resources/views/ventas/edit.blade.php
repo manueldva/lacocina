@@ -6,11 +6,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">@if($show == 1) Ver @else Editar @endif Cliente</h1>
+            <h1 class="m-0 text-dark">@if($show == 1) Ver @else Editar @endif Venta</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('clientes.index') }}">Cliente</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('ventas.index') }}">Venta</a></li>
               <li class="breadcrumb-item active">@if($show == 1) Ver @else Editar @endif</li>
             </ol>
           </div><!-- /.col -->
@@ -25,7 +25,7 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
           <div class="col-md-12">
-          <form action="{{ route('clientes.update',$cliente->id) }}" method="POST">
+          <form action="{{ route('ventas.update',$venta->id) }}" method="POST">
             @csrf
             @method('PUT')
               <div class="row">
@@ -36,19 +36,21 @@
                       <div class="card-header">
                         <div class="row justify-content-center align-items-center">
                           @if($show == 0)
-                            <div class="form-group">
-                              <button name="guardar" id="guardar" type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar</button>
-                            </div>
-                            @can('clientes.create')  
+                            @if($venta->estado == 1)
+                              <div class="form-group">
+                                <button name="guardar" id="guardar" type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar</button>
+                              </div>
+                            @endif
+                            @can('ventas.create')  
                             &nbsp; &nbsp; 
                             <div class="form-group">
-                              <a class="btn btn-outline-info" href="{{ route('clientes.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
+                              <a class="btn btn-outline-info" href="{{ route('ventas.create') }}"><i class="fas fa-plus"></i> Nuevo</a>
                             </div>
                             @endcan
                             &nbsp; &nbsp; 
                           @endif
                           <div class="form-group">
-                            <a class="btn btn-outline-success" href="{{ route('clientes.index') }}"><i class="fas fa-list"></i> Listado</a>
+                            <a class="btn btn-outline-success" href="{{ route('ventas.index') }}"><i class="fas fa-list"></i> Listado</a>
                           </div>
                           <!-- /.col -->
                         </div>
@@ -62,7 +64,7 @@
                   <div class="card card-default">
                     <div class="card-header">
                       <center>
-                        <h3 class="card-title">Datos Generales</h3>
+                        <h3 class="card-title">Datos de la Venta</h3>
                       </center>
                       
                     </div>
@@ -70,179 +72,162 @@
                     <!-- form start -->
                       <div class="card-body">
                         <div class="form-group">
-                          <label for="apellido">Apellido(*):</label>
-                          <input type="text" class="form-control @error('apellido') is-invalid @enderror" id="apellido" name="apellido" placeholder="Eje: Perez" value="{{ $cliente->persona->apellido }}">
+                            <label for="cliente">cliente(*):</label>
+                            <input type="text" class="form-control" id="cliente" name="cliente" value="{{ $venta->cliente->persona->apellido }} {{ $venta->cliente->persona->nombre }}" disabled>
                         </div>
-                        @error('apellido')
-                          <div class="alert alert-info" role="alert">
-                            {{ $message }}
-                          </div>
-                        @enderror
-
                         <div class="form-group">
-                          <label for="nombre">Nombre(*):</label>
-                          <input type="text" class="form-control @error('nombre') is-invalid @enderror" id="nombre" name="nombre" placeholder="Eje: Juan" value="{{ $cliente->persona->nombre }}">
-                        </div>
-                        @error('nombre')
-                          <div class="alert alert-info" role="alert">
-                            {{ $message }}
-                          </div>
-                        @enderror
-
-                        <div class="form-group">
-                          <label for="documento">Documento:</label>
-                          <input type="text" class="form-control @error('documento') is-invalid @enderror" id="documento" name="documento" placeholder="Eje: 15325642" value="{{ $cliente->persona->documento }}">
-                        </div>
-                        @error('documento')
-                          <div class="alert alert-info" role="alert">
-                            {{ $message }}
-                          </div>
-                        @enderror
-
-                        <!--
-                        <div class="form-group">
-                          <label for="fechanacimiento">Fecha de Nacimiento:</label>
-                          <input type="date" class="form-control @error('fechanacimiento') is-invalid @enderror" id="fechanacimiento" name="fechanacimiento" value="{{ old('fechanacimiento') ? old('fechanacimiento') : date('Y-m-d')  }}">
-                        </div>
-                        @error('fechanacimiento')
-                          <div class="alert alert-info" role="alert">
-                            {{ $message }}
-                          </div>
-                        @enderror
-                        -->
-                        <div class="form-group">
-                          <label for="estado">Estado:</label>
-                          <select id="activo" name="activo" class="form-control  @error('activo') is-invalid @enderror">
-                              <option value="1" @if ($cliente->activo == 1) selected @endif >Activo</option>
-                              <option value="0" @if ($cliente->activo == 0) selected @endif>Inactivo</option>
-                          </select>
-                        </div>
-                        
+                          <label for="metodopago_id">Metodo Pago(*):</label>
+                          <input type="text" class="form-control" id="metodopago_id" name="metodopago_id" value="{{ $venta->metodopago->descripcion }}" disabled>
                       </div>
-                      <!-- /.card-body -->
-                  </div>
-                  <!-- /.card -->
-
-                </div>
-                
-                <div class="col-md-4"> <!-- Oculto por el momento-->
-                  <!-- general form elements -->
-                  <div class="card card-default">
-                    <div class="card-header">
-                      <center>
-                        <h3 class="card-title">Datos de Contacto</h3>
-                      </center>
-                      
-                    </div>
-                    <!-- /.card-header -->
-                    <!-- form start -->
-                    <div class="card-body">
-                      <div class="form-group">
                           <div class="form-group">
-                            <label for="telefono">Telefono/Celular:</label>
-                            <input type="number" class="form-control @error('telefono') is-invalid @enderror" id="telefono" name="telefono" placeholder="Eje: 3704662448" value="{{ $cliente->persona->telefono }}">
-                          </div>
-                          @error('telefono')
-                            <div class="alert alert-info" role="alert">
-                              {{ $message }}
-                            </div>
-                          @enderror
-
-                          <div class="form-group">
-                            <label for="email">Correo:</label>
-                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Eje: santydebil@gmail.com" value="{{ $cliente->persona->email }}">
-                          </div>
-                          @error('email')
-                            <div class="alert alert-info" role="alert">
-                              {{ $message }}
-                            </div>
-                          @enderror
-
-                      
-                          <div class="form-group">
-                            <label>Otro tipo de contacto:</label>
-                            <textarea id= "otrocontacto" name="otrocontacto" class="form-control" rows="1" placeholder="Ingrese algun tipo de contacto">{{ $cliente->persona->otrocontacto }}</textarea>
-                          </div>
-                          @error('otrocontacto')
-                            <div class="alert alert-info" role="alert">
-                              {{ $message }}
-                            </div>
-                          @enderror
-                          <div class="form-group">
-                            <label>Domicilio:</label>
-                            <textarea id= "domicilio" name="domicilio" class="form-control" rows="1" placeholder="Ingrese un domicilio">{{ $cliente->persona->domicilio }}</textarea>
-                          </div>
-                          @error('domicilio')
-                            <div class="alert alert-info" role="alert">
-                              {{ $message }}
-                            </div>
-                          @enderror
-  
-                        </div>
-                      </div>
-                      <!-- /.card-body -->
-                    </div>
-                  <!-- /.card -->
-                </div>
-                
-                <div class="col-md-4"> <!-- Oculto por el momento-->
-                  <!-- general form elements -->
-                  <div class="card card-default">
-                    <div class="card-header">
-                      <center>
-                        <h3 class="card-title">Datos Viandas</h3>
-                      </center>
-                      
-                    </div>
-                    <!-- /.card-header -->
-                    <!-- form start -->
-                    <div class="card-body">
-                      <div class="form-group">
-                          
-                          <div class="form-group">
-                              <label for="metodopago_id">Metodo de Pago(*):</label>
-                              <select id="metodopago_id" name="metodopago_id" class="form-control @error('metodopago_id') is-invalid @enderror">
-                                  <option value="">Seleccionar un Metodo</option>
-                                  @foreach($metodopagos as $metodopago)
-                                      <option value="{{ $metodopago->id }}" {{ $metodopago->id == $cliente->metodopago_id ? 'selected' : '' }}>
-                                          {{ $metodopago->descripcion }}
+                              <label for="tipopago_id">Tipo de Pago:</label>
+                              <select id="tipopago_id" name="tipopago_id" class="form-control @error('tipopago_id') is-invalid @enderror">
+                                  <option value="">Seleccionar</option>
+                                  @foreach($tipopagos as $tipopago)
+                                      <option value="{{ $tipopago->id }}" @if ($venta->tipopago_id == $tipopago->id) selected @endif>
+                                          {{ $tipopago->descripcion }}
                                       </option>
                                   @endforeach
                               </select>
                           </div>
-                          @error('metodopago_id')
+                          @error('tipopago_id')
                               <div class="alert alert-info" role="alert">
                                   {{ $message }}
                               </div>
                           @enderror
+                          
 
-                          <div class="form-group">
-                            <table class="table table-borderless">
-                                <tbody>
-                                    @foreach($viandas as $vianda)
-                                        <tr>
-                                            <td>
-                                                <label>
-                                                    <input type="checkbox" name="viandas[]" value="{{ $vianda->id }}" {{ in_array($vianda->id, $viandasSeleccionadas) ? 'checked' : '' }} onclick="toggleCantidad(this)"> {{ Str::limit($vianda->descripcion, 10, '') }}
-                                                </label>
-                                            </td>
-                                            <td>
-                                            <input class="form-control form-control-sm" type="number" name="cantidad_{{ $vianda->id }}" id="cantidad_{{ $vianda->id }}" value="{{ old('cantidad_' . $vianda->id, $cantidades[$vianda->id] ?? '') }}" {{ in_array($vianda->id, $viandasSeleccionadas) ? '' : 'disabled' }}>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                                
-                            </table>
-                          </div>
-  
+                        <div class="form-group">
+                            <label for="fecha">Fecha(*)</label>
+                            <input type="date" class="form-control" id="fecha" name="fecha" value="{{ $venta->fecha }}" disabled>
                         </div>
+                        @error('fecha')
+                            <div class="alert alert-info" role="alert">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                        <div class="form-group">
+                          <label for="total">Total:</label>
+                          <input type="number" class="form-control @error('total') is-invalid @enderror" id="total" name="total" value="{{ $venta->total }}">
+                        </div>
+                        @error('total')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
+
+                        <div class="form-group">
+                          @if($ventafechas->isEmpty())
+                            <input type="checkbox" name="estado" id="estado"  @if ($venta->estado == 1 ) checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success"  data-on-text="Activo" data-off-text="Cerrado">
+                            &nbsp; 
+                          @endif
+                            <input type="checkbox" name="pago" id="pago" @if ($venta->pago == 1 ) checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success"  data-on-text="Pago" data-off-text="No pago">
+                        </div>
+                          
+
+                      </div>
+                      <!-- /.card-body -->
+                  </div>
+                  <!-- /.card -->
+
+                </div>
+                
+                <div class="col-md-8"> <!-- Oculto por el momento-->
+                  <!-- general form elements -->
+                  <div class="card card-default">
+                    <div class="card-header">
+                      <center>
+                        <h3 class="card-title">Detalle de la Venta</h3>
+                      </center>
+                      
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <div class="card-body">
+                      <div class="form-group">
+                        <div class="table-responsive">
+                          <table class="table table-striped table-valign-middle table-bordered">
+                            <thead>
+                              <tr>
+                                <th><center>Vianda</center></th>
+                                <th><center>Precio</center></th>
+                                <th><center>Cantidad</center></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              @foreach($ventadetalles as $ventad)
+                                <tr>
+                                  <td>
+                                    <center>
+                                      {{ $ventad->vianda->descripcion }}
+                                    </center>
+                                  </td>
+                                  
+                                  <td>
+                                    <center>
+                                      {{ $ventad->precio }}
+                                    </center>
+                                  </td>
+                                  <td>
+                                    <center>
+                                      {{ $ventad->cantidad }}
+                                    </center>
+                                  </td>
+                                </tr>
+                              @endforeach
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div class="table-responsive">
+                          <table class="table table-striped table-valign-middle table-bordered">
+                            <thead>
+                              <tr>
+                                <th><center>Fecha</center></th>
+                                <th><center>Envio</center></th>
+                                <th><center>Entregado</center></th>
+                                <th><center>Cancelar</center></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              @foreach($ventafechas as $ventaf)
+                                <tr>
+                                  <td>
+                                    <center>
+                                      {{ $ventaf->fecha }}
+                                    </center>
+                                  </td>
+                                  
+                                  <td>
+                                      <center>
+                                        <input @if($show == 1 ) disabled @endif type="checkbox" class="envio-checkbox" data-ventaf-id="{{ $ventaf->id }}" @if($ventaf->envio == 1) checked @endif data-on-switch-change="envioEntregado"  data-on-text="Si" data-off-text="No">
+                                      </center>
+                                  </td>
+                                  <td>
+                                    <center>
+                                      <input @if($show == 1 ) disabled @endif type="checkbox" class="entregado-checkbox" data-ventaf-id="{{ $ventaf->id }}" @if($ventaf->entregado == 1) checked @endif data-on-switch-change="actualizarEntregado"  data-on-text="Si" data-off-text="No">
+                                  </center>
+                                  </td>
+                                  <td>
+                                    <center>
+                                      <input @if($show == 1 ) disabled @endif type="checkbox" class="cancelar-checkbox" data-ventaf-id="{{ $ventaf->id }}"  data-on-switch-change="cancelarEntregado"  data-on-text="Si" data-off-text="No">
+                                    </center>
+                                </td>
+                                </tr>
+                              @endforeach
+                            </tbody>
+                          </table>
+                          </div>
+                          @if($totalRegistrosRestantes > 0)
+                            <center><h5>Quedan {{ $totalRegistrosRestantes }} registros para procesar y el {{ $ultimaFecha }} es la ultima entrega</h5></center>
+                          @endif
                       </div>
                       <!-- /.card-body -->
                     </div>
                   <!-- /.card -->
-                  </div>
-
+                </div>
+              
                 </div>
                 
               </div>
@@ -260,18 +245,79 @@
 
 @section('js')
 <script type="text/javascript">
-    $(".alert").delay(4000).slideUp(200, function() {
-        $(this).alert('close');
+  $(".alert").delay(4000).slideUp(200, function() {
+      $(this).alert('close');
+  });
+  $("input[data-bootstrap-switch]").each(function(){
+    $(this).bootstrapSwitch('state', $(this).prop('checked'));
+  });
+
+
+    
+  $(document).ready(function() {
+      $(".entregado-checkbox").bootstrapSwitch();
+      $(".envio-checkbox").bootstrapSwitch();
+      $(".cancelar-checkbox").bootstrapSwitch();
+
+      $("body").on("switchChange.bootstrapSwitch", ".entregado-checkbox, .cancelar-checkbox", function(event, state) {
+          var checkbox = $(this);
+          var ventafId = checkbox.data("ventaf-id");
+          var entregado = $(".entregado-checkbox[data-ventaf-id='" + ventafId + "']").bootstrapSwitch("state") ? 1 : 0;
+          var envio = $(".envio-checkbox[data-ventaf-id='" + ventafId + "']").bootstrapSwitch("state") ? 1 : 0;
+          var cancelar = $(".cancelar-checkbox[data-ventaf-id='" + ventafId + "']").bootstrapSwitch("state") ? 1 : 0;
+
+          var mensaje = cancelar ? "El registro ha sido cancelado y la fecha actualizada" : "El registro desaparecerá de este listado";
+    
+
+          // Realizar una solicitud AJAX para actualizar el registro en el servidor
+          $.ajax({
+              type: "POST",
+              url: "{{ route('venta.actualizar_entregado') }}",
+              data: {
+                  ventaf_id: ventafId,
+                  entregado: entregado,
+                  envio: envio,
+                  cancelar: cancelar,
+                  _token: "{{ csrf_token() }}"
+              },
+              success: function(response) {
+                  // Mostrar mensaje SweetAlert
+                  Swal.fire({
+                      icon: 'success',
+                      title: 'Registro Actualizado',
+                      text: mensaje,
+                      showConfirmButton: true
+                  }).then(function() {
+                      // Recargar la página
+                      location.reload();
+                  });
+              },
+              error: function(xhr, status, error) {
+                  console.error(error);
+              }
+          });
+      });
+  });
+
+  $(document).ready(function() {
+    var checkboxPago = $("#pago");
+    var selectTipoPago = $("#tipopago_id");
+
+    checkboxPago.on("switchChange.bootstrapSwitch", function(event, state) {
+        if (state) {
+            if (selectTipoPago.val() === "") {
+                checkboxPago.bootstrapSwitch("state", false);
+            }
+        }
     });
 
-    function toggleCantidad(checkbox) {
-        var cantidadInput = checkbox.parentNode.parentNode.nextElementSibling.querySelector('input[type="number"]');
-        cantidadInput.disabled = !checkbox.checked;
-        if (checkbox.checked) {
-            cantidadInput.value = 1;
-        } else {
-            cantidadInput.value = '';
+    selectTipoPago.on("change", function() {
+        if (selectTipoPago.val() === "") {
+            checkboxPago.bootstrapSwitch("state", false);
         }
-    }
+    });
+  });
+
+
 </script>
 @endsection

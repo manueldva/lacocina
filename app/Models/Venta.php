@@ -18,6 +18,7 @@ class Venta extends Model
         'metodopago_id',
         'fecha',
         'total',
+        'totalopagado',
         'pago',
         'estado'
     ];
@@ -57,6 +58,18 @@ class Venta extends Model
     {
         return $this->ventaDetalles->sum('cantidad');
     }
+
+    public function ventafechasNoEntregadas()
+    {
+        return $this->hasMany(Ventafecha::class)
+            ->where('entregado', 1);
+    }
+
+    public function ventafechasTotal()
+    {
+        return $this->hasMany(Ventafecha::class);
+    }
+
 
     public function scopeBuscarpor($query, $tipo, $buscar) {
         if ($tipo && $buscar) {

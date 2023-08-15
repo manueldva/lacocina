@@ -83,16 +83,16 @@
           <!-- ./col -->
           <div class="col-lg-3 col-6">
             <!-- small box -->
-            <div class="small-box bg-danger">
+            <div class="small-box @if($ventasConAviso > 0 ) bg-danger @else bg-success @endif">
               <div class="inner">
-                <h3>{{ $clientesConMontoAdeudado }}</h3>
+                <h3>{{ $ventasConAviso }}</h3>
 
-                <p>Pagos Atrasados</p>
+                <p>Vencimientos</p>
               </div>
               <div class="icon">
-                <i class="fa fa-ban"></i>
+                <i class="fa fa-exclamation-triangle"></i>
               </div>
-              <a href="#" class="small-box-footer">Mas información <i class="fa fa-arrow-circle-right"></i></a>
+              <a href="{{ route('vencimientos') }}" class="small-box-footer">Mas información <i class="fa fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->

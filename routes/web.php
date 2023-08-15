@@ -33,6 +33,7 @@ Auth::routes();
 //Route::get('/publico', 'PublicoController@publico')->name('publico');
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/vencimientos', 'HomeController@mostrarVencimientos')->name('vencimientos');
 
 Route::resource('manageusers', 'ManageuserController');
 route::get('/showSetting/{id}',		'ManageuserController@showSetting')->name('showSetting');
@@ -56,6 +57,8 @@ Route::resource('metodopagos', 'MetodoPagoController');
 
 Route::resource('ventas', 'VentaController');
 Route::get('/ajax/get-cliente-info/{clienteId}', 'VentaController@getClienteInfo');
+Route::post('/actualizar-entregado', 'VentaController@actualizarEntregado')->name('venta.actualizar_entregado');
+Route::get('detallesVenta/{id}', 'VentaController@detallesVenta');
 
 Route::resource('informes', 'InformeController');
 

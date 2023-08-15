@@ -42,7 +42,7 @@
                     <!-- form start -->
                       <div class="card-body">
                         <div class="col-md-12">
-                            
+                        <div class="table-responsive">
                             <table class="table table-striped table-valign-middle table-bordered">
                                 <thead>
                                   <tr>
@@ -80,14 +80,16 @@
                                       </td>
                                       <td>
                                         <center>
-                                            <a  target="_blank" class="btn btn-sm btn-flat btn-outline-success" href="{{ $ventaConAviso['mensaje'] }}" data-toggle="tooltip" data-placement="top" title="Enviar Msj"><i class="fab fa-whatsapp"></i> </a>                                  
+                                            <a  target="_blank" class="btn btn-sm btn-flat btn-outline-danger" href="{{ $ventaConAviso['mensaje'] }}" data-toggle="tooltip" data-placement="top" title="WhatsApp Web"><i class="fab fa-whatsapp"></i> </a>  
+                                            <a  target="_blank" class="btn btn-sm btn-flat btn-outline-success" href="{{ $ventaConAviso['mensajeMovil'] }}" data-toggle="tooltip" data-placement="top" title="WhatsApp Movil"><i class="fab fa-whatsapp"></i> </a>                                                                  
                                         </center>
                                       </td>
                                       
                                     </tr>
                                   @endforeach
                                 </tbody>
-                            </table>                   
+                            </table>     
+                            </div>              
                         </div>
                       </div>
                       <!-- /.card-body -->

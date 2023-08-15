@@ -106,12 +106,14 @@ class HomeController extends Controller
                     
                     $mensaje = "https://web.whatsapp.com/send?phone=". $venta->cliente->persona->telefono."&text=Hola! Lo saludamos desde la Cocina, queríamos avisarle que el día  ". $fechaEntrega->format('Y-m-d') ." se realizara la ultima entrega de su compra actual. Recuerde renovar su pedido. Gracias";
 
+                    $mensajeMovil = " https://wa.me/". $venta->cliente->persona->telefono."?text=Hola! Lo saludamos desde la Cocina, queríamos avisarle que el día  ". $fechaEntrega->format('Y-m-d') ." se realizara la ultima entrega de su compra actual. Recuerde renovar su pedido. Gracias";
                     $ventasConAviso[] = [
                          'cliente' => $venta->cliente->persona->apellido .' ' . $venta->cliente->persona->nombre , // Asumiendo que tienes un método en tu modelo Cliente para obtener el nombre completo
                          'ultima_fecha' => $fechaEntrega->format('Y-m-d'),
                          'telefono' => $venta->cliente->persona->telefono,
                          'aviso'=>$venta->metodoPago->aviso,
                          'mensaje'=> $mensaje,
+                         'mensajeMovil'=>$mensajeMovil,
                      ];
                  }
              }

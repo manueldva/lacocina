@@ -56,7 +56,7 @@ Route::resource('tipopagos', 'TipopagoController');
 Route::resource('metodopagos', 'MetodoPagoController');
 
 Route::resource('ventas', 'VentaController');
-Route::get('/ajax/get-cliente-info/{clienteId}', 'VentaController@getClienteInfo');
+Route::get('clienteInfo/{clienteId}', 'VentaController@getClienteInfo');
 Route::post('/actualizar-entregado', 'VentaController@actualizarEntregado')->name('venta.actualizar_entregado');
 Route::get('detallesVenta/{id}', 'VentaController@detallesVenta');
 

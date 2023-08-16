@@ -148,7 +148,7 @@
               active
               @endif
               ">
-              <i class="nav-icon fas fa-money  nav-icon"></i>
+              <i class="nav-icon fas fa-money-bill-wave nav-icon"></i>
               <p>
                 Ventas
               </p>
@@ -178,7 +178,7 @@
               active
               @endif
               ">
-              <i class="nav-icon fas fa-file  nav-icon"></i>
+              <i class="nav-icon fas fa-hamburger nav-icon"></i>
               <p>
                 Viandas
               </p>

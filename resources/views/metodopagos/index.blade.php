@@ -85,11 +85,9 @@
                           <td>
                             <center>
                               @if($metodopago->activo == 1)
-                                <img src="{{url('image/on.ico')}}"  width="30" height="30" data-toggle="tooltip" data-placement="top" title="Activo">
-                               
+                                <i class="fas fa-toggle-on fa-lg text-success" data-toggle="tooltip" data-placement="top" title="Activo"></i>
                               @else
-                                <img src="{{url('image/off.ico')}}"  width="30" height="30" data-toggle="tooltip" data-placement="top" title="Inactivo">
-                               
+                                  <i class="fas fa-toggle-off fa-lg text-danger" data-toggle="tooltip" data-placement="top" title="Inactivo"></i>
                               @endif
                             </center>
                           </td>

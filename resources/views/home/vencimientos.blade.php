@@ -80,8 +80,8 @@
                                       </td>
                                       <td>
                                         <center>
-                                            <a  target="_blank" class="btn btn-sm btn-flat btn-outline-danger" href="{{ $ventaConAviso['mensaje'] }}" data-toggle="tooltip" data-placement="top" title="WhatsApp Web"><i class="fab fa-whatsapp"></i> </a>  
-                                            <a  target="_blank" class="btn btn-sm btn-flat btn-outline-success" href="{{ $ventaConAviso['mensajeMovil'] }}" data-toggle="tooltip" data-placement="top" title="WhatsApp Movil"><i class="fab fa-whatsapp"></i> </a>                                                                  
+                                            <a target="_blank" id="movil" class="btn btn-sm btn-flat btn-outline-success" href="{{ $ventaConAviso['mensajeMovil'] }}" data-toggle="tooltip" data-placement="top" title="WhatsApp Movil"><i class="fab fa-whatsapp"></i></a>
+                                            <a target="_blank"  id="noMovil" class="btn btn-sm btn-flat btn-outline-primary" href="{{ $ventaConAviso['mensaje'] }}" data-toggle="tooltip" data-placement="top" title="WhatsApp Web"><i class="fab fa-whatsapp"></i></a>
                                         </center>
                                       </td>
                                       
@@ -113,6 +113,21 @@
 
 <script type="text/javascript">
 
+    function isMobileDevice() {
+        return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+    }
+
+    $(document).ready(function() {
+        if (isMobileDevice()) {
+            //console.log("Estás en un dispositivo móvil");
+            // Ocultar el botón de WhatsApp Web
+            $('#noMovil').hide();
+        } else {
+            //console.log("Estás en una computadora");
+            // Ocultar el botón de WhatsApp Móvil
+            $('#movil').hide();
+        }
+    });
 
 </script>
 @endsection

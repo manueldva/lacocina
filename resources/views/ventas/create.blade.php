@@ -259,7 +259,8 @@
 
             
             $.ajax({
-                url: '/ajax/get-cliente-info/' + clienteId,
+                url: '{{ url('clienteInfo') }}/' + clienteId,
+                //url: '/ajax/get-cliente-info/' + clienteId,
                 type: 'GET',
                 success: function(response) {
                     var viandasCantidad = response.viandasSeleccionadas;

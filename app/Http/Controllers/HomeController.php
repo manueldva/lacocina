@@ -38,31 +38,19 @@ class HomeController extends Controller
         ->having('monto_adeudado', '>', 0)
         ->count();*/
 
-
-
-        // Obtener la fecha actual
-        $fechaActual = Carbon::now();
-
         // Obtener todas las ventas
-        $ventas = Venta::all();
+        $ventas = Venta::where('estado',1)->get();
 
         $ventasConAviso = 0;
 
         // Recorrer las ventas
         foreach ($ventas as $venta) {
-            // Obtener la última Ventafecha para la venta
-            $ultimaEntrega = $venta->ventafechas()->orderByDesc('fecha')->first();
 
-            // Verificar si hay una última entrega válida
-            if ($ultimaEntrega) {
-                // Convertir la fecha de entrega a un objeto Carbon
-                $fechaEntrega = Carbon::parse($ultimaEntrega->fecha);
+            $EntregaFaltanteCount = $venta->ventafechas()->where('entregado', 0)->count();
 
-                // Calcular la cantidad de días entre la última entrega y la fecha actual
-                $diasEntreEntregaYActual = $fechaEntrega->diffInDays($fechaActual);
-
-                // Verificar si el aviso coincide con la cantidad de días
-                if ($diasEntreEntregaYActual === $venta->metodoPago->aviso) {
+            if ($EntregaFaltanteCount) {
+            
+                if ($EntregaFaltanteCount <= $venta->metodoPago->aviso) {
                     $ventasConAviso++;
                 }
             }
@@ -83,26 +71,25 @@ class HomeController extends Controller
          $fechaActual = Carbon::now();
 
          // Obtener todas las ventas
-         $ventas = Venta::all();
+         $ventas = Venta::where('estado',1)->get();
  
          $ventasConAviso = [];
  
          // Recorrer las ventas
          foreach ($ventas as $venta) {
-             // Obtener la última Ventafecha para la venta
-             $ultimaEntrega = $venta->ventafechas()->orderByDesc('fecha')->first();
- 
-             // Verificar si hay una última entrega válida
-             if ($ultimaEntrega) {
-                 // Convertir la fecha de entrega a un objeto Carbon
-                 $fechaEntrega = Carbon::parse($ultimaEntrega->fecha);
- 
-                 // Calcular la cantidad de días entre la última entrega y la fecha actual
-                 $diasEntreEntregaYActual = $fechaEntrega->diffInDays($fechaActual);
- 
-                 // Verificar si el aviso coincide con la cantidad de días
-                 if ($diasEntreEntregaYActual === $venta->metodoPago->aviso) {
 
+            $EntregaFaltanteCount = $venta->ventafechas()->where('entregado', 0)->count();
+
+            if ($EntregaFaltanteCount) {
+            
+                if ($EntregaFaltanteCount <= $venta->metodoPago->aviso) {
+
+                    $fechaTemp = Ventafecha::where('venta_id', $venta->id)
+                    ->orderBy('fecha', 'desc') // Ordenar por la fecha en orden descendente
+                    ->pluck('fecha')
+                    ->first();
+
+                    $fechaEntrega = Carbon::parse($fechaTemp);
                     
                     $mensaje = "https://web.whatsapp.com/send?phone=". $venta->cliente->persona->telefono."&text=Hola! Lo saludamos desde la Cocina, queríamos avisarle que el día  ". $fechaEntrega->format('Y-m-d') ." se realizara la ultima entrega de su compra actual. Recuerde renovar su pedido. Gracias";
 

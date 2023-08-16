@@ -36,7 +36,7 @@
                       <div class="card-header">
                         <div class="row justify-content-center align-items-center">
                           @if($show == 0)
-                            @if($venta->estado == 1)
+                            @if($venta->estado == 1 || $venta->total == 0)
                               <div class="form-group">
                                 <button name="guardar" id="guardar" type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i> Guardar</button>
                               </div>
@@ -307,13 +307,15 @@
         if (state) {
             if (selectTipoPago.val() === "") {
                 checkboxPago.bootstrapSwitch("state", false);
-            }
+            } 
         }
     });
 
     selectTipoPago.on("change", function() {
         if (selectTipoPago.val() === "") {
             checkboxPago.bootstrapSwitch("state", false);
+        } else {
+            checkboxPago.bootstrapSwitch("state", true);
         }
     });
   });

@@ -345,11 +345,17 @@
     });
 
     // Obtener los elementos necesarios
+    const metodoPago = document.querySelectorAll('#metodopago_id');
     const cantidadInputs = document.querySelectorAll('.cantidad-input');
     const checkboxes = document.querySelectorAll('input[name="viandas[]"]');
     const totalInput = document.getElementById('total');
     //const totalPagadoInput = document.getElementById('totalpagado');
 
+    // Escuchar el evento change en los campos de cantidad
+    metodoPago.forEach(function(input) {
+        input.addEventListener('change', calcularMontoTotal);
+    });
+    
     // Escuchar el evento change en los campos de cantidad
     cantidadInputs.forEach(function(input) {
         input.addEventListener('change', calcularMontoTotal);

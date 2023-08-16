@@ -110,11 +110,7 @@
                             </center>
                           </td>
                           <td><center>
-                          @if ($cliente->monto_adeudado > 0)
-                            <span class="text-danger">Debe: ${{ $cliente->monto_adeudado }}</span>
-                          @else
-                            <span class="text-success">@if ($cliente->monto_adeudado !=  0) A Favor: @endif ${{ abs($cliente->monto_adeudado) }}</span>
-                          @endif
+                            {{ $cliente->deuda  }}
                           </center>
                           </td>
                           <td>

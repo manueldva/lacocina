@@ -49,7 +49,7 @@ class ClienteController extends Controller
         //$clientes =  Cliente::buscarpor($request->get('tipo'), $request->get('buscarpor'))->paginate(10);
         
         $clientes = Cliente::buscarpor($request->get('tipo'), $request->get('buscarpor'))
-        ->withMontoAdeudado()
+        ->MontoAdeudado()
         ->paginate(10);
 
         return view('clientes.index',compact('clientes', 'segment','buscador','dato'));

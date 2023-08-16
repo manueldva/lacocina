@@ -90,7 +90,7 @@ class Cliente extends Model
     }*/
 
 
-	public function scopeWithMontoAdeudado(Builder $query, $fechaDesde = null, $fechaHasta = null)
+	public function scopeWithMontoAdeudado(Builder $query, $fechaDesde = null, $fechaHasta = null) //sacar cuando se elimina del informe
     {
         $query->select('clientes.*')
             ->selectSub(function ($subquery) use ($fechaDesde, $fechaHasta) {
@@ -124,4 +124,16 @@ class Cliente extends Model
             }]);
     }
 
+
+    public function scopeMontoAdeudado($query)
+    {
+        return $query->addSelect(['deuda' => function ($subquery) {
+            $subquery->selectRaw('SUM(ventadetalles.cantidad * ventadetalles.precio * metodopagos.dias)')
+                ->from('ventas')
+                ->join('ventadetalles', 'ventadetalles.venta_id', '=', 'ventas.id')
+                ->join('metodopagos', 'metodopagos.id', '=', 'ventas.metodopago_id')
+                ->whereColumn('ventas.cliente_id', 'clientes.id')
+                ->where('ventas.pago', 0);
+        }]);
+    }
 }

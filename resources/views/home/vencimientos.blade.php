@@ -10,7 +10,7 @@
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('home') }}">Vencimientos</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('home') }}">Tablero</a></li>
               <li class="breadcrumb-item active">Vencimientos</li>
             </ol>
           </div><!-- /.col -->
@@ -69,7 +69,7 @@
                                         </td>
                                         <td>
                                             <center>
-                                                {{ $ventaConAviso['aviso'] }} dia/s antes
+                                                Faltando @if($ventaConAviso['aviso'] === 1) 1 entrega @else {{ $ventaConAviso['aviso'] }} entregas @endif
                                             </center>
                                         </td>
                                       

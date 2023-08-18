@@ -98,7 +98,7 @@
                           
 
                         <div class="form-group">
-                            <label for="fecha">Fecha(*)</label>
+                            <label for="fecha">Fecha(*):</label>
                             <input type="date" class="form-control" id="fecha" name="fecha" value="{{ $venta->fecha }}" disabled>
                         </div>
                         @error('fecha')

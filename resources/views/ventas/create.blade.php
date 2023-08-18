@@ -114,7 +114,7 @@
                         
 
                       <div class="form-group">
-                          <label for="fecha">Fecha(*)</label>
+                          <label for="fecha">Fecha(*):</label>
                           <input type="date" class="form-control" id="fecha" name="fecha" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" max="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
                       </div>
                       @error('fecha')
@@ -128,6 +128,16 @@
                         <input type="number" class="form-control @error('total') is-invalid @enderror" id="total" name="total" value="{{ old('total') }}">
                       </div>
                       @error('total')
+                        <div class="alert alert-info" role="alert">
+                          {{ $message }}
+                        </div>
+                      @enderror
+
+                      <div class="form-group">
+                        <label for="totalpago">Total Pagado:</label>
+                        <input type="number" class="form-control @error('total') is-invalid @enderror" id="totalpago" name="totalpago" value="{{ old('totalpago') }}">
+                      </div>
+                      @error('totalpago')
                         <div class="alert alert-info" role="alert">
                           {{ $message }}
                         </div>
@@ -163,6 +173,10 @@
                     <!-- form start -->
                     <div class="card-body">
                       <div class="form-group">
+                           
+                        <div class="form-group">
+                          <input type="checkbox" name="producto" id="producto" data-bootstrap-switch checked data-off-color="primary" data-on-color="success"  data-on-text="Vianda" data-off-text="Producto">
+                        </div>
                         <div class="form-group">
                           <table class="table table-borderless">
                               <tbody>
@@ -183,6 +197,16 @@
                               </tbody>
                           </table>
                         </div>
+                        <div class="form-group">
+                            <label for="observaciones">Observaciones:</label>
+                            <textarea id= "observaciones" name="observaciones" class="form-control" rows="3" placeholder="Ingrese un detalle">{{ old('observaciones') }}</textarea>
+                        </div>
+                        @error('observaciones')
+                            <div class="alert alert-info" role="alert">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
                       </div>
                       <!-- /.card-body -->
                     </div>
@@ -366,6 +390,18 @@
         checkbox.addEventListener('change', calcularMontoTotal);
     });
 
+    var checkboxProducto = $("#producto");
+
+    checkboxProducto.on("switchChange.bootstrapSwitch", function(event, state) {
+      if (state) {
+        calcularMontoTotal();
+          
+      } else {
+        $("#total").val(""); //que aca
+      }
+    });
+
+
     // Función para calcular el monto total y actualizar los campos correspondientes
     function calcularMontoTotal() {
         let montoTotal = 0;
@@ -382,6 +418,7 @@
 
         totalInput.value = montoTotal.toFixed(2) * dias;
     }
+
 
     
 </script>

@@ -71,10 +71,7 @@
           <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block btn-flat"><i class="fas fa-sign-in-alt"></i> {{ __('Ingresar') }}</button>
           </div>
-          &nbsp; &nbsp; 
-          <div class="form-group">
-          <a class="btn btn-default btn-block btn-flat" href="{{ url('/') }}"><i class="fas fa-undo"></i> Volver</a>
-          </div>
+         
           <!-- /.col -->
         </div>
       </form>

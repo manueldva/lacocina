@@ -83,7 +83,7 @@
                             <select id="metodopago_id" name="metodopago_id" class="form-control @error('metodopago_id') is-invalid @enderror">
                                 <option value="">Seleccionar</option>
                                 @foreach($metodopagos as $metodopago)
-                                    <option value="{{ $metodopago->id }}"  data-dias="{{ $metodopago->dias }}">
+                                    <option value="{{ $metodopago->id }}"  data-dias="{{ $metodopago->dias }}" data-otros="{{ $metodopago->descripcion === 'Otros' ? 1 : 0 }}">
                                         {{ $metodopago->descripcion }} ({{ $metodopago->dias }})
                                     </option>
                                 @endforeach
@@ -134,10 +134,10 @@
                       @enderror
 
                       <div class="form-group">
-                        <label for="totalpago">Total Pagado:</label>
-                        <input type="number" class="form-control @error('total') is-invalid @enderror" id="totalpago" name="totalpago" value="{{ old('totalpago') }}">
+                        <label for="totalpagado">Total Pagado:</label>
+                        <input type="number" class="form-control @error('totalpagado') is-invalid @enderror" id="totalpagado" name="totalpagado" value="{{ old('totalpagado') }}">
                       </div>
-                      @error('totalpago')
+                      @error('totalpagado')
                         <div class="alert alert-info" role="alert">
                           {{ $message }}
                         </div>
@@ -174,9 +174,7 @@
                     <div class="card-body">
                       <div class="form-group">
                            
-                        <div class="form-group">
-                          <input type="checkbox" name="producto" id="producto" data-bootstrap-switch checked data-off-color="primary" data-on-color="success"  data-on-text="Vianda" data-off-text="Producto">
-                        </div>
+                     
                         <div class="form-group">
                           <table class="table table-borderless">
                               <tbody>
@@ -184,12 +182,17 @@
                                       <tr>
                                           <td>
                                               <label>
-                                                  <input type="checkbox" name="viandas[]" value="{{ $vianda->id }}">  {{ Str::limit($vianda->descripcion, 10, '') }}
-                                      
+                                                  @if($vianda->descripcion=="Otros")
+                                                    <input type="checkbox" name="otros" value="0">  {{ Str::limit($vianda->descripcion, 10, '') }}
+                                                  @else
+                                                    <input type="checkbox" name="viandas[]" value="{{ $vianda->id }}">  {{ Str::limit($vianda->descripcion, 10, '') }}
+                                                  @endif
                                               </label>
                                           </td>
                                           <td>
-                                            <input class="form-control form-control-sm cantidad-input" type="number" name="cantidad_{{ $vianda->id }}" id="cantidad_{{ $vianda->id }}" min="1" disabled>
+                                            @if($vianda->descripcion !== "Otros")
+                                              <input class="form-control form-control-sm cantidad-input" type="number" name="cantidad_{{ $vianda->id }}" id="cantidad_{{ $vianda->id }}" min="1" disabled>
+                                            @endif
                                           </td>
                                           <td style="display: none;" class="precio">{{ $vianda->precio }}</td>
                                       </tr>
@@ -310,6 +313,21 @@
         });
     });
 
+
+    $('input[name="otros"]').on('change', function() {
+      var otros = $(this).prop('checked');
+       // Si el checkbox "otros" está marcado, seleccionar la opción con data-otros igual a 1
+       if (otros) {
+            $('#metodopago_id option[data-otros="1"]').prop('selected', true);
+            // Restablecer estado de checkboxes y campos de cantidad
+            $('#total').val('');
+            $('input[name="viandas[]"]').prop('checked', false);
+            $('input[name^="cantidad_"]').prop('disabled', true).val('');
+        } else {
+          $('#cliente_id').change();
+        }
+    });
+
     // Ejecutar el cambio de estado de los checkboxes al cargar la página
     $('input[name="viandas[]"]').on('change', function() {
         toggleCantidad(this);
@@ -333,19 +351,53 @@
         // Obtener el valor del campo de selección de método de pago
         var fechaSeleccionado = $('#fecha').val();
 
+        var total = $('#total').val();
 
-        // Si no se ha seleccionado ninguna vianda, o el cliente o el método de pago están vacíos, mostrar un mensaje de alerta
-        if (viandasSeleccionadas === 0 || clienteSeleccionado === '' || metodoPagoSeleccionado === ''  || fechaSeleccionado === '') {
+        var totalpagado = $('#totalpagado').val();
+
+        var pago = $(".pago-checkbox").bootstrapSwitch("state") ? 1 : 0;
+
+        var otros =  $('input[name="otros"]').prop('checked'); // depende de si esta chequeado o no permito
+
+
+        var camposHabilitados = $('.cantidad-input:enabled');
+        var hayCamposInvalidos = false;
+
+        camposHabilitados.each(function() {
+            var cantidad = parseInt($(this).val());
+            if (isNaN(cantidad) || cantidad <= 0) {
+                hayCamposInvalidos = true;
+                return false; // Salir del bucle each si se encuentra un campo inválido
+            }
+        });
+
+
+        if (otros == true) {
+          if (clienteSeleccionado === '' || metodoPagoSeleccionado === ''  || fechaSeleccionado === '' || pago === 0 || total <= 0  ) {
             event.preventDefault(); // Evita que el formulario se envíe
-
             Swal.fire({
-                icon: 'error', // Cambiamos el icono a 'error'
-                title: '¡Atención!',
-                text: 'Debes seleccionar al menos una vianda, un cliente y un método de pago antes de guardar.',
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Aceptar'
-            });
+                    type: 'info',
+                    title: '¡Atención!',
+                    text: 'Debes seleccionar al menos una vianda, un cliente, un tipo de pago, un metodo de pago y el monto total debe ser mayor a 0.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Aceptar'
+                });
+          }
+        } else {
+           // Si no se ha seleccionado ninguna vianda, o el cliente o el método de pago están vacíos, mostrar un mensaje de alerta
+          if (viandasSeleccionadas === 0 || clienteSeleccionado === '' || metodoPagoSeleccionado === ''  || fechaSeleccionado === ''  || hayCamposInvalidos) {
+              event.preventDefault(); // Evita que el formulario se envíe
+
+              Swal.fire({
+                  type: 'info',
+                  title: '¡Atención!',
+                  text: 'Debes seleccionar al menos una vianda, un cliente, un metodo de pago y verificar que las cantidades que corresponden a cada vianda sean correctas antes de guardar.',
+                  confirmButtonColor: '#3085d6',
+                  confirmButtonText: 'Aceptar'
+              });
+          }
         }
+       
     });
 
 
@@ -390,16 +442,9 @@
         checkbox.addEventListener('change', calcularMontoTotal);
     });
 
-    var checkboxProducto = $("#producto");
 
-    checkboxProducto.on("switchChange.bootstrapSwitch", function(event, state) {
-      if (state) {
-        calcularMontoTotal();
-          
-      } else {
-        $("#total").val(""); //que aca
-      }
-    });
+    var selectedOption = $('#metodopago_id').find(":selected");
+        var dias = selectedOption.data("dias");
 
 
     // Función para calcular el monto total y actualizar los campos correspondientes
@@ -420,7 +465,6 @@
     }
 
 
-    
 </script>
 
 @endsection

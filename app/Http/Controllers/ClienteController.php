@@ -67,8 +67,8 @@ class ClienteController extends Controller
 
         //$tipoclientes = Tipocliente::where('activo',1)->get();
         //$tipocontactos = Tipocontacto::where('activo',1)->get();
-        $metodopagos = MetodoPago::where('activo',1)->get();
-        $viandas = Vianda::where('activo', 1)->get();
+        $metodopagos = MetodoPago::where('activo',1)->where('descripcion','!=','Otros')->get();
+        $viandas = Vianda::where('activo', 1)->where('descripcion','!=','Otros')->get();
 
         //$dias = Dia::where('activo',1)->get();
 
@@ -168,9 +168,9 @@ class ClienteController extends Controller
         $segment = 'clientes';
 
         //$tipoclientes = Tipocliente::where('activo',1)->get();
-        $metodopagos = MetodoPago::where('activo',1)->get();
+        $metodopagos = MetodoPago::where('activo',1)->where('descripcion','!=','Otros')->get();
         //$dias = Dia::where('activo',1)->get();
-        $viandas = Vianda::where('activo', 1)->get();
+        $viandas = Vianda::where('activo', 1)->where('descripcion','!=','Otros')->get();
 
         $viandasSeleccionadas = $cliente->viandas()->pluck('vianda_id')->toArray();
 
@@ -198,9 +198,9 @@ class ClienteController extends Controller
         $segment = 'clientes';
 
         //$tipoclientes = Tipocliente::where('activo',1)->get();
-        $metodopagos = MetodoPago::where('activo',1)->get();
+        $metodopagos = MetodoPago::where('activo',1)->where('descripcion','!=','Otros')->get();
         //$dias = Dia::where('activo',1)->get();
-        $viandas = Vianda::where('activo', 1)->get();
+        $viandas = Vianda::where('activo', 1)->where('descripcion','!=','Otros')->get();
 
         $viandasSeleccionadas = $cliente->viandas()->pluck('vianda_id')->toArray();
 

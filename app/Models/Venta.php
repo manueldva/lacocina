@@ -18,9 +18,11 @@ class Venta extends Model
         'metodopago_id',
         'fecha',
         'total',
-        'totalopagado',
+        'totalpagado',
         'pago',
-        'estado'
+        'estado',
+        'otros',
+        'observaciones'
     ];
 
 

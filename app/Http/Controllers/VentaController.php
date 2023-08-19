@@ -96,7 +96,7 @@ class VentaController extends Controller
     public function store(Request $request)
     {
 
-          //dd($request->all());
+        //dd($request->all());
         $messages = [
             'metodopago_id.required' =>'El campo Metodo de pago es obligatorio.'
             
@@ -111,12 +111,12 @@ class VentaController extends Controller
             //'body' => 'required',
         ], $messages);
         
-        $tieneRegistros = Venta::where('estado',1)->where('cliente_id',$request->cliente_id)->count();  
+        /*$tieneRegistros = Venta::where('estado',1)->where('cliente_id',$request->cliente_id)->count();  
 
         if ( $tieneRegistros > 0 ) {
             alert()->error('Error', 'Este cliente tiene una venta sin cerrar');
             return back();
-        }
+        }*/
 
         $venta = new Venta;
             //$cliente->tipocliente_id = $request->input('tipocliente_id');
@@ -125,15 +125,17 @@ class VentaController extends Controller
             $venta->metodopago_id = $request->metodopago_id;
             $venta->fecha = $request->fecha;
             $venta->total = $request->total ?? 0;
-            //$venta->totalpagado = $request->totalpagado ?? 0;
+            $venta->totalpagado = $request->totalpagado ?? 0;
             $venta->estado = true; //$request->has('estado') ? true : false;
             $venta->pago = $request->has('pago') ? true : false;
+            $venta->otros = $request->has('otros') ? true : false;
+            $venta->observaciones = $request->observaciones ?? '';
         $venta->save();
 
 
          // Actualizar los registros de ClienteVianda asociados al cliente
         $viandas = $request->input('viandas', []);
-        $total = 0;
+        //$total = 0;
 
         
          // Crear nuevos registros de ClienteVianda
@@ -149,8 +151,16 @@ class VentaController extends Controller
                     $ventadetalle->precio = $precio;
                 $ventadetalle->save();
 
-                $total += $cantidad * $precio;
+                //$total += $cantidad * $precio;
             }
+        } elseif ($venta->otros == true){
+                $idotros = Vianda::where('descripcion', 'Otros')->pluck('id')->first();
+                $ventadetalle = new VentaDetalle();
+                    $ventadetalle->venta_id = $venta->id;
+                    $ventadetalle->vianda_id = $idotros;
+                    $ventadetalle->cantidad = 1;
+                    $ventadetalle->precio = 0;
+                $ventadetalle->save();
         }
         
 
@@ -158,7 +168,7 @@ class VentaController extends Controller
         // Actualizar el campo total de la venta
         /*$venta->total = $total;
         $venta->save();*/
-        $dias = MetodoPago::where('id', $request->metodopago_id)->pluck('dias')->first();
+        $dias = $request->has('otros') ? 1 : MetodoPago::where('id', $request->metodopago_id)->pluck('dias')->first() ;
         $fechaInicio = $request->fecha;
 
     
@@ -287,8 +297,8 @@ class VentaController extends Controller
      */
     public function update(Request $request, Venta $venta)
     {
-        
-        $estado = $request->has('estado') ? true : false;
+        //dd($request->all());
+        $estado = $request->has('estado') ? false : true;
         $pago = $request->has('pago') ? true : false;
        
 
@@ -297,7 +307,7 @@ class VentaController extends Controller
             return back();
         }
 
-        Venta::where('id', $venta->id)->update(['estado' => $estado, 'pago'=>$pago, 'tipopago_id' => $request->tipopago_id, 'total'=>  $request->total]);
+        Venta::where('id', $venta->id)->update(['estado' => $estado, 'pago'=>$pago, 'tipopago_id' => $request->tipopago_id, 'total'=>  $request->total,'totalpagado'=>  $request->totalpagado]);
   
         alert()->success('Registro Actualizado', 'Exitosamente');
         return redirect()->route('ventas.edit', $venta->id);  

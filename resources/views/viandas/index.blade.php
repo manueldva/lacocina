@@ -97,12 +97,16 @@
                                 <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('viandas.show',$vianda->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>
                               @endcan
                               @can('viandas.edit')  
-                                <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('viandas.edit',$vianda->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
+                                @if($vianda->descripcion !== "Otros")
+                                  <a class="btn btn-sm btn-flat btn-outline-secondary" href="{{ route('viandas.edit',$vianda->id) }}" data-toggle="tooltip" data-placement="top" title="Editar Datos"><i class="fas fa-edit"></i> </a>
+                                @endif
                               @endcan
                               @can('viandas.destroy')  
-                                <a href="#" data-id="{{$vianda->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
-                                  <i class="fas fa-trash-alt"></i>
-                                </a>
+                                @if($vianda->descripcion !== "Otros")
+                                  <a href="#" data-id="{{$vianda->id}}" class="btn btn-sm btn-flat btn-outline-danger btnDelete" data-toggle="modal" data-target="#delete"  data-toggle="tooltip" data-placement="top" title="Eliminar Registro">
+                                    <i class="fas fa-trash-alt"></i>
+                                  </a>
+                                @endif
                               @endcan
     
                             </center>

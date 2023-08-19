@@ -118,6 +118,16 @@
                         @enderror
 
                         <div class="form-group">
+                          <label for="totalpagado">Total Pagado:</label>
+                          <input type="number" class="form-control @error('totalpagado') is-invalid @enderror" id="totalpagado" name="totalpagado" value="{{ $venta->totalpagado }}">
+                        </div>
+                        @error('totalpagado')
+                          <div class="alert alert-info" role="alert">
+                            {{ $message }}
+                          </div>
+                        @enderror
+
+                        <div class="form-group">
                           @if($ventafechas->isEmpty())
                             <input type="checkbox" name="estado" id="estado"  @if ($venta->estado == 1 ) checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success"  data-on-text="Activo" data-off-text="Cerrado">
                             &nbsp; 
@@ -283,7 +293,7 @@
               success: function(response) {
                   // Mostrar mensaje SweetAlert
                   Swal.fire({
-                      icon: 'success',
+                      type: 'success',
                       title: 'Registro Actualizado',
                       text: mensaje,
                       showConfirmButton: true
@@ -318,6 +328,32 @@
             checkboxPago.bootstrapSwitch("state", true);
         }
     });
+  });
+
+
+
+  $('#guardar').click(function(event) {
+    
+
+      var total = $('#total').val();
+
+      var totalpagado = $('#totalpagado').val();
+
+      var pago = $("#pago");
+
+
+      if (pago.prop('checked') == true) {
+        if (total != totalpagado ) {
+          event.preventDefault(); // Evita que el formulario se envíe
+          Swal.fire({
+                  type: 'error',
+                  title: '¡Atención!',
+                  text: 'El total y total pagado deben coincidir.',
+                  confirmButtonColor: '#3085d6',
+                  confirmButtonText: 'Aceptar'
+              });
+        }
+      }
   });
 
 

@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\User;
+use App\Models\MetodoPago;
+use App\Models\Tipopago;
+use App\Models\Vianda;
 use Illuminate\Database\Seeder;
 use DB;
 
@@ -91,5 +94,29 @@ class DatabaseSeeder extends Seeder
             'descripcion' => 'Domingo',
             'activo' => 0
         ]);*/
+
+        MetodoPago::create([
+            'descripcion' => 'Otros',
+            'dias' => 0,
+            'aviso' => 0,
+            'activo' => true,
+            
+        ]);
+
+        Vianda::create([
+            'descripcion' => 'Otros',
+            'precio' => 0,
+            'activo' => true,
+            
+        ]);
+
+        Tipopago::create([
+            'descripcion' => 'Efectivo',
+            'activo' => true,
+            
+        ]);
+    
     }
+
+
 }

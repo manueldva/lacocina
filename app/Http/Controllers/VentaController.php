@@ -405,15 +405,22 @@ class VentaController extends Controller
     {
         $ventaDetalles = VentaDetalle::where('venta_id', $id)->with('vianda')->get();
         $ventaFechas = Ventafecha::where('venta_id', $id)->orderby('fecha')->get();
-
+        $otros = Venta::where('id', $id)->pluck('observaciones')->first();
+        $otros = $otros == '' ? '(Sin detalle)' : '(' . $otros . ')';
         $result = [];
 
         foreach ($ventaFechas as $ventaFecha) {
-            $detallesTexto = $ventaDetalles->pluck('cantidad', 'vianda.descripcion')->map(function ($cantidad, $descripcion) {
+            $detallesTexto = $ventaDetalles->pluck('cantidad', 'vianda.descripcion')->map(function ($cantidad, $descripcion) use ($id) {
+                if($descripcion == 'Otros') {
+                    $otros = Venta::where('id', $id)->pluck('observaciones')->first();
+                    $otros = $otros == '' ? '(Sin detalle)' : '(' . $otros . ')';
+                    $descripcion =   $descripcion . $otros;
+                }
                 return "$cantidad $descripcion";
             })->implode(', ');
 
-            $ventaFecha['detallesTexto'] = $detallesTexto;
+            $ventaFecha['detallesTexto'] =  $detallesTexto;
+
 
             $result[] = $ventaFecha;
         }

@@ -90,14 +90,13 @@ class Cliente extends Model
     }*/
 
 
-	public function scopeWithMontoAdeudado(Builder $query, $fechaDesde = null, $fechaHasta = null) //sacar cuando se elimina del informe
+	/*public function scopeWithMontoAdeudado(Builder $query, $fechaDesde = null, $fechaHasta = null) //sacar cuando se elimina del informe
     {
         $query->select('clientes.*')
             ->selectSub(function ($subquery) use ($fechaDesde, $fechaHasta) {
                 $subquery->selectRaw('COALESCE(SUM(total), 0)')
                     ->from('ventas')
                     ->whereColumn('ventas.cliente_id', 'clientes.id');
-
                 if ($fechaDesde) {
                     $subquery->where('fecha', '>=', $fechaDesde);
                 }
@@ -122,16 +121,27 @@ class Cliente extends Model
             ->addSelect(['monto_adeudado' => function ($query) {
                 $query->selectRaw('monto_ventas - monto_pagado');
             }]);
-    }
+    }*/
 
 
-    public function scopeMontoAdeudado($query)
+    /*public function scopeMontoAdeudado($query)
     {
         return $query->addSelect(['deuda' => function ($subquery) {
             $subquery->selectRaw('SUM(ventadetalles.cantidad * ventadetalles.precio * metodopagos.dias)')
                 ->from('ventas')
                 ->join('ventadetalles', 'ventadetalles.venta_id', '=', 'ventas.id')
                 ->join('metodopagos', 'metodopagos.id', '=', 'ventas.metodopago_id')
+                ->whereColumn('ventas.cliente_id', 'clientes.id')
+                ->where('ventas.pago', 0);
+        }]);
+    }*/
+
+
+    public function scopeMontoAdeudado($query)
+    {
+        return $query->addSelect(['deuda' => function ($subquery) {
+            $subquery->selectRaw('SUM(ventas.total - ventas.totalpagado)')
+                ->from('ventas')
                 ->whereColumn('ventas.cliente_id', 'clientes.id')
                 ->where('ventas.pago', 0);
         }]);

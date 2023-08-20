@@ -170,7 +170,10 @@
                                 <tr>
                                   <td>
                                     <center>
-                                      {{ $ventad->vianda->descripcion }}
+                                      {{ $ventad->vianda->descripcion }} 
+                                      @if($ventad->vianda->descripcion == 'Otros')
+                                          ({{ $venta->observaciones == '' ?  'Sin detalle' :  $venta->observaciones}})
+                                      @endif
                                     </center>
                                   </td>
                                   

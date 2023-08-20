@@ -52,6 +52,7 @@ class ClienteController extends Controller
         ->MontoAdeudado()
         ->paginate(10);
 
+
         return view('clientes.index',compact('clientes', 'segment','buscador','dato'));
     }
 

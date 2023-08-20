@@ -126,7 +126,7 @@ class InformeController extends Controller
         
         $cliente = Cliente::with('persona:id,apellido,nombre')
         ->select('persona_id')
-        ->where('id', $clienteId)->withMontoAdeudado($fechadesde,$fechahasta)->first();
+        ->where('id', $clienteId)->MontoAdeudado()->first();
     
         $ventas = Venta::with([
             'tipoPago:id,descripcion',
@@ -144,7 +144,7 @@ class InformeController extends Controller
         ->orderBy('fecha', 'DESC')
         ->get();
     
-        $cantidadgeneral = Cliente::where('id', $clienteId)->withMontoAdeudado()->value('monto_adeudado');
+        $cantidadgeneral = Cliente::where('id', $clienteId)->MontoAdeudado()->value('deuda');
          
         $pdf = PDF::loadView('informes.print1', compact('ventas', 'fechadesde', 'fechahasta', 'cliente','cantidadgeneral'));
             //$pdf->setPaper('Legal', 'landscape'); --Portrait 

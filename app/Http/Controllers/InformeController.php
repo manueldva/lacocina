@@ -121,7 +121,7 @@ class InformeController extends Controller
 
 
 
-    public function print1($clienteId, $fechadesde, $fechahasta)
+    /*public function print1($clienteId, $fechadesde, $fechahasta, $tipo)
     {
         
         $cliente = Cliente::with('persona:id,apellido,nombre')
@@ -146,10 +146,49 @@ class InformeController extends Controller
     
         $cantidadgeneral = Cliente::where('id', $clienteId)->MontoAdeudado()->value('deuda');
          
-        $pdf = PDF::loadView('informes.print1', compact('ventas', 'fechadesde', 'fechahasta', 'cliente','cantidadgeneral'));
+        $pdf = PDF::loadView('informes.print1', compact('ventas', 'fechadesde', 'fechahasta', 'cliente','cantidadgeneral', 'tipo'));
             //$pdf->setPaper('Legal', 'landscape'); --Portrait 
 
         return $pdf->setPaper('a4', 'Portrait')->stream($cliente->persona->apellido . '_' . $cliente->persona->nombre . '_'.now()->format('Y-m-d').'.pdf');
-    }
+    }*/
+
+    public function print1($clienteId, $fechadesde, $fechahasta, $tipo)
+{
+    $cliente = Cliente::with('persona:id,apellido,nombre')
+        ->select('persona_id')
+        ->where('id', $clienteId)->MontoAdeudado()->first();
+
+    $ventas = Venta::with([
+        'tipoPago:id,descripcion',
+        'cliente.persona:id,apellido,nombre'
+    ])
+    ->select('id', 'total', 'totalpagado', 'tipopago_id', 'fecha', 'cliente_id','pago','estado')
+    ->withCount('ventaDetalles as cantidadviandas')
+    ->where('cliente_id', $clienteId)
+    ->where(function ($query) use ($tipo) { // filtro para traer solo los registros que todavia no se pagan
+        if ($tipo == 1) {
+            $query->where('estado', 1);
+        }
+    });
+
+    if ($tipo == 0) { // agregar filtro de fechas si es el informe del modulo informes
+        $ventas->when($fechadesde, function ($query, $fechadesde) {
+            return $query->where('fecha', '>=', $fechadesde);
+        })
+        ->when($fechahasta, function ($query, $fechahasta) {
+            return $query->where('fecha', '<=', $fechahasta);
+        });
+    } 
+
+
+    $ventas = $ventas->orderBy('fecha', 'DESC')->get();
+
+    $cantidadgeneral = Cliente::where('id', $clienteId)->MontoAdeudado()->value('deuda');
+
+    $pdf = PDF::loadView('informes.print1', compact('ventas', 'fechadesde', 'fechahasta', 'cliente','cantidadgeneral', 'tipo'));
+
+    return $pdf->setPaper('a4', 'Portrait')->stream($cliente->persona->apellido . '_' . $cliente->persona->nombre . '_'.now()->format('Y-m-d').'.pdf');
+}
+
 
 }

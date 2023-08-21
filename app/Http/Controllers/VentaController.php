@@ -124,8 +124,8 @@ class VentaController extends Controller
             $venta->tipopago_id = $request->tipopago_id;
             $venta->metodopago_id = $request->metodopago_id;
             $venta->fecha = $request->fecha;
-            $venta->total = $request->total ?? 0;
-            $venta->totalpagado = $request->totalpagado ?? 0;
+                $venta->total = $request->total ?? 0;
+                $venta->totalpagado = $request->totalpagado ?? 0;
             $venta->estado = true; //$request->has('estado') ? true : false;
             $venta->pago = $request->has('pago') ? true : false;
             $venta->otros = $request->has('otros') ? true : false;
@@ -153,16 +153,17 @@ class VentaController extends Controller
 
                 //$total += $cantidad * $precio;
             }
-        } elseif ($venta->otros == true){
-                $idotros = Vianda::where('descripcion', 'Otros')->pluck('id')->first();
-                $ventadetalle = new VentaDetalle();
-                    $ventadetalle->venta_id = $venta->id;
-                    $ventadetalle->vianda_id = $idotros;
-                    $ventadetalle->cantidad = 1;
-                    $ventadetalle->precio = 0;
-                $ventadetalle->save();
+        } 
+
+        if ($venta->otros == true){
+            $idotros = Vianda::where('descripcion', 'Otros')->pluck('id')->first();
+            $ventadetalle = new VentaDetalle();
+                $ventadetalle->venta_id = $venta->id;
+                $ventadetalle->vianda_id = $idotros;
+                $ventadetalle->cantidad = 1;
+                $ventadetalle->precio = 0;
+            $ventadetalle->save();
         }
-        
 
 
         // Actualizar el campo total de la venta
@@ -193,6 +194,7 @@ class VentaController extends Controller
             // Incrementar la fecha en un día
             $fechaObj->add(new \DateInterval('P1D'));
         }
+
 
 
         alert()->success('Venta Creada', 'Exitosamente');

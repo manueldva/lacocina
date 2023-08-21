@@ -3,8 +3,9 @@
 @section('cuerpo')
 
 <h3><center>Cliente: {{ $cliente ?  $cliente->persona->apellido  : ''}} {{ $cliente ?  $cliente->persona->nombre  : ''}}</h3>
-<h3><center>Desde el  @if($fechadesde) {{ $fechadesde}} @endif Hasta el @if($fechahasta) {{ $fechahasta}} @endif</center></h3>
-
+@if($tipo == 0)
+	<h3><center>Desde el  @if($fechadesde) {{ $fechadesde}} @endif Hasta el @if($fechahasta) {{ $fechahasta}} @endif</center></h3>
+@endif
 <div class="row">
 	<div class="col-md-12">	
 
@@ -43,7 +44,9 @@
                                             <th><center>Fecha</center></th>
                                             <th><center>Tipo Pago</center></th>
 											<th><center>Cantidad</center></th>
-                                            <th><center>Concepto</center></th>
+											@if($tipo == 0 )
+                                            	<th><center>Concepto</center></th>
+											@endif
                                             <th><center>Total</center></th>
                                             <th><center>TotalPagado</center></th>
 										</tr>
@@ -56,7 +59,9 @@
 											<td><center>{{ $venta->fecha }}</center></td>
 											<td><center>{{ $venta->tipoPago ? $venta->tipoPago->descripcion : 'Sin tipo de pago' }}</center></td>
 											<td><center>{{ $venta->pago == 1 ?  '-' : $venta->cantidadviandas }}</center></td>
-											<td><center>{{ $venta->pago == 1 ? 'Pago' : 'Venta' }}</center></td>
+											@if($tipo == 0 )
+												<td><center>{{ $venta->pago == 1 ? 'Pagado' : 'Sin Pagar' }}</center></td>
+											@endif
 											<td><center>{{  $venta->pago == 1 ?  '-' : $venta->total }}</center></td>
 											<td><center>{{ $venta->totalpagado }}</center></td>
 											</tr>

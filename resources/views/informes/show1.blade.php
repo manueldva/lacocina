@@ -115,7 +115,7 @@
 
       var cliente = $("#cliente_id").val();
       e.preventDefault();
-      window.open("{{url('print1')}}/"+ cliente + "/" + fechadesde + "/" + fechahasta);
+      window.open("{{url('print1')}}/"+ cliente + "/" + fechadesde + "/" + fechahasta + "/" + 0);
 
 
   });

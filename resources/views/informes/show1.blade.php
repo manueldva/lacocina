@@ -131,7 +131,7 @@
             if (!cliente) {
                 // Mostrar una alerta con SweetAlert
                 Swal.fire({
-                    icon: 'error',
+                    type: 'error',
                     title: 'Oops...',
                     text: 'Por favor, seleccione un cliente antes de generar el informe.'
                 });

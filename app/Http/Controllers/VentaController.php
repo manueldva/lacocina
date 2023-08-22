@@ -357,10 +357,12 @@ class VentaController extends Controller
         $entregado = $request->input('entregado');
         $envio = $request->input('envio');
         $cancelar = $request->input('cancelar');
+        $eliminar = $request->input('eliminar');
 
         // Convertir el valor 'entregado' a booleano
         $entregado = filter_var($entregado, FILTER_VALIDATE_BOOLEAN);
         $envio = filter_var($envio, FILTER_VALIDATE_BOOLEAN);
+        $cancelar = filter_var($cancelar, FILTER_VALIDATE_BOOLEAN);
         $cancelar = filter_var($cancelar, FILTER_VALIDATE_BOOLEAN);
 
         // Si se desea cancelar
@@ -388,7 +390,12 @@ class VentaController extends Controller
 
             // Actualizar el campo 'fecha' en la base de datos
             Ventafecha::where('id', $id)->update(['entregado' => $entregado, 'envio' => $envio, 'fecha' => $carbonFecha]);
-        } else {
+        
+        } elseif($eliminar) {
+            // Actualizar el campo 'entregado' en la base de datos sin modificar la fecha
+            Ventafecha::where('id', $id)->delete();
+        }
+        else {
             // Actualizar el campo 'entregado' en la base de datos sin modificar la fecha
             Ventafecha::where('id', $id)->update(['entregado' => $entregado, 'envio' => $envio]);
         }

@@ -63,5 +63,6 @@ Route::get('detallesVenta/{id}', 'VentaController@detallesVenta');
 Route::resource('informes', 'InformeController');
 
 route::get('/print1/{cliente}/{fechadesde}/{fechahasta}/{tipo}',		'InformeController@print1')->name('print1');
+route::get('/print2/{fecha}',		'InformeController@print2')->name('print2');
 
 

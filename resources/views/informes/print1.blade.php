@@ -44,6 +44,7 @@
                                             <th><center>Fecha</center></th>
                                             <th><center>Tipo Pago</center></th>
 											<th><center>Cantidad</center></th>
+											<th><center>Dias</center></th>
 											@if($tipo == 0 )
                                             	<th><center>Concepto</center></th>
 											@endif
@@ -58,11 +59,12 @@
 											
 											<td><center>{{ $venta->fecha }}</center></td>
 											<td><center>{{ $venta->tipoPago ? $venta->tipoPago->descripcion : 'Sin tipo de pago' }}</center></td>
-											<td><center>{{ $venta->pago == 1 ?  '-' : $venta->cantidadviandas }}</center></td>
+											<td><center>{{ $venta->cantidadviandas }}</center></td>
+											<td><center>{{ $venta->dias == 0 ? '' : $venta->dias }}</center></td>
 											@if($tipo == 0 )
 												<td><center>{{ $venta->pago == 1 ? 'Pagado' : 'Sin Pagar' }}</center></td>
 											@endif
-											<td><center>{{  $venta->pago == 1 ?  '-' : $venta->total }}</center></td>
+											<td><center>{{ $venta->total }}</center></td>
 											<td><center>{{ $venta->totalpagado }}</center></td>
 											</tr>
 										@endforeach

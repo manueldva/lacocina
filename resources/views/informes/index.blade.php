@@ -48,7 +48,12 @@
                                     Informes de Movimiento del Cliente
                                 </a>
                             </div>
-                        
+                            <br>
+                            <div class="form-group" style="font-size:16pt">
+                                <a href="{{ route('informes.show', 2) }}" style="color:#235B88;">
+                                    Informes de entregas del dia
+                                </a>
+                            </div>
                         </div>
                       </div>
                       <!-- /.card-body -->

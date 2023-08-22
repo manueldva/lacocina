@@ -201,6 +201,7 @@
                                 <th><center>Envio</center></th>
                                 <th><center>Entregado</center></th>
                                 <th><center>Cancelar</center></th>
+                                <th><center>Eliminar</center></th>
                               </tr>
                             </thead>
                             <tbody>
@@ -226,7 +227,12 @@
                                     <center>
                                       <input @if($show == 1 ) disabled @endif type="checkbox" class="cancelar-checkbox" data-ventaf-id="{{ $ventaf->id }}"  data-on-switch-change="cancelarEntregado"  data-on-text="Si" data-off-text="No">
                                     </center>
-                                </td>
+                                  </td>
+                                  <td>
+                                    <center>
+                                      <input @if($show == 1 ) disabled @endif type="checkbox" class="eliminar-checkbox" data-ventaf-id="{{ $ventaf->id }}"  data-on-switch-change="EliminarEntregado"  data-on-text="Si" data-off-text="No">
+                                    </center>
+                                  </td>
                                 </tr>
                               @endforeach
                             </tbody>
@@ -271,13 +277,15 @@
       $(".entregado-checkbox").bootstrapSwitch();
       $(".envio-checkbox").bootstrapSwitch();
       $(".cancelar-checkbox").bootstrapSwitch();
+      $(".eliminar-checkbox").bootstrapSwitch();
 
-      $("body").on("switchChange.bootstrapSwitch", ".entregado-checkbox, .cancelar-checkbox", function(event, state) {
+      $("body").on("switchChange.bootstrapSwitch", ".entregado-checkbox, .cancelar-checkbox, .eliminar-checkbox", function(event, state) {
           var checkbox = $(this);
           var ventafId = checkbox.data("ventaf-id");
           var entregado = $(".entregado-checkbox[data-ventaf-id='" + ventafId + "']").bootstrapSwitch("state") ? 1 : 0;
           var envio = $(".envio-checkbox[data-ventaf-id='" + ventafId + "']").bootstrapSwitch("state") ? 1 : 0;
           var cancelar = $(".cancelar-checkbox[data-ventaf-id='" + ventafId + "']").bootstrapSwitch("state") ? 1 : 0;
+          var eliminar = $(".eliminar-checkbox[data-ventaf-id='" + ventafId + "']").bootstrapSwitch("state") ? 1 : 0;
 
           var mensaje = cancelar ? "El registro ha sido cancelado y la fecha actualizada" : "El registro desaparecerá de este listado";
     
@@ -291,6 +299,7 @@
                   entregado: entregado,
                   envio: envio,
                   cancelar: cancelar,
+                  eliminar: eliminar,
                   _token: "{{ csrf_token() }}"
               },
               success: function(response) {

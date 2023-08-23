@@ -300,11 +300,11 @@ class VentaController extends Controller
     public function update(Request $request, Venta $venta)
     {
         //dd($request->all());
-        $estado = $request->has('estado') ? false : true;
+        $estado = $request->estadoVal;//$request->has('estado') ? false : true;
         $pago = $request->has('pago') ? true : false;
        
 
-        if ($estado == false && $pago == false) {
+        if ($estado == 0 && $pago == false) {
             alert()->error('Error', 'Debe seleccionar un tipo de pago para cerrar la venta');
             return back();
         }

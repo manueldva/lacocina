@@ -132,7 +132,8 @@
                             <input type="checkbox" name="estado" id="estado"  @if ($venta->estado == 1 ) checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success"  data-on-text="Activo" data-off-text="Cerrado">
                             &nbsp; 
                           @endif
-                            <input type="checkbox" name="pago" id="pago" @if ($venta->pago == 1 ) checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success"  data-on-text="Pago" data-off-text="No pago">
+                          <input  name="estadoVal" id="estadoVal" style="display: none;" type="number" value="{{$venta->estado}}">
+                          <input type="checkbox" name="pago" id="pago" @if ($venta->pago == 1 ) checked @endif data-bootstrap-switch data-off-color="danger" data-on-color="success"  data-on-text="Pago" data-off-text="No pago">
                         </div>
                           
 
@@ -272,6 +273,18 @@
   });
 
 
+  $(document).ready(function() {
+    var estado = $("#estado");
+    
+    estado.on("switchChange.bootstrapSwitch", function(event, state) {
+      if (state) {
+        $("#estadoVal").val(1);
+      }else {
+        $("#estadoVal").val(0);
+      }
+    });
+  });
+
     
   $(document).ready(function() {
       $(".entregado-checkbox").bootstrapSwitch();
@@ -347,9 +360,9 @@
   $('#guardar').click(function(event) {
     
 
-      var total = $('#total').val();
+      var total = parseFloat($('#total').val()).toFixed(2);
 
-      var totalpagado = $('#totalpagado').val();
+      var totalpagado = parseFloat($('#totalpagado').val()).toFixed(2);
 
       var pago = $("#pago");
 

@@ -192,8 +192,9 @@ class InformeController extends Controller
         $cantidadgeneral = Cliente::where('id', $clienteId)->MontoAdeudado()->value('deuda');
 
         $pdf = PDF::loadView('informes.print1', compact('ventas', 'fechadesde', 'fechahasta', 'cliente','cantidadgeneral', 'tipo'));
-
-        return $pdf->setPaper('a4', 'Portrait')->stream($cliente->persona->apellido . '_' . $cliente->persona->nombre . '_'.now()->format('Y-m-d').'.pdf');
+        
+        return $pdf->setPaper('a4', 'Portrait')->download($cliente->persona->apellido . '_' . $cliente->persona->nombre . '_'.now()->format('Y-m-d').'.pdf');
+        //return $pdf->setPaper('a4', 'Portrait')->stream($cliente->persona->apellido . '_' . $cliente->persona->nombre . '_'.now()->format('Y-m-d').'.pdf');
     }
 
 

@@ -129,7 +129,7 @@
                               <form action="{{ route('clientes.destroy',$cliente->id) }}" method="POST">
                                   
                                   @can('clientes.show')  
-                                    <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('print1', ['cliente' => $cliente->id, 'fechadesde' => now()->format('Y-m-d'), 'fechahasta' => now()->format('Y-m-d'), 'tipo' => 1]) }}" data-toggle="tooltip" data-placement="top" title="Estado de cuenta" target="_blank"><i class="fas fa-print"></i> </a>
+                                    <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('print1', ['cliente' => $cliente->id, 'fechadesde' => now()->format('Y-m-d'), 'fechahasta' => now()->format('Y-m-d'), 'tipo' => 1]) }}" data-toggle="tooltip" data-placement="top" title="Estado de cuenta"><i class="fas fa-print"></i> </a>
                                     <a class="btn btn-sm btn-flat btn-outline-info" href="{{ route('clientes.show',$cliente->id) }}" data-toggle="tooltip" data-placement="top" title="Ver Datos"><i class="fas fa-eye"></i> </a>
                                   @endcan
                                   @can('clientes.edit')  

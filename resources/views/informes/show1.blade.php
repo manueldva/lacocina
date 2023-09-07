@@ -62,7 +62,7 @@
                             </div>
 
                             
-                            <a target="_blank" href="#" id="imprimir">
+                            <a href="#" id="imprimir">
                                 <button type="button" class="btn btn btn-primary" id="btnGenerarInforme">Generar Informe</button>
                             </a>
                                                     

@@ -199,7 +199,7 @@ class InformeController extends Controller
 
     public function print2($fecha)
     {
-        /*$ventas = Ventafecha::where('fecha', $fecha)
+        $ventas = Ventafecha::where('fecha', $fecha)
         ->with([
             'venta.cliente.persona:id,apellido,nombre',
             'venta.ventafechas:venta_id,envio,entregado',
@@ -212,11 +212,7 @@ class InformeController extends Controller
 
         $pdf = PDF::loadView('informes.print2', compact('ventas', 'fecha'));
 
-        return $pdf->setPaper('a4', 'Portrait')->stream('Informe_ventrega_por_fecha_' . $fecha.'.pdf');*/
-
-        return view('informes.print2');
-
-
+        return $pdf->setPaper('a4', 'Portrait')->stream('Informe_ventrega_por_fecha_' . $fecha.'.pdf');
     }
 
 
